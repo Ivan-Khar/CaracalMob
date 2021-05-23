@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.aqupd.caracal.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MainMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
