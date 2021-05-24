@@ -10,7 +10,6 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.TurtleEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -19,18 +18,18 @@ import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
 public class CaracalEntity extends MobEntity {
-    
+
+
     public CaracalEntity(EntityType<? extends CaracalEntity> entityType, World world) {
         super(entityType, world);
     }
     
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
-        this.goalSelector.add(7, new PounceAtTargetGoal(this, 0.3F));
-        this.goalSelector.add(8, new AttackGoal(this));
-        this.goalSelector.add(11, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
+        this.goalSelector.add(2, new PounceAtTargetGoal(this, 0.3F));
+        this.goalSelector.add(3, new AttackGoal(this));
+        this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
         this.targetSelector.add(1, new FollowTargetGoal<>(this, ChickenEntity.class, false));
-        this.targetSelector.add(1, new FollowTargetGoal<>(this, TurtleEntity.class, 10, false, false, TurtleEntity.BABY_TURTLE_ON_LAND_FILTER));
     }
 
     public void mobTick() {
@@ -56,7 +55,9 @@ public class CaracalEntity extends MobEntity {
         return PassiveEntity.createLivingAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 10D)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.30000001192092896D)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 64.0D);
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 64.0D)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.5D)
+                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 0.5);
     }
 
     public boolean canImmediatelyDespawn(double distanceSquared) {
@@ -81,18 +82,6 @@ public class CaracalEntity extends MobEntity {
     }
     protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_OCELOT_DEATH;
-    }
-    
-    private float getAttackDamage() {
-        return (float)this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
-    }
-
-    public boolean tryAttack(Entity target) {
-        return target.damage(DamageSource.mob(this), this.getAttackDamage());
-    }
-
-    public boolean damage(DamageSource source, float amount) {
-        return !this.isInvulnerableTo(source) && super.damage(source, amount);
     }
 
     @Environment(EnvType.CLIENT)
