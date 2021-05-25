@@ -1,7 +1,6 @@
 package com.aqupd.caracal.client.model;
 
 import com.aqupd.caracal.entities.CaracalEntity;
-import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -12,17 +11,18 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
 
     private final ModelPart body;
     private final ModelPart head;
-    private final ModelPart ear1;
-    private final ModelPart earfluff1;
-    private final ModelPart ear2;
-    private final ModelPart earfluff2;
     private final ModelPart tail;
     private final ModelPart tail2;
     private final ModelPart front_left_leg;
     private final ModelPart back_left_leg;
     private final ModelPart front_right_leg;
     private final ModelPart back_right_leg;
-
+    private final ModelPart ear1;
+    private final ModelPart ear2;
+    private final ModelPart earfluff1;
+    private final ModelPart earfluff2;
+    protected int animationState = 1;
+    
     public CaracalEntityModel(){
         textureWidth = 64;
         textureHeight = 32;
@@ -31,9 +31,9 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         body.setTextureOffset(20, 9).addCuboid(-2.5F, -11.5F, -8.5F, 5.0F, 6.0F, 17.0F, 0.0F, false);
 
         head = new ModelPart(this);
-        head.setPivot(0.0F, 12.4F, -8.5F);
-        head.setTextureOffset(0, 0).addCuboid(-3.0F, -2.4F, -4.0F, 6.0F, 4.0F, 4.0F, 0.0F, false);
-        head.setTextureOffset(16, 1).addCuboid(-1.5F, -0.4F, -5.0F, 3.0F, 2.0F, 1.0F, 0.0F, false);
+        head.setPivot(0.0F, 13.4F, -8.2F);
+        head.setTextureOffset(0, 0).addCuboid(-3.0F, -2.9F, -3.6F, 6.0F, 4.0F, 4.0F, 0.0F, false);
+        head.setTextureOffset(16, 1).addCuboid(-1.5F, -0.9F, -4.6F, 3.0F, 2.0F, 1.0F, 0.0F, false);
 
         ear1 = new ModelPart(this);
         ear1.setPivot(1.5F, -2.4F, -0.5F);
@@ -87,6 +87,42 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
 
     @Override
     public void setAngles(CaracalEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+        this.head.pitch = headPitch * 0.017453292F;
+        this.head.yaw = headYaw * 0.017453292F;
+        if (this.animationState != 3) {
+            this.body.pitch = 0.0F;
+            if (this.animationState == 2) {
+                this.back_left_leg.pitch = MathHelper.cos(limbAngle * 0.6662F) * limbDistance;
+                this.back_right_leg.pitch = MathHelper.cos(limbAngle * 0.6662F + 0.3F) * limbDistance;
+                this.front_left_leg.pitch = MathHelper.cos(limbAngle * 0.6662F + 3.1415927F + 0.3F) * limbDistance;
+                this.front_right_leg.pitch = MathHelper.cos(limbAngle * 0.6662F + 3.1415927F) * limbDistance;
+                this.tail2.pitch = 0.5278761F + 0.31415927F * MathHelper.cos(limbAngle) * limbDistance;
+            } else {
+                this.back_left_leg.pitch = MathHelper.cos(limbAngle * 0.6662F) * limbDistance;
+                this.back_right_leg.pitch = MathHelper.cos(limbAngle * 0.6662F + 3.1415927F) * limbDistance;
+                this.front_left_leg.pitch = MathHelper.cos(limbAngle * 0.6662F + 3.1415927F) * limbDistance;
+                this.front_right_leg.pitch = MathHelper.cos(limbAngle * 0.6662F) * limbDistance;
+                if (this.animationState == 1) {
+                    if (entity.isInSneakingPose()) {
+                        setRotationAngle(body, 0.0524F, 0.0F, 0.0F);
+                        setRotationAngle(earfluff1, 0.0F, 0.0F, 2.3126F);
+                        setRotationAngle(earfluff2, 0.0F, 0.0F, -1.9199F);
+                        head.setPivot(0.0F, 14.4F, -8.2F);
+                        tail.setPivot(0.0F, 13.0F, 7.0F);
+                    }
+                    else{
+                        setRotationAngle(body, 0.0F, 0.0F, 0.0F);
+                        setRotationAngle(earfluff1, 0.0F, 0.0F, 0.6109F);
+                        setRotationAngle(earfluff2, 0.0F, 0.0F, -0.6109F);
+                        head.setPivot(0.0F, 13.4F, -8.2F);
+                        tail.setPivot(0.0F, 13.0F, 8.0F);
+                    }
+                    this.tail2.pitch = 0.5278761F + 0.3853982F * MathHelper.cos(limbAngle) * limbDistance;
+                } else {
+                    this.tail2.pitch = 0.5278761F + 0.27123894F * MathHelper.cos(limbAngle) * limbDistance;
+                }
+            }
+        }
 
     }
 
