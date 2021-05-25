@@ -15,6 +15,7 @@ import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
@@ -23,6 +24,8 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CaracalEntity extends TameableEntity {
     private static final Ingredient TAMING_INGREDIENT;
@@ -69,7 +72,7 @@ public class CaracalEntity extends TameableEntity {
             this.setSprinting(false);
         }
     }
-    
+
     public static DefaultAttributeContainer.Builder createcaracalAttributes(){
         return PassiveEntity.createLivingAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 10D)
@@ -89,7 +92,7 @@ public class CaracalEntity extends TameableEntity {
     }
 
     public int getMinAmbientSoundDelay() {
-        return 800;
+        return ThreadLocalRandom.current().nextInt(300, 1200 + 1);
     }
 
     protected SoundEvent getHurtSound(DamageSource source) {
@@ -118,7 +121,7 @@ public class CaracalEntity extends TameableEntity {
 
     @Nullable
     public PassiveEntity createChild(ServerWorld serverWorld, PassiveEntity passiveEntity) {
-        CaracalEntity caracalEntity = (CaracalEntity)Main.CARACAL.create(serverWorld);
+        CaracalEntity caracalEntity = Main.CARACAL.create(serverWorld);
         if (passiveEntity instanceof CaracalEntity) {
             if (this.isTamed()) {
                 caracalEntity.setOwnerUuid(this.getOwnerUuid());
