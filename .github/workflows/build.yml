@@ -1,4 +1,4 @@
-# Automatically build the project and run any configured tests for every push
+ Automatically build the project and run any configured tests for every push
 # and submitted pull request. This can help catch issues that only occur on
 # certain platforms or Java versions, and provides a first line of defence
 # against bad commits.
@@ -12,12 +12,10 @@ jobs:
       matrix:
         # Use these Java versions
         java: [
-          8.0,  # Minimum supported by Minecraft
-          11,   # Current Java LTS
-          16    # Latest version
+          16
         ]
         # and run on both Linux and Windows
-        os: [ubuntu-20.04, windows-latest]
+        os: [ubuntu-20.04]
     runs-on: ${{ matrix.os }}
     steps:
       - name: checkout repository
