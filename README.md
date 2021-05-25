@@ -1,1 +1,1 @@
-# Caracal entity
+# Caracal animal
