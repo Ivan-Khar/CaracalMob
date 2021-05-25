@@ -1,5 +1,7 @@
 package com.aqupd.caracal.entities;
 
+import com.aqupd.caracal.Main;
+import com.aqupd.caracal.aqupdSoundEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.*;
@@ -8,9 +10,12 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.entity.passive.ChickenEntity;
+import net.minecraft.entity.passive.ParrotEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Vec3d;
@@ -30,6 +35,8 @@ public class CaracalEntity extends MobEntity {
         this.goalSelector.add(3, new AttackGoal(this));
         this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
         this.targetSelector.add(1, new FollowTargetGoal<>(this, ChickenEntity.class, false));
+        this.targetSelector.add(2, new FollowTargetGoal<>(this, ParrotEntity.class, false));
+        this.targetSelector.add(3, new FollowTargetGoal<>(this, BatEntity.class, false));
     }
 
     public void mobTick() {
@@ -68,17 +75,17 @@ public class CaracalEntity extends MobEntity {
         return false;
     }
 
-    @Nullable
+    @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_OCELOT_AMBIENT;
+        return aqupdSoundEvents.CARACAL_AMBIENT;
     }
 
     public int getMinAmbientSoundDelay() {
-        return 100;
+        return 200;
     }
 
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_OCELOT_HURT;
+        return aqupdSoundEvents.CARACAL_HISS;
     }
     protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_OCELOT_DEATH;

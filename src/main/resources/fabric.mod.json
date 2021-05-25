@@ -12,7 +12,7 @@
     "sources": "https://github.com/AquUpd/testmod"
   },
   "license": "CC0-1.0",
-  "icon": "assets/aqupd/caracal/icon.png",
+  "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [

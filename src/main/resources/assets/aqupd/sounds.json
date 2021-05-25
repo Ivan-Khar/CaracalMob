@@ -1,0 +1,21 @@
+{
+  "caracal_scream": {
+    "subtitle": "subtitles.aqupd.caracal_scream",
+    "sounds": [
+      "aqupd:caracal/scream1",
+      "aqupd:caracal/scream2",
+      "aqupd:caracal/scream3"
+    ]
+  },
+  "caracal_hiss": {
+    "subtitle": "subtitles.aqupd.caracal_hiss",
+    "sounds": [
+      "aqupd:caracal/hiss1",
+      "aqupd:caracal/hiss2",
+      "aqupd:caracal/hiss3",
+      "aqupd:caracal/hiss4"
+    ],
+    "pitch": "1.3",
+    "volume": "0.5"
+  }
+}

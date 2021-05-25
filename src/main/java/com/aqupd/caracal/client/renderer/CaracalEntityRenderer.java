@@ -19,6 +19,6 @@ public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, Cara
 
     @Override
     public Identifier getTexture(CaracalEntity entity){
-        return new Identifier("aqupd", "caracal/textures/entity/caracal/caracal.png");
+        return new Identifier("aqupd", "textures/entity/caracal.png");
     }
 }
