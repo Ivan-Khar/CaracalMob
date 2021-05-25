@@ -1,7 +1,7 @@
 package com.aqupd.caracal.entities;
 
+import com.aqupd.caracal.Main;
 import com.aqupd.caracal.aqupdSoundEvents;
-import com.google.common.collect.Maps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.*;
@@ -9,8 +9,6 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
@@ -26,8 +24,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-
 public class CaracalEntity extends TameableEntity {
     private static final Ingredient TAMING_INGREDIENT;
 
@@ -38,14 +34,21 @@ public class CaracalEntity extends TameableEntity {
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
         this.goalSelector.add(1, new SitGoal(this));
-        //this.goalSelector.add(2, new FollowOwnerGoal());
+        this.goalSelector.add(1, new EscapeDangerGoal(this, 1.4D));
+        this.goalSelector.add(2, new AnimalMateGoal(this, 1.0D));
+        this.goalSelector.add(2, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
+        this.goalSelector.add(3, new TemptGoal(this, 1.0D, false, TAMING_INGREDIENT));
+        this.goalSelector.add(8, new WanderAroundGoal(this, 0.5F));
         this.goalSelector.add(5, new PounceAtTargetGoal(this, 0.3F));
         this.goalSelector.add(6, new AttackGoal(this));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.5F));
-        this.targetSelector.add(1, new FollowTargetGoal<>(this, ChickenEntity.class, false));
-        this.targetSelector.add(2, new FollowTargetGoal<>(this, RabbitEntity.class, false));
-        this.targetSelector.add(3, new FollowTargetGoal<>(this, BatEntity.class, false));
+        this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
+        this.targetSelector.add(2, new AttackWithOwnerGoal(this));
+        this.targetSelector.add(3, new FollowTargetGoal<>(this, ChickenEntity.class, false));
+        this.targetSelector.add(4, new FollowTargetGoal<>(this, RabbitEntity.class, false));
+        this.targetSelector.add(5, new FollowTargetGoal<>(this, BatEntity.class, false));
+
     }
 
     public void mobTick() {
@@ -86,7 +89,7 @@ public class CaracalEntity extends TameableEntity {
     }
 
     public int getMinAmbientSoundDelay() {
-        return 200;
+        return 800;
     }
 
     protected SoundEvent getHurtSound(DamageSource source) {
@@ -112,9 +115,10 @@ public class CaracalEntity extends TameableEntity {
 
         super.eat(player, stack);
     }
-/*
-    public CaracalEntity createChild(ServerWorld serverWorld, PassiveEntity passiveEntity) {
-        CaracalEntity caracalEntity = (CaracalEntity)EntityType.CARACAL.create(serverWorld);
+
+    @Nullable
+    public PassiveEntity createChild(ServerWorld serverWorld, PassiveEntity passiveEntity) {
+        CaracalEntity caracalEntity = (CaracalEntity)Main.CARACAL.create(serverWorld);
         if (passiveEntity instanceof CaracalEntity) {
             if (this.isTamed()) {
                 caracalEntity.setOwnerUuid(this.getOwnerUuid());
@@ -123,7 +127,6 @@ public class CaracalEntity extends TameableEntity {
         }
         return caracalEntity;
     }
-*/
     public boolean canBreedWith(AnimalEntity other) {
         if (!this.isTamed()) {
             return false;
@@ -198,6 +201,7 @@ public class CaracalEntity extends TameableEntity {
         return !this.isTamed() && this.age > 2400;
     }
 
+
     static {
         TAMING_INGREDIENT = Ingredient.ofItems(Items.COD, Items.SALMON, Items.CHICKEN, Items.RABBIT);
     }
@@ -205,11 +209,5 @@ public class CaracalEntity extends TameableEntity {
     @Environment(EnvType.CLIENT)
     public Vec3d method_29919() {
         return new Vec3d(0.0D, 0.5F * this.getStandingEyeHeight(), this.getWidth() * 0.4F);
-    }
-
-    @Nullable
-    @Override
-    public PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
-        return null;
     }
 }
