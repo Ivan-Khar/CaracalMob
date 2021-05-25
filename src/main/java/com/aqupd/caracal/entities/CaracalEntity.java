@@ -36,19 +36,15 @@ public class CaracalEntity extends TameableEntity {
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
         this.goalSelector.add(1, new SitGoal(this));
-        
         this.goalSelector.add(2, new FollowParentGoal(this, 1.4));
-        this.goalSelector.add(2, new EscapeDangerGoal(this, 1.4D));
-        this.goalSelector.add(2, new AnimalMateGoal(this, 1.0D));
         this.goalSelector.add(2, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
+        this.goalSelector.add(3, new EscapeDangerGoal(this, 1.4D));
+        this.goalSelector.add(3, new AnimalMateGoal(this, 1.0D));
         this.goalSelector.add(3, new TemptGoal(this, 1.0D, false, TAMING_INGREDIENT));
-        this.goalSelector.add(8, new WanderAroundGoal(this, 0.5F));
         this.goalSelector.add(5, new PounceAtTargetGoal(this, 0.3F));
         this.goalSelector.add(6, new AttackGoal(this));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.5F));
-        this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
-        this.targetSelector.add(2, new AttackWithOwnerGoal(this));
         this.targetSelector.add(3, new FollowTargetGoal<>(this, ChickenEntity.class, true));
         this.targetSelector.add(4, new FollowTargetGoal<>(this, RabbitEntity.class, true));
         this.targetSelector.add(5, new FollowTargetGoal<>(this, BatEntity.class, true));
