@@ -1,6 +1,5 @@
 # Caracal for 1.16
-## Fabric required! 
-
+## Fabric and Fabric API required! 
 
 - This mod adds caracals to your world!
 - They like chickens and rabbits
