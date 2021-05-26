@@ -1,13 +1,18 @@
 package com.aqupd.caracal;
 
+import com.aqupd.caracal.items.CaracalSpawnEgg;
 import net.fabricmc.api.ModInitializer;
 import com.aqupd.caracal.entities.CaracalEntity;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -24,9 +29,13 @@ public class Main implements ModInitializer {
 			FabricEntityTypeBuilder.create(SpawnGroup.CREATURE,
 					CaracalEntity::new).dimensions(EntityDimensions.fixed(0.5f, 0.75f)).build()
 	);
+
+	public static final SpawnEggItem CARACAL_SPAWN_EGG = new SpawnEggItem(CARACAL, 5453358, 10587797, new FabricItemSettings().group(ItemGroup.MISC).fireproof().maxCount(64));
+
 	@Override
 	public void onInitialize() {
 
+		Registry.register(Registry.ITEM, new Identifier("aqupd", "caracal_spawn_egg"), CARACAL_SPAWN_EGG);
 		FabricDefaultAttributeRegistry.register(CARACAL, CaracalEntity.createcaracalAttributes());
 
 		BiomeModifications.addSpawn(
