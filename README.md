@@ -13,5 +13,5 @@
 ![sits](https://user-images.githubusercontent.com/47220198/119643955-090f5800-be25-11eb-9b05-8430156d8606.png)
 ![kids](https://user-images.githubusercontent.com/47220198/119643959-09a7ee80-be25-11eb-9c2a-402053c5ac44.png)
 
-### model made by u/SociopathyKathy
+## model made by u/SociopathyKathy
 https://www.reddit.com/r/Minecraft/comments/kh6cm7/i_got_bored_and_decided_to_make_a_caracal/
