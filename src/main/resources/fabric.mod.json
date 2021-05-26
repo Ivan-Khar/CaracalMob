@@ -2,19 +2,20 @@
   "schemaVersion": 1,
   "id": "aqupd",
   "version": "${version}",
-  "name": "Caracal",
-  "description": "This mod adds caracal to the game!",
+  "name": "Caracal mob",
+  "description": "This mod adds caracal to the game! Floppas are best!",
   "authors": [
     "AqUpd",
     "Maity",
     "u/SociopathyKathy"
   ],
   "contact": {
+    "email": "aquupd@ya.ru",
     "homepage": "https://vk.com/aqupd",
     "issues": "https://github.com/AquUpd/CaracalMob/issues",
     "sources": "https://github.com/AquUpd/CaracalMob"
   },
-  "license": "CC0-1.0",
+  "license": "MIT",
   "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
