@@ -15,3 +15,6 @@
 
 ## model made by u/SociopathyKathy
 https://www.reddit.com/r/Minecraft/comments/kh6cm7/i_got_bored_and_decided_to_make_a_caracal/
+
+
+This is my first mod, soo it's probably has a lot of bugs, please report them to me
