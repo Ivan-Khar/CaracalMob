@@ -1,6 +1,5 @@
 package com.aqupd.caracal;
 
-import com.aqupd.caracal.items.CaracalSpawnEgg;
 import net.fabricmc.api.ModInitializer;
 import com.aqupd.caracal.entities.CaracalEntity;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
@@ -10,7 +9,6 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.sound.SoundEvent;
