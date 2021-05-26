@@ -1,5 +1,6 @@
 # Caracal for 1.16
 ## Fabric and Fabric API required! 
+![](https://badgen.net/github/release/aquupd/caracalmob)![](https://badgen.net/github/stars/aquupd/caracalmob)![](https://badgen.net/github/license/aquupd/caracalmob)
 
 - This mod adds caracals to your world!
 - They like chickens and rabbits
