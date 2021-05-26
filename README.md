@@ -1,5 +1,5 @@
-# Caracal
-## Fabric required!
+# Caracal for 1.16
+## Fabric required! 
 
 
 - This mod adds caracals to your world!
