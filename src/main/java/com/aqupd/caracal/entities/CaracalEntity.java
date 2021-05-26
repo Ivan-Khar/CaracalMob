@@ -194,7 +194,7 @@ public class CaracalEntity extends TameableEntity {
     }
 
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
-        return dimensions.height * 0.5F;
+        return dimensions.height * 0.9F;
     }
 
     public boolean canImmediatelyDespawn(double distanceSquared) {

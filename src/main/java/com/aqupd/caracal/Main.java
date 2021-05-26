@@ -25,7 +25,7 @@ public class Main implements ModInitializer {
 			Registry.ENTITY_TYPE,
 			new Identifier("aqupd", "caracal"),
 			FabricEntityTypeBuilder.create(SpawnGroup.CREATURE,
-					CaracalEntity::new).dimensions(EntityDimensions.fixed(0.5f, 0.75f)).build()
+					CaracalEntity::new).dimensions(EntityDimensions.fixed(0.6f, 0.75f)).build()
 	);
 
 	public static final SpawnEggItem CARACAL_SPAWN_EGG = new SpawnEggItem(CARACAL, 5453358, 10587797, new FabricItemSettings().group(ItemGroup.MISC).fireproof().maxCount(64));

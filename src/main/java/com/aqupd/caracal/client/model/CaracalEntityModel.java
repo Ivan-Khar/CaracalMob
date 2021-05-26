@@ -22,7 +22,6 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
     private final ModelPart earfluff1;
     private final ModelPart earfluff2;
 
-    protected int animationState = 1;
     protected float sizemultiplier = 0.0F;
     
     public CaracalEntityModel(){
@@ -36,6 +35,25 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         head.setPivot(0.0F, 13.4F, -8.2F);
         head.setTextureOffset(0, 0).addCuboid(-3.0F, -2.9F, -3.6F, 6.0F, 4.0F, 4.0F, sizemultiplier, false);
         head.setTextureOffset(16, 1).addCuboid(-1.5F, -0.9F, -4.6F, 3.0F, 2.0F, 1.0F, sizemultiplier, false);
+
+        ModelPart hat = new ModelPart(this);
+        hat.setPivot(0.0F, 10.6F, 8.2F);
+        head.addChild(hat);
+        hat.setTextureOffset(0, 16).addCuboid(-3.5F, -14.0F, -13.5F, 7.0F, 1.0F, 7.0F, 0.0F, false);
+        hat.setTextureOffset(0, 24).addCuboid(-2.5F, -17.0F, -12.5F, 5.0F, 3.0F, 5.0F, 0.0F, false);
+
+        ModelPart commander = new ModelPart(this);
+        commander.setPivot(0.0F, 0.0F, 0.0F);
+        head.addChild(commander);
+        commander.setTextureOffset(20, 0).addCuboid(-3.5F, -3.8F, -4.1F, 7.0F, 1.0F, 5.0F, 0.0F, false);
+
+        ModelPart commander_r1 = new ModelPart(this);
+        commander_r1.setPivot(0.0F, 0.0F, 0.0F);
+        commander.addChild(commander_r1);
+        setRotationAngle(commander_r1, 1.2566F, 0.0F, 0.0F);
+        commander_r1.setTextureOffset(21, 6).addCuboid(-3.2F, -3.5F, -2.4F, 4.0F, 1.0F, 4.0F, 0.0F, false);
+        commander_r1.setTextureOffset(21, 6).addCuboid(-0.8F, -3.5F, -2.4F, 4.0F, 1.0F, 4.0F, 0.0F, false);
+
 
         ear1 = new ModelPart(this);
         ear1.setPivot(1.5F, -2.4F, -0.5F);

@@ -25,6 +25,12 @@ public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, Cara
     }
     @Override
     public Identifier getTexture(CaracalEntity entity){
-        return new Identifier("aqupd", "textures/entity/caracal.png");
+        if ((entity.getCustomName() != null) && (entity.getCustomName().asString().equals("Шлёпа") || entity.getCustomName().asString().equals("Большой Шлёпа") || entity.getCustomName().asString().equals("Big Floppa") || entity.getCustomName().asString().equals("Floppa"))){
+            return new Identifier("aqupd", "textures/entity/caracalshlopa.png");
+        } else if ((entity.getCustomName() != null) && (entity.getCustomName().asString().equals("Командир") || entity.getCustomName().asString().equals("Commander"))){
+            return new Identifier("aqupd", "textures/entity/caracalcommander.png");
+        } else {
+            return new Identifier("aqupd", "textures/entity/caracal.png");
+        }
     }
 }
