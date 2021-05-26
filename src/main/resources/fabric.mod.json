@@ -3,13 +3,16 @@
   "id": "aqupd",
   "version": "${version}",
   "name": "Caracal",
-  "description": "This mod should add caracal to the game!",
+  "description": "This mod adds caracal to the game!",
   "authors": [
-    "AqUpd"
+    "AqUpd",
+    "Maity",
+    "u/SociopathyKathy"
   ],
   "contact": {
     "homepage": "https://vk.com/aqupd",
-    "sources": "https://github.com/AquUpd/testmod"
+    "issues": "https://github.com/AquUpd/CaracalMob/issues",
+    "sources": "https://github.com/AquUpd/CaracalMob"
   },
   "license": "CC0-1.0",
   "icon": "icon.png",
