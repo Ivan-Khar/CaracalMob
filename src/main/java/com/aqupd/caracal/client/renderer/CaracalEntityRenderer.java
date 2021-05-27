@@ -24,15 +24,35 @@ public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, Cara
         }
     }
     @Override
-    public Identifier getTexture(CaracalEntity entity){
-        if ((entity.getCustomName() != null) && (entity.getCustomName().asString().equals("Шлёпа") || entity.getCustomName().asString().equals("Большой Шлёпа") || entity.getCustomName().asString().equals("Big Floppa") || entity.getCustomName().asString().equals("Floppa"))){
-            return new Identifier("aqupd", "textures/entity/caracalshlopa.png");
-        } else if ((entity.getCustomName() != null) && (entity.getCustomName().asString().equals("Командир") || entity.getCustomName().asString().equals("Commander"))){
-            return new Identifier("aqupd", "textures/entity/caracalcommander.png");
-        } else if ((entity.getCustomName() != null) && (entity.getCustomName().asString().equals("Анонимус") || entity.getCustomName().asString().equals("Anonymous"))){
-        return new Identifier("aqupd", "textures/entity/caracalanonymous.png");
-        } else {
-            return new Identifier("aqupd", "textures/entity/caracal.png");
+    public Identifier getTexture(CaracalEntity entity) {
+        if (entity.getCustomName() != null) {
+            String n = entity.getCustomName().asString();
+
+            if (n.equalsIgnoreCase("шлёпа") || n.equalsIgnoreCase("большой шлёпа") || n.equalsIgnoreCase("шлепа") || n.equalsIgnoreCase("большой шлепа") || n.equalsIgnoreCase("floppa") || n.equalsIgnoreCase("big floppa")) {
+                return new Identifier("aqupd", "textures/entity/caracalshlopa.png");
+            }
+
+            if (n.equalsIgnoreCase("мирный командир") || n.equalsIgnoreCase("мирный командир шлепа") || n.equalsIgnoreCase("мирный командир шлёпа") || n.equalsIgnoreCase("peaceful floppa commander") || n.equalsIgnoreCase("peaceful commander")) {
+                return new Identifier("aqupd", "textures/entity/caracalcommander.png");
+            }
+
+            if (n.equalsIgnoreCase("командир") || n.equalsIgnoreCase("командир шлепа") || n.equalsIgnoreCase("командир шлёпа") || n.equalsIgnoreCase("floppa commander") || n.equalsIgnoreCase("commander")) {
+                return new Identifier("aqupd", "textures/entity/caracalcommander.png");
+            }
+
+            if (n.equalsIgnoreCase("анонимус") || n.equalsIgnoreCase("анонимный шлёпа") || n.equalsIgnoreCase("анонимный шлепа") || n.equalsIgnoreCase("anonymous floppa") || n.equalsIgnoreCase("anonymous")) {
+                return new Identifier("aqupd", "textures/entity/caracalanonymous.png");
+            }
+
+            if (n.equalsIgnoreCase("новогодний") || n.equalsIgnoreCase("new year") || n.equalsIgnoreCase("новогодний шлепа") || n.equalsIgnoreCase("новогодний шлёпа") || n.equalsIgnoreCase("new year's floppa")) {
+                return new Identifier("aqupd", "textures/entity/caracalnewyear.png");
+            }
+
+            if (n.equalsIgnoreCase("взрывной") || n.equalsIgnoreCase("взрывной шлёпа") || n.equalsIgnoreCase("взрывной шлепа") || n.equalsIgnoreCase("explosive") || n.equalsIgnoreCase("explosive floppa")) {
+                return new Identifier("aqupd", "textures/entity/caracalexplosive.png");
+            }
         }
+
+        return new Identifier("aqupd", "textures/entity/caracal.png");
     }
 }

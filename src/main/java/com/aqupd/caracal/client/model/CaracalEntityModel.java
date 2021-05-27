@@ -31,6 +31,43 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         body.setPivot(0.0F, 24.0F, 0.0F);
         body.setTextureOffset(20, 9).addCuboid(-2.5F, -11.5F, -8.5F, 5.0F, 6.0F, 17.0F, sizemultiplier, false);
 
+        ModelPart explosive = new ModelPart(this);
+        explosive.setPivot(0.0F, -10.0F, -8.2F);
+        body.addChild(explosive);
+        explosive.setTextureOffset(48, 10).addCuboid(2.5F, -1.5F, 9.9F, 4.0F, 4.0F, 4.0F, 0.0F, false);
+        explosive.setTextureOffset(48, 10).addCuboid(2.5F, -1.5F, 5.9F, 4.0F, 4.0F, 4.0F, 0.0F, false);
+        explosive.setTextureOffset(48, 10).addCuboid(-6.5F, -1.5F, 9.9F, 4.0F, 4.0F, 4.0F, 0.0F, false);
+        explosive.setTextureOffset(48, 10).addCuboid(-6.5F, -1.5F, 5.9F, 4.0F, 4.0F, 4.0F, 0.0F, false);
+        explosive.setTextureOffset(48, 18).addCuboid(-7.0F, -1.6F, 7.4F, 7.0F, 0.0F, 1.0F, 0.0F, false);
+        explosive.setTextureOffset(48, 18).addCuboid(-3.0F, 4.6F, 7.4F, 6.0F, 0.0F, 1.0F, 0.0F, false);
+        explosive.setTextureOffset(48, 18).addCuboid(0.0F, -1.6F, 7.4F, 7.0F, 0.0F, 1.0F, 0.0F, false);
+        explosive.setTextureOffset(48, 18).addCuboid(0.0F, -1.6F, 11.4F, 7.0F, 0.0F, 1.0F, 0.0F, false);
+        explosive.setTextureOffset(48, 18).addCuboid(-7.0F, -1.6F, 11.4F, 7.0F, 0.0F, 1.0F, 0.0F, false);
+        explosive.setTextureOffset(48, 18).addCuboid(-3.0F, 4.6F, 11.4F, 6.0F, 0.0F, 1.0F, 0.0F, false);
+
+        ModelPart wire13_r1 = new ModelPart(this);
+        wire13_r1.setPivot(7.0F, 4.4F, 7.9F);
+        explosive.addChild(wire13_r1);
+        setRotationAngle(wire13_r1, 0.0F, 0.0F, 0.5236F);
+        wire13_r1.setTextureOffset(46, 18).addCuboid(-13.2F, 5.2F, 3.5F, 5.0F, 0.0F, 1.0F, 0.0F, false);
+        wire13_r1.setTextureOffset(46, 18).addCuboid(-13.2F, 5.2F, -0.5F, 5.0F, 0.0F, 1.0F, 0.0F, false);
+
+        ModelPart wire12_r1 = new ModelPart(this);
+        wire12_r1.setPivot(7.0F, 4.4F, 7.9F);
+        explosive.addChild(wire12_r1);
+        setRotationAngle(wire12_r1, 0.0F, 0.0F, -0.5236F);
+        wire12_r1.setTextureOffset(46, 18).addCuboid(-3.9F, -1.8F, 3.5F, 5.0F, 0.0F, 1.0F, 0.0F, false);
+        wire12_r1.setTextureOffset(46, 18).addCuboid(-3.9F, -1.8F, -0.5F, 5.0F, 0.0F, 1.0F, 0.0F, false);
+
+        ModelPart wire10_r1 = new ModelPart(this);
+        wire10_r1.setPivot(-7.0F, -1.6F, 12.7F);
+        explosive.addChild(wire10_r1);
+        setRotationAngle(wire10_r1, 0.0F, 0.0F, -1.5708F);
+        wire10_r1.setTextureOffset(46, 18).addCuboid(-4.0F, 14.0F, -5.3F, 4.0F, 0.0F, 1.0F, 0.0F, false);
+        wire10_r1.setTextureOffset(46, 18).addCuboid(-4.0F, 0.0F, -5.3F, 4.0F, 0.0F, 1.0F, 0.0F, false);
+        wire10_r1.setTextureOffset(46, 18).addCuboid(-4.0F, 14.0F, -1.3F, 4.0F, 0.0F, 1.0F, 0.0F, false);
+        wire10_r1.setTextureOffset(46, 18).addCuboid(-4.0F, 0.0F, -1.3F, 4.0F, 0.0F, 1.0F, 0.0F, false);
+
         head = new ModelPart(this);
         head.setPivot(0.0F, 13.4F, -8.2F);
         head.setTextureOffset(0, 0).addCuboid(-3.0F, -2.9F, -3.6F, 6.0F, 4.0F, 4.0F, sizemultiplier, false);
@@ -41,6 +78,24 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         head.addChild(hat);
         hat.setTextureOffset(0, 16).addCuboid(-3.5F, -14.0F, -13.5F, 7.0F, 1.0F, 7.0F, 0.0F, false);
         hat.setTextureOffset(0, 24).addCuboid(-2.5F, -17.0F, -12.5F, 5.0F, 3.0F, 5.0F, 0.0F, false);
+
+        ModelPart hat5_r1 = new ModelPart(this);
+        hat5_r1.setPivot(-0.8F, -21.5F, -10.0F);
+        hat.addChild(hat5_r1);
+        setRotationAngle(hat5_r1, 0.0F, 0.0F, -0.4189F);
+        hat5_r1.setTextureOffset(0, 32).addCuboid(-1.0F, -1.8F, -1.0F, 2.0F, 2.0F, 2.0F, 0.0F, false);
+
+        ModelPart hat4_r1 = new ModelPart(this);
+        hat4_r1.setPivot(-0.7572F, -20.2089F, -10.0F);
+        hat.addChild(hat4_r1);
+        setRotationAngle(hat4_r1, 0.0F, 0.0F, -0.2618F);
+        hat4_r1.setTextureOffset(8, 32).addCuboid(-0.2F, -1.5F, -0.5F, 1.0F, 3.0F, 1.0F, 0.0F, false);
+
+        ModelPart hat3_r1 = new ModelPart(this);
+        hat3_r1.setPivot(0.0F, -18.5F, -10.0F);
+        hat.addChild(hat3_r1);
+        setRotationAngle(hat3_r1, 0.0F, 0.0F, -0.1222F);
+        hat3_r1.setTextureOffset(12, 32).addCuboid(-1.7F, -1.2F, -1.5F, 3.0F, 3.0F, 3.0F, 0.0F, false);
 
         ModelPart commander = new ModelPart(this);
         commander.setPivot(0.0F, 0.0F, 0.0F);

@@ -15,15 +15,18 @@ import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CaracalEntity extends TameableEntity {
@@ -32,11 +35,12 @@ public class CaracalEntity extends TameableEntity {
     public CaracalEntity(EntityType<? extends CaracalEntity> entityType, World world) {
         super(entityType, world);
     }
-    
+
+    private boolean commander;
+
     protected void initGoals() {
         this.goalSelector.add(1, new SwimGoal(this));
         this.goalSelector.add(1, new SitGoal(this));
-        this.goalSelector.add(2, new FollowParentGoal(this, 1.4));
         this.goalSelector.add(2, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false));
         this.goalSelector.add(3, new EscapeDangerGoal(this, 1.4D));
         this.goalSelector.add(3, new AnimalMateGoal(this, 1.0D));
@@ -45,10 +49,12 @@ public class CaracalEntity extends TameableEntity {
         this.goalSelector.add(6, new AttackGoal(this));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.5F));
+
+        this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
         this.targetSelector.add(3, new FollowTargetGoal<>(this, ChickenEntity.class, true));
         this.targetSelector.add(4, new FollowTargetGoal<>(this, RabbitEntity.class, true));
         this.targetSelector.add(5, new FollowTargetGoal<>(this, BatEntity.class, true));
-
+        this.targetSelector.add(6, new CaracalEntity.FollowEntityGoal(this));
     }
 
     public void mobTick() {
@@ -70,6 +76,7 @@ public class CaracalEntity extends TameableEntity {
         }
     }
 
+
     public static DefaultAttributeContainer.Builder createcaracalAttributes(){
         return PassiveEntity.createLivingAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 10D)
@@ -77,6 +84,52 @@ public class CaracalEntity extends TameableEntity {
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 20.0D)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.5D)
                 .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 0.5);
+    }
+
+    public void writeCustomDataToTag(CompoundTag tag) {
+        super.writeCustomDataToTag(tag);
+        if (this.commander) {
+            tag.putBoolean("Commander", true);
+        }
+
+    }
+
+    public void readCustomDataFromTag(CompoundTag tag) {
+        super.readCustomDataFromTag(tag);
+        if (tag.contains("Commander", 99)) {
+            this.commander = tag.getBoolean("Commander");
+        }
+
+    }
+
+    public void setCustomName(@Nullable Text name) {
+        super.setCustomName(name);
+        if (this.getCustomName() != null) {
+            String n = this.getCustomName().asString();
+
+            if (n.equalsIgnoreCase("Командир") || n.equalsIgnoreCase("Commander")) {
+                this.commander = true;
+            }
+
+            if (!(n.equalsIgnoreCase("Командир") || n.equalsIgnoreCase("Commander"))) {
+                this.commander = false;
+            }
+        }
+    }
+
+    static class FollowEntityGoal extends FollowTargetGoal<LivingEntity>{
+        public FollowEntityGoal(CaracalEntity caracalEntity) {
+            super(caracalEntity, LivingEntity.class, 0, true, true, LivingEntity::isMobOrPlayer);
+        }
+
+        public boolean canStart() {
+            return ((CaracalEntity)this.mob).commander && super.canStart();
+        }
+
+        public void start() {
+            super.start();
+            this.mob.setDespawnCounter(0);
+        }
     }
 
     public boolean handleFallDamage(float fallDistance, float damageMultiplier) {
@@ -121,6 +174,7 @@ public class CaracalEntity extends TameableEntity {
         CaracalEntity caracalEntity = Main.CARACAL.create(serverWorld);
         if (passiveEntity instanceof CaracalEntity) {
             if (this.isTamed()) {
+                assert caracalEntity != null;
                 caracalEntity.setOwnerUuid(this.getOwnerUuid());
                 caracalEntity.setTamed(true);
             }
@@ -154,7 +208,7 @@ public class CaracalEntity extends TameableEntity {
                     if (!(item instanceof DyeItem)) {
                         if (item.isFood() && this.isBreedingItem(itemStack) && this.getHealth() < this.getMaxHealth()) {
                             this.eat(player, itemStack);
-                            this.heal((float)item.getFoodComponent().getHunger());
+                            this.heal((float) Objects.requireNonNull(item.getFoodComponent()).getHunger());
                             return ActionResult.CONSUME;
                         }
 
