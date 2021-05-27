@@ -26,7 +26,7 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
     
     public CaracalEntityModel(){
         textureWidth = 64;
-        textureHeight = 32;
+        textureHeight = 64;
         body = new ModelPart(this);
         body.setPivot(0.0F, 24.0F, 0.0F);
         body.setTextureOffset(20, 9).addCuboid(-2.5F, -11.5F, -8.5F, 5.0F, 6.0F, 17.0F, sizemultiplier, false);
@@ -54,6 +54,24 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         commander_r1.setTextureOffset(21, 6).addCuboid(-3.2F, -3.5F, -2.4F, 4.0F, 1.0F, 4.0F, 0.0F, false);
         commander_r1.setTextureOffset(21, 6).addCuboid(-0.8F, -3.5F, -2.4F, 4.0F, 1.0F, 4.0F, 0.0F, false);
 
+        ModelPart anonymous = new ModelPart(this);
+        anonymous.setPivot(0.0F, 0.7F, 0.0F);
+        head.addChild(anonymous);
+        anonymous.setTextureOffset(46, 32).addCuboid(-4.0F, -4.9F, -4.7F, 8.0F, 7.0F, 1.0F, 0.0F, false);
+        anonymous.setTextureOffset(46, 40).addCuboid(-2.0F, 2.1F, -4.7F, 4.0F, 1.0F, 1.0F, 0.0F, false);
+        anonymous.setTextureOffset(46, 45).addCuboid(-3.0F, -3.4F, 0.6F, 6.0F, 1.0F, 0.0F, 0.0F, false);
+
+        ModelPart anonymous3_r1 = new ModelPart(this);
+        anonymous3_r1.setPivot(0.0F, 0.0F, 0.0F);
+        anonymous.addChild(anonymous3_r1);
+        setRotationAngle(anonymous3_r1, 0.0F, 0.1745F, 0.0F);
+        anonymous3_r1.setTextureOffset(46, 38).addCuboid(-3.1F, -3.4F, -4.9F, 0.0F, 1.0F, 5.0F, 0.0F, false);
+
+        ModelPart anonymous2_r1 = new ModelPart(this);
+        anonymous2_r1.setPivot(0.0F, 0.0F, 0.0F);
+        anonymous.addChild(anonymous2_r1);
+        setRotationAngle(anonymous2_r1, 0.0F, -0.1745F, 0.0F);
+        anonymous2_r1.setTextureOffset(46, 37).addCuboid(3.1F, -3.4F, -4.9F, 0.0F, 1.0F, 5.0F, 0.0F, false);
 
         ear1 = new ModelPart(this);
         ear1.setPivot(1.5F, -2.4F, -0.5F);
