@@ -11,7 +11,8 @@
 
 <h2 align=center>Screenshots</h2>
 <p align=center>
-<img src="https://user-images.githubusercontent.com/47220198/119643949-0876c180-be25-11eb-871c-27dcaa305345.png"><img src="https://user-images.githubusercontent.com/47220198/119643955-090f5800-be25-11eb-9b05-8430156d8606.png"><img src="https://user-images.githubusercontent.com/47220198/119643959-09a7ee80-be25-11eb-9c2a-402053c5ac44.png">
+<img src="https://i.imgur.com/ZMRftI0.png">
+<img src="https://i.imgur.com/7gI8C9c.png">
 </p>
 
 ## Model made by u/SociopathyKathy
