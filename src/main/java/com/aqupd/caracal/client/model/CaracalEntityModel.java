@@ -2,15 +2,12 @@ package com.aqupd.caracal.client.model;
 
 import com.aqupd.caracal.entities.CaracalEntity;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.model.ModelUtil;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 
 public class CaracalEntityModel extends EntityModel<CaracalEntity> {
-
-    private boolean sleepAnimation;
     private final ModelPart body;
     private final ModelPart head;
     private final ModelPart tail;
