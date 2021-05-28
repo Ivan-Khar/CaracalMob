@@ -11,15 +11,12 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.SpawnEggItem;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 
 public class Main implements ModInitializer {
 
-	public static final Identifier CARACAL_SCREAM = new Identifier("aqupd:caracal_scream");
-	public static SoundEvent CARACAL_AMBIENT = new SoundEvent(CARACAL_SCREAM);
 
 	public static final EntityType<CaracalEntity> CARACAL = Registry.register(
 			Registry.ENTITY_TYPE,

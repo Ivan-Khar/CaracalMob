@@ -2,6 +2,7 @@ package com.aqupd.caracal.client.model;
 
 import com.aqupd.caracal.entities.CaracalEntity;
 import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.model.ModelUtil;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
@@ -9,6 +10,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class CaracalEntityModel extends EntityModel<CaracalEntity> {
 
+    private boolean sleepAnimation;
     private final ModelPart body;
     private final ModelPart head;
     private final ModelPart tail;
@@ -23,7 +25,7 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
     private final ModelPart earfluff2;
 
     protected float sizemultiplier = 0.0F;
-    
+
     public CaracalEntityModel(){
         textureWidth = 64;
         textureHeight = 64;
@@ -209,6 +211,9 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
             setRotationAngle(back_right_leg, -1.6F, 0.0F, 0.0F);
             tail.setPivot(0.0F, 22.5F, 8.0F);
             setRotationAngle(tail, 1.9109F, 0.0F, 0.0F);
+        } else if (entity.isSleepingWithOwner()){
+            body.setPivot(10.0F, 20.0F, 0.0F);
+            setRotationAngle(body, -0.7156F, 0.0F, 1.5359F);
         } else {
             setRotationAngle(body, 0.0F, 0.0F, 0.0F);
             setRotationAngle(earfluff1, 0.0F, 0.0F, 0.6109F);
