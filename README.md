@@ -11,8 +11,9 @@
 
 <h2 align=center>Screenshots</h2>
 <p align=center>
-<img src="https://i.imgur.com/ZMRftI0.png">
-<img src="https://i.imgur.com/7gI8C9c.png">
+  <img src="https://i.imgur.com/ZMRftI0.png">
+  <img src="https://i.imgur.com/7gI8C9c.png">
+  <img src="https://i.imgur.com/diIGJhP.png">
 </p>
 
 ## Model made by u/SociopathyKathy
