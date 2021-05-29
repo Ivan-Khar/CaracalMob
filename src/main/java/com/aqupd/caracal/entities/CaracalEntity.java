@@ -1,7 +1,7 @@
 package com.aqupd.caracal.entities;
 
 import com.aqupd.caracal.Main;
-import com.aqupd.caracal.aqupdSoundEvents;
+import com.aqupd.caracal.ai.CaracalSitOnBlockGoal;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BedBlock;
@@ -65,6 +65,7 @@ public class CaracalEntity extends TameableEntity {
         this.goalSelector.add(3, new TemptGoal(this, 1.0D, false, TAMING_INGREDIENT));
         this.goalSelector.add(5, new PounceAtTargetGoal(this, 0.3F));
         this.goalSelector.add(6, new AttackGoal(this));
+        this.goalSelector.add(7, new CaracalSitOnBlockGoal(this, 0.8D));
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.5F));
 
@@ -91,6 +92,9 @@ public class CaracalEntity extends TameableEntity {
         } else {
             this.setPose(EntityPose.STANDING);
             this.setSprinting(false);
+        }
+        if ((this.isSleepingWithOwner()) && this.age % 5 == 0) {
+            this.playSound(SoundEvents.ENTITY_CAT_PURR, 0.6F + 0.4F * (this.random.nextFloat() - this.random.nextFloat()), 1.0F);
         }
     }
 
@@ -156,7 +160,11 @@ public class CaracalEntity extends TameableEntity {
 
     @Nullable
     protected SoundEvent getAmbientSound() {
-        return aqupdSoundEvents.CARACAL_AMBIENT;
+        if (!((this.isSleepingWithOwner()) && this.age % 5 == 0)) {
+            return Main.CARACAL_AMBIENT;
+        } else {
+            return null;
+        }
     }
 
     public int getMinAmbientSoundDelay() {
@@ -164,7 +172,7 @@ public class CaracalEntity extends TameableEntity {
     }
 
     protected SoundEvent getHurtSound(DamageSource source) {
-        return aqupdSoundEvents.CARACAL_HISS;
+        return Main.CARACAL_HISS;
     }
     protected SoundEvent getDeathSound() {
         return SoundEvents.ENTITY_OCELOT_DEATH;

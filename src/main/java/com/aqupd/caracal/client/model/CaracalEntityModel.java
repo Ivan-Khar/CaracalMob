@@ -186,13 +186,21 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         this.back_right_leg.pitch = MathHelper.cos(limbAngle * 0.6662F + 3.1415927F + 0.3F) * limbDistance;
         this.front_left_leg.pitch = MathHelper.cos(limbAngle * 0.6662F + 0.3F) * limbDistance;
         this.front_right_leg.pitch = MathHelper.cos(limbAngle * 0.6662F + 3.1415927F) * limbDistance;
+        this.back_left_leg.yaw = 0.0F;
+        this.back_right_leg.yaw = 0.0F;
+        this.front_left_leg.yaw = 0.0F;
+        this.front_right_leg.yaw = 0.0F;
+        this.back_left_leg.roll = 0.0F;
+        this.back_right_leg.roll = 0.0F;
+        this.front_left_leg.roll = 0.0F;
+        this.front_right_leg.roll = 0.0F;
         if (entity.isInSneakingPose()) {
             setRotationAngle(body, 0.0524F, 0.0F, 0.0F);
             setRotationAngle(earfluff1, 0.0F, 0.0F, 2.1126F);
             setRotationAngle(earfluff2, 0.0F, 0.0F, -1.9199F);
             head.setPivot(0.0F, 14.4F, -8.2F);
             tail.setPivot(0.0F, 13.0F, 7.0F);
-        } else if (entity.isInSittingPose()) {
+        } else if (entity.isInSittingPose() && !entity.isSleepingWithOwner()) {
             setRotationAngle(body, -0.7854F, 0.0F, 0.0F);
             setRotationAngle(earfluff1, 0.0F, 0.0F, 1.1109F);
             setRotationAngle(earfluff2, 0.0F, 0.0F, -1.1109F);
@@ -209,8 +217,20 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
             tail.setPivot(0.0F, 22.5F, 8.0F);
             setRotationAngle(tail, 1.9109F, 0.0F, 0.0F);
         } else if (entity.isSleepingWithOwner()){
-            body.setPivot(10.0F, 20.0F, 0.0F);
-            setRotationAngle(body, -0.7156F, 0.0F, 1.5359F);
+            body.setPivot(-8.0F, 21.0F, 0.0F);
+            setRotationAngle(body, -0.2F, 0.05F, 1.4F);
+            head.setPivot(0.0F, 18.4F, -8.2F);
+            this.head.yaw = -0.5F;
+            front_left_leg.setPivot(1.5F, 21.0F, -6.5F);
+            front_right_leg.setPivot(-1.5F, 19.0F, -6.5F);
+            back_left_leg.setPivot(1.25F, 19.0F, 6.0F);
+            back_right_leg.setPivot(-1.25F, 21.0F, 6.0F);
+            tail.setPivot(0.0F, 20.0F, 10.0F);
+            setRotationAngle(tail, 0.0F, 0.0F, 1.0F);
+            setRotationAngle(front_left_leg, -1.1345F, 0.1745F, 1.5272F);
+            setRotationAngle(front_right_leg, -0.6981F, 0.0F, 1.5272F);
+            setRotationAngle(back_right_leg, 0.6545F, -0.0873F, 1.3526F);
+            setRotationAngle(back_left_leg, 0.1309F, 0.0F, 1.4399F);
         } else {
             setRotationAngle(body, 0.0F, 0.0F, 0.0F);
             setRotationAngle(earfluff1, 0.0F, 0.0F, 0.6109F);
