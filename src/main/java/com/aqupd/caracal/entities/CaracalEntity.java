@@ -49,6 +49,7 @@ public class CaracalEntity extends TameableEntity {
     private static final TrackedData<Boolean> SLEEPING_WITH_OWNER;
     private static final Ingredient TAMING_INGREDIENT;
 
+
     public CaracalEntity(EntityType<? extends CaracalEntity> entityType, World world) {
         super(entityType, world);
     }
@@ -93,11 +94,14 @@ public class CaracalEntity extends TameableEntity {
             this.setPose(EntityPose.STANDING);
             this.setSprinting(false);
         }
+        this.updateAnimations();
+    }
+
+    private void updateAnimations() {
         if ((this.isSleepingWithOwner()) && this.age % 5 == 0) {
             this.playSound(SoundEvents.ENTITY_CAT_PURR, 0.6F + 0.4F * (this.random.nextFloat() - this.random.nextFloat()), 1.0F);
         }
     }
-
 
     public static DefaultAttributeContainer.Builder createcaracalAttributes(){
         return PassiveEntity.createLivingAttributes()
@@ -407,7 +411,7 @@ public class CaracalEntity extends TameableEntity {
     }
 
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
-        return dimensions.height * 0.9F;
+        return dimensions.height * 0.98F;
     }
 
     public boolean canImmediatelyDespawn(double distanceSquared) {
