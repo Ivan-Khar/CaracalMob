@@ -9,6 +9,7 @@
     <li> Spawns naturally in the savanna</li>
     <li> They have cute sounds!</li>
 </ul>
+<h1 align=center><a href="https://github.com/AquUpd/CaracalMob/wiki/Nametags">All nametags list </a></h1>
 <h2 align=center>Screenshots</h2>
 <p align=center>
     <img src="https://i.imgur.com/ZMRftI0.png">
