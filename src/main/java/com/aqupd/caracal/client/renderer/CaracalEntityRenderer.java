@@ -4,16 +4,16 @@ import com.aqupd.caracal.client.model.CaracalEntityModel;
 import com.aqupd.caracal.entities.CaracalEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, CaracalEntityModel> {
+public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, CaracalEntityModel<CaracalEntity>> {
 
-    public CaracalEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
-        super(entityRenderDispatcher, new CaracalEntityModel(), 0.6f);
+    public CaracalEntityRenderer(EntityRendererFactory.Context context) {
+        super(context, new CaracalEntityModel(context.getPart(EntityModelLayers.CARACAL)), 0.6F);
     }
 
     protected void scale(CaracalEntity caracalEntity, MatrixStack matrixStack, float f){
@@ -23,6 +23,7 @@ public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, Cara
             matrixStack.scale(1.0F, 1.0F, 1.0F);
         }
     }
+
     @Override
     public Identifier getTexture(CaracalEntity entity) {
         if (entity.getCustomName() != null) {

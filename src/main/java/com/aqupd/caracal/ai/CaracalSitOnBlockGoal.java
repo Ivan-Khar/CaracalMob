@@ -5,6 +5,7 @@ import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FurnaceBlock;
+import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.ai.goal.MoveToTargetPosGoal;
 import net.minecraft.tag.BlockTags;
@@ -43,8 +44,8 @@ public class CaracalSitOnBlockGoal extends MoveToTargetPosGoal {
             return false;
         } else {
             BlockState blockState = world.getBlockState(pos);
-            return blockState.isOf(Blocks.FURNACE) && (Boolean)blockState.get(FurnaceBlock.LIT) ? true : blockState.method_27851(BlockTags.BEDS, (abstractBlockState) -> {
-                return (Boolean)abstractBlockState.method_28500(BedBlock.PART).map((bedPart) -> {
+            return blockState.isOf(Blocks.FURNACE) && (Boolean) blockState.get(FurnaceBlock.LIT) || blockState.isIn(BlockTags.BEDS, (abstractBlockState) -> {
+                return (Boolean) abstractBlockState.getOrEmpty(BedBlock.PART).map((bedPart) -> {
                     return bedPart != BedPart.HEAD;
                 }).orElse(true);
             });

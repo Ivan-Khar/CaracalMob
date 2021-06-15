@@ -1,7 +1,8 @@
 package com.aqupd.caracal.client.model;
 
 import com.aqupd.caracal.entities.CaracalEntity;
-import net.minecraft.client.model.ModelPart;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
@@ -36,175 +37,40 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
     private final ModelPart back_right_leg;
     private final ModelPart back_left_leg;
 
-    public CaracalEntityModel() {
-        textureWidth = 64;
-        textureHeight = 64;
-        main = new ModelPart(this);
-        main.setPivot(0.0F, 15.5F, 0.0F);
+    public OcelotEntityModel(ModelPart root) {
+        super(true, 10.0F, 4.0F);
+        this.head = root.getChild("head");
+        this.body = root.getChild("body");
+        this.upperTail = root.getChild("tail1");
+        this.lowerTail = root.getChild("tail2");
+        this.leftHindLeg = root.getChild("left_hind_leg");
+        this.rightHindLeg = root.getChild("right_hind_leg");
+        this.leftFrontLeg = root.getChild("left_front_leg");
+        this.rightFrontLeg = root.getChild("right_front_leg");
+    }
 
+    public static ModelData getModelData(Dilation dilation) {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
+        modelPartData.addChild("head", ModelPartBuilder.create().cuboid("main", -2.5F, -2.0F, -3.0F, 5.0F, 4.0F, 5.0F, dilation).cuboid("nose", -1.5F, 0.0F, -4.0F, 3, 2, 2, dilation, 0, 24).cuboid("ear1", -2.0F, -3.0F, 0.0F, 1, 1, 2, dilation, 0, 10).cuboid("ear2", 1.0F, -3.0F, 0.0F, 1, 1, 2, dilation, 6, 10), ModelTransform.pivot(0.0F, 15.0F, -9.0F));
+        modelPartData.addChild("body", ModelPartBuilder.create().uv(20, 0).cuboid(-2.0F, 3.0F, -8.0F, 4.0F, 16.0F, 6.0F, dilation), ModelTransform.of(0.0F, 12.0F, -10.0F, 1.5707964F, 0.0F, 0.0F));
+        modelPartData.addChild("tail1", ModelPartBuilder.create().uv(0, 15).cuboid(-0.5F, 0.0F, 0.0F, 1.0F, 8.0F, 1.0F, dilation), ModelTransform.of(0.0F, 15.0F, 8.0F, 0.9F, 0.0F, 0.0F));
+        modelPartData.addChild("tail2", ModelPartBuilder.create().uv(4, 15).cuboid(-0.5F, 0.0F, 0.0F, 1.0F, 8.0F, 1.0F, dilation), ModelTransform.pivot(0.0F, 20.0F, 14.0F));
+        ModelPartBuilder modelPartBuilder = ModelPartBuilder.create().uv(8, 13).cuboid(-1.0F, 0.0F, 1.0F, 2.0F, 6.0F, 2.0F, dilation);
+        modelPartData.addChild("left_hind_leg", modelPartBuilder, ModelTransform.pivot(1.1F, 18.0F, 5.0F));
+        modelPartData.addChild("right_hind_leg", modelPartBuilder, ModelTransform.pivot(-1.1F, 18.0F, 5.0F));
+        ModelPartBuilder modelPartBuilder2 = ModelPartBuilder.create().uv(40, 0).cuboid(-1.0F, 0.0F, 0.0F, 2.0F, 10.0F, 2.0F, dilation);
+        modelPartData.addChild("left_front_leg", modelPartBuilder2, ModelTransform.pivot(1.2F, 14.1F, -5.0F));
+        modelPartData.addChild("right_front_leg", modelPartBuilder2, ModelTransform.pivot(-1.2F, 14.1F, -5.0F));
+        return modelData;
+    }
 
-        body = new ModelPart(this);
-        body.setPivot(0.0F, 0.0F, 0.0F);
-        main.addChild(body);
-        body.setTextureOffset(20, 9).addCuboid(-2.5F, -3.0F, -8.5F, 5.0F, 6.0F, 17.0F, 0.0F, false);
+    protected Iterable<ModelPart> getHeadParts() {
+        return ImmutableList.of(this.head);
+    }
 
-        explosive = new ModelPart(this);
-        explosive.setPivot(0.0F, 0.0F, 1.7F);
-        body.addChild(explosive);
-        explosive.setTextureOffset(48, 10).addCuboid(2.5F, -3.0F, 0.0F, 4.0F, 4.0F, 4.0F, 0.0F, false);
-        explosive.setTextureOffset(48, 10).addCuboid(2.5F, -3.0F, -4.0F, 4.0F, 4.0F, 4.0F, 0.0F, false);
-        explosive.setTextureOffset(48, 10).addCuboid(-6.5F, -3.0F, 0.0F, 4.0F, 4.0F, 4.0F, 0.0F, false);
-        explosive.setTextureOffset(48, 10).addCuboid(-6.5F, -3.0F, -4.0F, 4.0F, 4.0F, 4.0F, 0.0F, false);
-        explosive.setTextureOffset(48, 18).addCuboid(-7.0F, -3.1F, -2.5F, 7.0F, 0.0F, 1.0F, 0.0F, false);
-        explosive.setTextureOffset(48, 18).addCuboid(-3.0F, 3.1F, -2.5F, 6.0F, 0.0F, 1.0F, 0.0F, false);
-        explosive.setTextureOffset(48, 18).addCuboid(0.0F, -3.1F, -2.5F, 7.0F, 0.0F, 1.0F, 0.0F, false);
-        explosive.setTextureOffset(48, 18).addCuboid(0.0F, -3.1F, 1.5F, 7.0F, 0.0F, 1.0F, 0.0F, false);
-        explosive.setTextureOffset(48, 18).addCuboid(-7.0F, -3.1F, 1.5F, 7.0F, 0.0F, 1.0F, 0.0F, false);
-        explosive.setTextureOffset(48, 18).addCuboid(-3.0F, 3.1F, 1.5F, 6.0F, 0.0F, 1.0F, 0.0F, false);
-
-        wire13_r1 = new ModelPart(this);
-        wire13_r1.setPivot(7.0F, 2.9F, -2.0F);
-        explosive.addChild(wire13_r1);
-        setRotationAngle(wire13_r1, 0.0F, 0.0F, 0.5236F);
-        wire13_r1.setTextureOffset(46, 18).addCuboid(-13.2F, 5.2F, 3.5F, 5.0F, 0.0F, 1.0F, 0.0F, false);
-        wire13_r1.setTextureOffset(46, 18).addCuboid(-13.2F, 5.2F, -0.5F, 5.0F, 0.0F, 1.0F, 0.0F, false);
-
-        wire12_r1 = new ModelPart(this);
-        wire12_r1.setPivot(7.0F, 2.9F, -2.0F);
-        explosive.addChild(wire12_r1);
-        setRotationAngle(wire12_r1, 0.0F, 0.0F, -0.5236F);
-        wire12_r1.setTextureOffset(46, 18).addCuboid(-3.9F, -1.8F, 3.5F, 5.0F, 0.0F, 1.0F, 0.0F, false);
-        wire12_r1.setTextureOffset(46, 18).addCuboid(-3.9F, -1.8F, -0.5F, 5.0F, 0.0F, 1.0F, 0.0F, false);
-
-        wire10_r1 = new ModelPart(this);
-        wire10_r1.setPivot(-7.0F, -3.1F, 2.8F);
-        explosive.addChild(wire10_r1);
-        setRotationAngle(wire10_r1, 0.0F, 0.0F, -1.5708F);
-        wire10_r1.setTextureOffset(46, 18).addCuboid(-4.0F, 14.0F, -5.3F, 4.0F, 0.0F, 1.0F, 0.0F, false);
-        wire10_r1.setTextureOffset(46, 18).addCuboid(-4.0F, 0.0F, -5.3F, 4.0F, 0.0F, 1.0F, 0.0F, false);
-        wire10_r1.setTextureOffset(46, 18).addCuboid(-4.0F, 14.0F, -1.3F, 4.0F, 0.0F, 1.0F, 0.0F, false);
-        wire10_r1.setTextureOffset(46, 18).addCuboid(-4.0F, 0.0F, -1.3F, 4.0F, 0.0F, 1.0F, 0.0F, false);
-
-        tail = new ModelPart(this);
-        tail.setPivot(0.0F, -2.5F, 8.0F);
-        body.addChild(tail);
-        setRotationAngle(tail, 0.6109F, 0.0F, 0.0F);
-        tail.setTextureOffset(29, 21).addCuboid(-0.5F, 0.0F, -0.5F, 1.0F, 4.0F, 1.0F, 0.0F, false);
-
-        tail2 = new ModelPart(this);
-        tail2.setPivot(0.0F, 4.0F, -0.5F);
-        tail.addChild(tail2);
-        setRotationAngle(tail2, 0.6109F, 0.0F, 0.0F);
-        tail2.setTextureOffset(33, 21).addCuboid(-0.5F, 0.0F, 0.0F, 1.0F, 4.0F, 1.0F, 0.0F, false);
-
-        head = new ModelPart(this);
-        head.setPivot(0.0F, -0.9F, -7.7F);
-        main.addChild(head);
-
-
-        head2 = new ModelPart(this);
-        head2.setPivot(0.0F, -2.1F, -2.0F);
-        head.addChild(head2);
-        head2.setTextureOffset(0, 0).addCuboid(-3.0F, -2.0F, -2.0F, 6.0F, 4.0F, 4.0F, 0.0F, false);
-        head2.setTextureOffset(16, 1).addCuboid(-1.5F, 0.0F, -3.0F, 3.0F, 2.0F, 1.0F, 0.0F, false);
-
-        ear1 = new ModelPart(this);
-        ear1.setPivot(1.5F, -2.0F, 1.4F);
-        head2.addChild(ear1);
-        ear1.setTextureOffset(0, 8).addCuboid(-0.5F, -1.5F, -0.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
-
-        earfluff1 = new ModelPart(this);
-        earfluff1.setPivot(0.5F, -1.5F, 0.0F);
-        ear1.addChild(earfluff1);
-        setRotationAngle(earfluff1, 0.0F, 0.0F, 0.6109F);
-        earfluff1.setTextureOffset(4, 8).addCuboid(0.0F, -2.0F, -0.5F, 0.0F, 2.0F, 1.0F, 0.0F, false);
-
-        ear2 = new ModelPart(this);
-        ear2.setPivot(-1.5F, -2.0F, 1.4F);
-        head2.addChild(ear2);
-        ear2.setTextureOffset(0, 8).addCuboid(-0.5F, -1.5F, -0.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
-
-        earfluff2 = new ModelPart(this);
-        earfluff2.setPivot(-0.5F, -1.5F, 0.0F);
-        ear2.addChild(earfluff2);
-        setRotationAngle(earfluff2, 0.0F, 0.0F, -0.6109F);
-        earfluff2.setTextureOffset(4, 8).addCuboid(0.0F, -2.0F, -0.5F, 0.0F, 2.0F, 1.0F, 0.0F, false);
-
-        hat = new ModelPart(this);
-        hat.setPivot(0.0F, -2.0F, -0.1F);
-        head2.addChild(hat);
-        hat.setTextureOffset(0, 16).addCuboid(-3.5F, -0.5F, -3.7F, 7.0F, 1.0F, 7.0F, 0.0F, false);
-        hat.setTextureOffset(0, 24).addCuboid(-2.5F, -3.5F, -2.7F, 5.0F, 3.0F, 5.0F, 0.0F, false);
-
-        hat5_r1 = new ModelPart(this);
-        hat5_r1.setPivot(-0.8F, -8.0F, -0.2F);
-        hat.addChild(hat5_r1);
-        setRotationAngle(hat5_r1, 0.0F, 0.0F, -0.4189F);
-        hat5_r1.setTextureOffset(0, 32).addCuboid(-1.0F, -1.8F, -1.0F, 2.0F, 2.0F, 2.0F, 0.0F, false);
-
-        hat5_r2 = new ModelPart(this);
-        hat5_r2.setPivot(-0.7572F, -6.7089F, -0.2F);
-        hat.addChild(hat5_r2);
-        setRotationAngle(hat5_r2, 0.0F, 0.0F, -0.2618F);
-        hat5_r2.setTextureOffset(8, 32).addCuboid(-0.2F, -1.5F, -0.5F, 1.0F, 3.0F, 1.0F, 0.0F, false);
-        hat5_r2.setTextureOffset(8, 32).addCuboid(-0.2F, -1.5F, -0.5F, 1.0F, 3.0F, 1.0F, 0.0F, false);
-
-        hat3_r1 = new ModelPart(this);
-        hat3_r1.setPivot(0.0F, -5.0F, -0.2F);
-        hat.addChild(hat3_r1);
-        setRotationAngle(hat3_r1, 0.0F, 0.0F, -0.1222F);
-        hat3_r1.setTextureOffset(12, 32).addCuboid(-1.7F, -1.2F, -1.5F, 3.0F, 3.0F, 3.0F, 0.0F, false);
-
-        commander = new ModelPart(this);
-        commander.setPivot(0.0F, 0.0F, -0.1F);
-        head2.addChild(commander);
-        commander.setTextureOffset(20, 0).addCuboid(-3.5F, -2.9F, -2.5F, 7.0F, 1.0F, 5.0F, 0.0F, false);
-
-        commander3_r1 = new ModelPart(this);
-        commander3_r1.setPivot(0.0F, 0.9F, 1.6F);
-        commander.addChild(commander3_r1);
-        setRotationAngle(commander3_r1, 1.2566F, 0.0F, 0.0F);
-        commander3_r1.setTextureOffset(21, 6).addCuboid(-3.2F, -3.5F, -2.4F, 4.0F, 1.0F, 4.0F, 0.0F, false);
-        commander3_r1.setTextureOffset(21, 6).addCuboid(-0.8F, -3.5F, -2.4F, 4.0F, 1.0F, 4.0F, 0.0F, false);
-
-        anonymous = new ModelPart(this);
-        anonymous.setPivot(0.0F, 0.3F, -0.1F);
-        head2.addChild(anonymous);
-        anonymous.setTextureOffset(46, 32).addCuboid(-4.0F, -3.3F, -3.1F, 8.0F, 7.0F, 1.0F, 0.0F, false);
-        anonymous.setTextureOffset(46, 40).addCuboid(-2.0F, 3.7F, -3.1F, 4.0F, 1.0F, 1.0F, 0.0F, false);
-        anonymous.setTextureOffset(46, 45).addCuboid(-3.0F, -1.8F, 2.2F, 6.0F, 1.0F, 0.0F, 0.0F, false);
-
-        anonymous3_r1 = new ModelPart(this);
-        anonymous3_r1.setPivot(0.0F, 1.6F, 1.6F);
-        anonymous.addChild(anonymous3_r1);
-        setRotationAngle(anonymous3_r1, 0.0F, 0.1745F, 0.0F);
-        anonymous3_r1.setTextureOffset(46, 38).addCuboid(-3.1F, -3.4F, -4.9F, 0.0F, 1.0F, 5.0F, 0.0F, false);
-
-        anonymous2_r1 = new ModelPart(this);
-        anonymous2_r1.setPivot(0.0F, 1.6F, 1.6F);
-        anonymous.addChild(anonymous2_r1);
-        setRotationAngle(anonymous2_r1, 0.0F, -0.1745F, 0.0F);
-        anonymous2_r1.setTextureOffset(46, 37).addCuboid(3.1F, -3.4F, -4.9F, 0.0F, 1.0F, 5.0F, 0.0F, false);
-
-        front_right_leg = new ModelPart(this);
-        front_right_leg.setPivot(-1.5F, 1.5F, -6.5F);
-        main.addChild(front_right_leg);
-        front_right_leg.setTextureOffset(46, 0).addCuboid(-0.75F, 0.0F, -1.0F, 2.0F, 7.0F, 2.0F, 0.0F, false);
-
-        front_left_leg = new ModelPart(this);
-        front_left_leg.setPivot(1.5F, 1.5F, -6.5F);
-        main.addChild(front_left_leg);
-        front_left_leg.setTextureOffset(46, 0).addCuboid(-1.25F, 0.0F, -1.0F, 2.0F, 7.0F, 2.0F, 0.0F, false);
-
-        back_right_leg = new ModelPart(this);
-        back_right_leg.setPivot(-1.25F, 1.5F, 6.0F);
-        main.addChild(back_right_leg);
-        back_right_leg.setTextureOffset(54, 0).addCuboid(-1.0F, 0.0F, -1.5F, 2.0F, 7.0F, 3.0F, 0.0F, false);
-
-        back_left_leg = new ModelPart(this);
-        back_left_leg.setPivot(1.25F, 1.5F, 6.0F);
-        main.addChild(back_left_leg);
-        back_left_leg.setTextureOffset(54, 0).addCuboid(-1.0F, 0.0F, -1.5F, 2.0F, 7.0F, 3.0F, 0.0F, false);
+    protected Iterable<ModelPart> getBodyParts() {
+        return ImmutableList.of(this.body, this.leftHindLeg, this.rightHindLeg, this.leftFrontLeg, this.rightFrontLeg, this.upperTail, this.lowerTail);
     }
 
     @Override
