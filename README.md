@@ -1,4 +1,4 @@
-<h1 align=center>Caracal for 1.17</h1>
+<h1 align=center>Caracal for 1.17(NOT WORKING)</h1>
 <h2 align=center>Fabric and Fabric API required!</h2>
 <p align=center>
 <img src="https://badgen.net/github/release/aquupd/caracalmob"><img src="https://badgen.net/github/stars/aquupd/caracalmob"><img src="https://badgen.net/github/license/aquupd/caracalmob"></p>
