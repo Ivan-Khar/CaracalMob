@@ -20,14 +20,14 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.aqupd.caracal.CaracalMain"
+      "com.aqupd.caracalmob.CaracalMain"
     ],
     "client": [
-      "com.aqupd.caracal.CaracalMainClient"
+      "com.aqupd.caracalmob.CaracalMainClient"
     ]
   },
   "mixins": [
-    "caracal.mixins.json"
+    "caracalmob.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.3",
