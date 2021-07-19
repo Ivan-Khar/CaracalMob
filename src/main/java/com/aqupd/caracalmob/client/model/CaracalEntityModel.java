@@ -1,8 +1,5 @@
-// Made with Model Converter by Globox_Z
-// Generate all required imports
-// Made with Model Converter by Globox_Z
-// Generate all required imports
 package com.aqupd.caracalmob.client.model;
+
 import com.aqupd.caracalmob.entity.CaracalEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
@@ -75,13 +72,13 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
         back_right_leg.setPivot(-1.25F, 1.5F, 6.0F);
         back_left_leg.setPivot(1.25F, 1.5F, 6.0F);
 
-        tail.pitch = 0.6109F;
-        tail1.pitch = 0.6109F;
-        earfluff1.roll = 0.6109F;
-        earfluff2.roll = -0.6109F;
-
-        setRotationAngle(head, (headPitch * 0.017453292F), (headYaw * 0.017453292F), 0.0F);
+        setRotationAngle(tail, 0.6109F, 0.0F, 0.0F);
+        setRotationAngle(tail1, 0.6109F, 0.0F, 0.0F);
+        setRotationAngle(earfluff1, 0.0F, 0.0F, 0.6109F);
+        setRotationAngle(earfluff2, 0.0F, 0.0F, -0.6109F);
+        setRotationAngle(main, 0.0F, 0.0F, 0.0F);
         setRotationAngle(body, 0.0F, 0.0F, 0.0F);
+        setRotationAngle(head, (headPitch * 0.017453292F), (headYaw * 0.017453292F), 0.0F);
         setRotationAngle(back_left_leg, (MathHelper.cos(limbAngle * 0.6662F) * limbDistance), 0.0F, 0.0F);
         setRotationAngle(back_right_leg, (MathHelper.cos(limbAngle * 0.6662F + 3.1415927F + 0.3F) * limbDistance), 0.0F, 0.0F);
         setRotationAngle(front_left_leg, (MathHelper.cos(limbAngle * 0.6662F + 0.3F) * limbDistance), 0.0F, 0.0F);
@@ -96,9 +93,9 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
             this.earfluff2.roll = -1.2217F;
         } else if (entity.isInSittingPose() && !entity.isInSleepingPose()) {
             main.setPivot(0.0F, 19.5F, 0.0F);
-            head.setPivot(0.0F, -5.5F, -5.5F);
-            front_left_leg.setPivot(1.5F, -2.5F, -6.1F);
-            front_right_leg.setPivot(-1.5F, -2.5F, -6.1F);
+            head.setPivot(0.0F, -6.9F, -5.0F);
+            front_left_leg.setPivot(1.5F, -2.5F, -5.6F);
+            front_right_leg.setPivot(-1.5F, -2.5F, -5.6F);
             back_left_leg.setPivot(1.25F, 3.2F, 2.2F);
             back_right_leg.setPivot(-1.25F, 3.2F, 2.2F);
             tail.setPivot(0.0F, -2.5F, 5.0F);
@@ -112,10 +109,22 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
             this.back_right_leg.pitch = -1.5708F;
             this.tail.pitch = 2.5744F;
         } else if (entity.isInSleepingPose()){
-
+            main.setPivot(0.0F, 21.5F, 0.0F);
+            this.main.roll = 1.285F;
+            this.head.roll = -1.185F;
+            this.earfluff1.roll = 1.3217F;
+            this.earfluff2.roll = -1.3217F;
+            this.front_left_leg.pitch = -0.9F;
+            this.front_right_leg.yaw = -0.1F;
+            this.front_right_leg.pitch = -1.4F;
+            this.back_left_leg.pitch = 0.6F;
+            this.back_right_leg.yaw = -0.1F;
+            this.back_right_leg.pitch = 1.0F;
+            this.tail.pivotY = -1.0F;
+            this.tail.roll = -1.185F;
+            this.tail.yaw = -0.285F;
         }
     }
-
     @Override
     public void render(MatrixStack matrixStack, VertexConsumer	buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
         main.render(matrixStack, buffer, packedLight, packedOverlay);
