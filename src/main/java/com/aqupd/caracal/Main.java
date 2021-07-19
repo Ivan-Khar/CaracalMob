@@ -16,6 +16,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 
+import static com.aqupd.caracal.utils.AqLogger.*;
+
 public class Main implements ModInitializer {
 	public static final Identifier CARACAL_SCREAM = new Identifier("aqupd:caracal_scream");
 	public static SoundEvent CARACAL_AMBIENT = new SoundEvent(CARACAL_SCREAM);
@@ -29,7 +31,7 @@ public class Main implements ModInitializer {
 					CaracalEntity::new).dimensions(EntityDimensions.fixed(0.6f, 0.75f)).build()
 	);
 
-	public static final SpawnEggItem CARACAL_SPAWN_EGG = new SpawnEggItem(CARACAL, 5453358, 10587797, new FabricItemSettings().group(ItemGroup.MISC).fireproof().maxCount(64));
+	public static final SpawnEggItem CARACAL_SPAWN_EGG = new SpawnEggItem(CARACAL, 5453358, 15592688, new FabricItemSettings().group(ItemGroup.MISC).fireproof().maxCount(64));
 
 	@Override
 	public void onInitialize() {
@@ -43,8 +45,8 @@ public class Main implements ModInitializer {
 				selection -> selection.getBiome().getCategory() == Biome.Category.SAVANNA,
 				SpawnGroup.CREATURE,
 				CARACAL,
-				5, 1, 3 // weight/min group size/max group size
+				50, 1, 3 // weight/min group size/max group size
 		);
-		System.out.println("[Caracal Mod] Initialized");
+		logInfo("Caracal mod is loaded!");
 	}
 }
