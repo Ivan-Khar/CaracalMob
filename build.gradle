@@ -24,11 +24,15 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
+
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	Set<String> apiModules = [
 		"fabric-api-base",
 		"fabric-biome-api-v1",
 		"fabric-item-api-v1",
+		"fabric-resource-loader-v0",
+		"fabric-tag-extensions-v0",
+		"fabric-tool-attribute-api-v1",
 		"fabric-object-builder-api-v1",
 		"fabric-renderer-api-v1",
 		"fabric-renderer-registries-v1"
