@@ -42,7 +42,7 @@ public class CaracalMain implements ModInitializer {
         Registry.register(Registry.SOUND_EVENT, com.aqupd.caracalmob.CaracalMain.CARACAL_HISSING, CARACAL_HISS);
         Registry.register(Registry.ITEM, new Identifier("aqupd", "caracal_spawn_egg"), CARACAL_SPAWN_EGG);
         FabricDefaultAttributeRegistry.register(CARACAL, CaracalEntity.createcaracalAttributes());
-
+        
         BiomeModifications.addSpawn(
                 selection -> selection.getBiome().getCategory() == Biome.Category.SAVANNA,
                 SpawnGroup.CREATURE,
