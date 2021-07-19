@@ -16,7 +16,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 
-import static com.aqupd.caracal.utils.AqLogger.*;
+import static com.aqupd.caracalmob.utils.AqLogger.*;
 
 public class CaracalMain implements ModInitializer {
 
