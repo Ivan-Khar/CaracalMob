@@ -16,6 +16,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 
+import static com.aqupd.caracal.utils.AqLogger.*;
+
 public class CaracalMain implements ModInitializer {
 
     public static final Identifier CARACAL_SCREAM = new Identifier("aqupd:caracal_scream");
@@ -47,6 +49,6 @@ public class CaracalMain implements ModInitializer {
                 CARACAL,
                 50, 1, 3 // weight/min group size/max group size
         );
-        System.out.println("[Caracal Mod] Initialized");
+        logInfo("Caracal mod is loaded!");
     }
 }
