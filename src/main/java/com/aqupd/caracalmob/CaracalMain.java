@@ -33,7 +33,7 @@ public class CaracalMain implements ModInitializer {
                     CaracalEntity::new).dimensions(EntityDimensions.fixed(0.6f, 0.75f)).build()
     );
 
-    public static final SpawnEggItem CARACAL_SPAWN_EGG = new SpawnEggItem(CARACAL, 5453358, 10587797, new FabricItemSettings().group(ItemGroup.MISC).fireproof().maxCount(64));
+    public static final SpawnEggItem CARACAL_SPAWN_EGG = new SpawnEggItem(CARACAL, 5453358, 15592688, new FabricItemSettings().group(ItemGroup.MISC).fireproof().maxCount(64));
 
     @Override
     public void onInitialize() {
