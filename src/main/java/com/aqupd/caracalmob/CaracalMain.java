@@ -45,7 +45,7 @@ public class CaracalMain implements ModInitializer {
                 selection -> selection.getBiome().getCategory() == Biome.Category.SAVANNA,
                 SpawnGroup.CREATURE,
                 CARACAL,
-                5, 1, 3 // weight/min group size/max group size
+                50, 1, 3 // weight/min group size/max group size
         );
         System.out.println("[Caracal Mod] Initialized");
     }

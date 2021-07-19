@@ -16,7 +16,7 @@ public class CaracalMainClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        EntityModelLayerRegistry.registerModelLayer(CARACAL_MODEL_LAYER, () -> CaracalEntityModel.createModelData());
+        EntityModelLayerRegistry.registerModelLayer(CARACAL_MODEL_LAYER, () -> CaracalEntityModel.getTexturedModelData());
         //Register the renderer
         EntityRendererRegistry.INSTANCE.register(CaracalMain.CARACAL, CaracalEntityRenderer::new);
 

@@ -7,13 +7,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, CaracalEntityModel<CaracalEntity>> {
 
     public CaracalEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new CaracalEntityModel<>(context.getPart(CaracalMainClient.CARACAL_MODEL_LAYER)), 0.6f);
+        super(context, new CaracalEntityModel<CaracalEntity>(context.getPart(CaracalMainClient.CARACAL_MODEL_LAYER)), 0.6f);
     }
 
     @Override
