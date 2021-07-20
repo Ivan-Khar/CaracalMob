@@ -1,9 +1,3 @@
-// Made with Model Converter by Globox_Z
-// Generate all required imports
-// Made with Model Converter by Globox_Z
-// Generate all required imports
-// Made with Model Converter by Globox_Z
-// Generate all required imports
 package com.aqupd.caracalmob.client.model;
 import com.aqupd.caracalmob.entity.CaracalEntity;
 import net.minecraft.client.model.*;
