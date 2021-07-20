@@ -1,5 +1,5 @@
 <h1 align=center>Caracal for 1.16</h1>
-<h2 align=center>Fabric and Fabric API required!</h2>
+<h2 align=center>Fabric required!</h2>
 <p align=center><img src="http://cf.way2muchnoise.eu/full_caracal-mod_Caracal Mod downloads.svg"></br>
 <img src="https://badgen.net/github/release/aquupd/caracalmob"><img src="https://badgen.net/github/stars/aquupd/caracalmob"><img src="https://badgen.net/github/license/aquupd/caracalmob"></p>
 <ul>
