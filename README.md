@@ -13,7 +13,7 @@
 <p align=center>
     <img src="https://i.imgur.com/ZMRftI0.png">
     <img src="https://i.imgur.com/GtJTC5C.png">
-    <img src="https://i.imgur.com/diIGJhP.png">
+    <img src="https://i.imgur.com/iWPD6X4.png">
 </p>
 <h3>Model made by u/SociopathyKathy:<br>
 https://www.reddit.com/r/Minecraft/comments/kh6cm7/i_got_bored_and_decided_to_make_a_caracal/</h3>
