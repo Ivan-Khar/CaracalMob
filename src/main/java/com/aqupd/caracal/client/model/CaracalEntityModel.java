@@ -240,12 +240,14 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         } else if (entity.isSleepingWithOwner()){
             main.setPivot(0.0F, 21.5F, 0.0F);
             this.main.roll = 1.285F;
-            this.head.roll = -1.185F;
+            this.head.pitch = 0.0F;
+            this.head.roll = -1.1F;
             this.earfluff1.roll = 1.3217F;
             this.earfluff2.roll = -1.3217F;
-            this.front_left_leg.pitch = -0.9F;
+            this.front_left_leg.pitch = -0.6F;
+            this.front_left_leg.yaw = 0.1F;
             this.front_right_leg.yaw = -0.1F;
-            this.front_right_leg.pitch = -1.4F;
+            this.front_right_leg.pitch = -1.1F;
             this.back_left_leg.pitch = 0.6F;
             this.back_right_leg.yaw = -0.1F;
             this.back_right_leg.pitch = 1.0F;
