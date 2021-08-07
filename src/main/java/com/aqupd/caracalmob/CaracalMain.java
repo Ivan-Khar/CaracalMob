@@ -18,6 +18,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import static com.aqupd.caracalmob.utils.AqLogger.*;
@@ -55,10 +57,7 @@ public class CaracalMain implements ModInitializer {
         FabricDefaultAttributeRegistry.register(CARACAL, CaracalEntity.createcaracalAttributes());
 
         BiomeModifications.addSpawn(
-                selection -> {
-                    var category = selection.getBiome().getCategory();
-                    return category == Biome.Category.SAVANNA;
-                },
+                selection -> Arrays.stream(biomelist).anyMatch(x -> x.equals(selection.getBiome().getCategory().getName().toUpperCase())),
                 SpawnGroup.CREATURE,
                 CARACAL,
                 weight, mingroup, maxgroup // weight/min group size/max group size
