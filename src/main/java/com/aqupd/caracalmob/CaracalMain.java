@@ -29,8 +29,6 @@ public class CaracalMain implements ModInitializer {
     int maxgroup = AqConfig.INSTANCE.getNumberProperty("spawn.max");
 
     String[] biomelist = AqConfig.INSTANCE.getStringProperty("spawn.biomes").split(",");
-    Set<String> biomeSet = Set.of(biomelist);
-
 
     public static final Identifier CARACAL_SCREAM = new Identifier("aqupd:caracal_scream");
     public static SoundEvent CARACAL_AMBIENT = new SoundEvent(CARACAL_SCREAM);
