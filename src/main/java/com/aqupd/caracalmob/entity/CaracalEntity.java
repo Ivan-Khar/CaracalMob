@@ -2,6 +2,7 @@ package com.aqupd.caracalmob.entity;
 
 import com.aqupd.caracalmob.CaracalMain;
 import com.aqupd.caracalmob.ai.CaracalSitOnBlockGoal;
+import com.aqupd.caracalmob.utils.AqConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BedBlock;
@@ -48,6 +49,11 @@ public class CaracalEntity extends TameableEntity {
     private static final Ingredient TAMING_INGREDIENT;
     private static final TrackedData<Boolean> IN_SLEEPING_POSE;
     private TemptGoal temptGoal;
+    private static double health = AqConfig.INSTANCE.getDoubleProperty("entity.health");
+    private static double speed = AqConfig.INSTANCE.getDoubleProperty("entity.speed");
+    private static double follow = AqConfig.INSTANCE.getDoubleProperty("entity.follow");
+    private static double damage = AqConfig.INSTANCE.getDoubleProperty("entity.damage");
+    private static double knockback = AqConfig.INSTANCE.getDoubleProperty("entity.knockback");
 
 
     public CaracalEntity(EntityType<? extends CaracalEntity> entityType, World world) {
@@ -135,11 +141,11 @@ public class CaracalEntity extends TameableEntity {
 
     public static DefaultAttributeContainer.Builder createcaracalAttributes(){
         return PassiveEntity.createLivingAttributes()
-                .add(EntityAttributes.GENERIC_MAX_HEALTH, 10D)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.30000001192092896D)
-                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 20.0D)
-                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2.5D)
-                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, 0.5);
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, health)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, speed)
+                .add(EntityAttributes.GENERIC_FOLLOW_RANGE, follow)
+                .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, damage)
+                .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, knockback);
     }
 
     public void writeCustomDataToNbt(NbtCompound tag) {
