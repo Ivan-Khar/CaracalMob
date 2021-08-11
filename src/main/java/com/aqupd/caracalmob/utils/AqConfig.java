@@ -32,6 +32,7 @@ public class AqConfig {
     private File file = new File("./config/AqMods/caracal.config");
 
     private void load() {
+        loaded = true;
         try {
             new File("./config/AqMods").mkdir();
 

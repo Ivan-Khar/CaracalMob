@@ -5,6 +5,7 @@ import com.aqupd.caracalmob.utils.AqConfig;
 import com.aqupd.caracalmob.utils.AqDebug;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -49,7 +50,9 @@ public class CaracalMain implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        AqDebug.INSTANCE.startDebug(AqConfig.INSTANCE.getBooleanProperty("debug"));
+        ServerWorldEvents.LOAD.register((server, world) -> {
+            AqDebug.INSTANCE.startDebug(AqConfig.INSTANCE.getBooleanProperty("debug"));
+        });
 
         Registry.register(Registry.SOUND_EVENT, com.aqupd.caracalmob.CaracalMain.CARACAL_SCREAM, CARACAL_AMBIENT);
         Registry.register(Registry.SOUND_EVENT, com.aqupd.caracalmob.CaracalMain.CARACAL_HISSING, CARACAL_HISS);
