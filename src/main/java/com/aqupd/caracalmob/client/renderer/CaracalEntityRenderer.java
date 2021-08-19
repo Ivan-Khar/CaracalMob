@@ -49,4 +49,13 @@ public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, Cara
 
         return new Identifier("aqupd", "textures/entity/caracal.png");
     }
+
+    protected void scale(CaracalEntity entity, MatrixStack matrixStack, float f) {
+        if(entity.getBreedingAge() < 0) {
+            matrixStack.scale(0.6F, 0.6F, 0.6F);
+        }
+        else {
+            matrixStack.scale(1.0F, 1.0F, 1.0F);
+        }
+    }
 }
