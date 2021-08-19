@@ -1,8 +1,8 @@
-package com.aqupd.caracalmob.client.renderer;
+package com.aqupd.caracal.client.renderer;
 
-import com.aqupd.caracalmob.CaracalMainClient;
-import com.aqupd.caracalmob.client.model.CaracalEntityModel;
-import com.aqupd.caracalmob.entity.CaracalEntity;
+import com.aqupd.caracal.CaracalMainClient;
+import com.aqupd.caracal.client.model.CaracalEntityModel;
+import com.aqupd.caracal.entity.CaracalEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.EntityRendererFactory;

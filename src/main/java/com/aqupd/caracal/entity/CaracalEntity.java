@@ -1,8 +1,8 @@
-package com.aqupd.caracalmob.entity;
+package com.aqupd.caracal.entity;
 
-import com.aqupd.caracalmob.CaracalMain;
-import com.aqupd.caracalmob.ai.CaracalSitOnBlockGoal;
-import com.aqupd.caracalmob.utils.AqConfig;
+import com.aqupd.caracal.CaracalMain;
+import com.aqupd.caracal.ai.CaracalSitOnBlockGoal;
+import com.aqupd.caracal.utils.AqConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BedBlock;

@@ -1,7 +1,7 @@
-package com.aqupd.caracalmob;
+package com.aqupd.caracal;
 
-import com.aqupd.caracalmob.client.model.CaracalEntityModel;
-import com.aqupd.caracalmob.client.renderer.CaracalEntityRenderer;
+import com.aqupd.caracal.client.model.CaracalEntityModel;
+import com.aqupd.caracal.client.renderer.CaracalEntityRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvType;

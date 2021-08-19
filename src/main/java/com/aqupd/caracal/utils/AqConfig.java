@@ -1,4 +1,4 @@
-package com.aqupd.caracalmob.utils;
+package com.aqupd.caracal.utils;
 
 import java.io.*;
 import java.util.Properties;

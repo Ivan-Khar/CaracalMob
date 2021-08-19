@@ -1,8 +1,8 @@
-package com.aqupd.caracalmob;
+package com.aqupd.caracal;
 
-import com.aqupd.caracalmob.entity.CaracalEntity;
-import com.aqupd.caracalmob.utils.AqConfig;
-import com.aqupd.caracalmob.utils.AqDebug;
+import com.aqupd.caracal.entity.CaracalEntity;
+import com.aqupd.caracal.utils.AqConfig;
+import com.aqupd.caracal.utils.AqDebug;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
@@ -17,13 +17,10 @@ import net.minecraft.item.SpawnEggItem;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.Biome;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
 
-import static com.aqupd.caracalmob.utils.AqLogger.*;
+import static com.aqupd.caracal.utils.AqLogger.*;
 
 public class CaracalMain implements ModInitializer {
 
@@ -54,8 +51,8 @@ public class CaracalMain implements ModInitializer {
             AqDebug.INSTANCE.startDebug(AqConfig.INSTANCE.getBooleanProperty("debug"));
         });
 
-        Registry.register(Registry.SOUND_EVENT, com.aqupd.caracalmob.CaracalMain.CARACAL_SCREAM, CARACAL_AMBIENT);
-        Registry.register(Registry.SOUND_EVENT, com.aqupd.caracalmob.CaracalMain.CARACAL_HISSING, CARACAL_HISS);
+        Registry.register(Registry.SOUND_EVENT, com.aqupd.caracal.CaracalMain.CARACAL_SCREAM, CARACAL_AMBIENT);
+        Registry.register(Registry.SOUND_EVENT, com.aqupd.caracal.CaracalMain.CARACAL_HISSING, CARACAL_HISS);
         Registry.register(Registry.ITEM, new Identifier("aqupd", "caracal_spawn_egg"), CARACAL_SPAWN_EGG);
         FabricDefaultAttributeRegistry.register(CARACAL, CaracalEntity.createcaracalAttributes());
 

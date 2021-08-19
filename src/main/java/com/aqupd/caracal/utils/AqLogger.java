@@ -1,4 +1,4 @@
-package com.aqupd.caracalmob.utils;
+package com.aqupd.caracal.utils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
