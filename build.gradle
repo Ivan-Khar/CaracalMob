@@ -16,6 +16,10 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
+	maven {
+		name 'Jitpack'
+		url 'https://jitpack.io'
+	}
 }
 
 dependencies {
@@ -41,6 +45,8 @@ dependencies {
 	apiModules.forEach {
 		include(modImplementation(fabricApi.module(it, "${project.fabric_version}")))
 	}
+	modImplementation 'com.github.astei:lazydfu:0.1.2'
+	modImplementation 'com.github.CaffeineMC:sodium-fabric:mc1.16.3-0.1.0'
 }
 
 processResources {
