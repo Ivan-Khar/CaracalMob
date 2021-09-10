@@ -15,7 +15,7 @@
     "issues": "https://github.com/AquUpd/CaracalMob/issues",
     "sources": "https://github.com/AquUpd/CaracalMob"
   },
-  "license": "MIT",
+  "license": "CC BY-NC 3.0",
   "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
