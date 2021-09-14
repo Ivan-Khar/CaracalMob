@@ -42,6 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -167,15 +168,8 @@ public class CaracalEntity extends TameableEntity {
     public void setCustomName(@Nullable Text name) {
         super.setCustomName(name);
         if (this.getCustomName() != null) {
-            String n = this.getCustomName().asString();
-
-            if (n.equalsIgnoreCase("Командир") || n.equalsIgnoreCase("Commander")) {
-                this.commander = true;
-            }
-
-            if (!(n.equalsIgnoreCase("Командир") || n.equalsIgnoreCase("Commander"))) {
-                this.commander = false;
-            }
+            String n = this.getCustomName().asString().toLowerCase(Locale.ENGLISH);
+            this.commander = (n.contains("командир") || n.contains("commander")) && !(n.contains("мирный") || n.contains("peaceful"));
         }
     }
 
