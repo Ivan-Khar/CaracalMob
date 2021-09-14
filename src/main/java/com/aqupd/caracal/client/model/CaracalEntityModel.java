@@ -32,6 +32,10 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
     private final ModelPart anonymous_r2;
     private final ModelPart commander;
     private final ModelPart commander_r1;
+    private final ModelPart brtube;
+    private final ModelPart brtube_r1;
+    private final ModelPart brtube_r2;
+    private final ModelPart brtube_r3;
     private final ModelPart front_right_leg;
     private final ModelPart front_left_leg;
     private final ModelPart back_right_leg;
@@ -41,7 +45,7 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         textureHeight = 64;
         main = new ModelPart(this);
         main.setPivot(0.0F, 15.5F, 0.0F);
-        
+
 
         body = new ModelPart(this);
         body.setPivot(0.0F, 0.0F, 0.0F);
@@ -61,7 +65,6 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         tnt = new ModelPart(this);
         tnt.setPivot(0.0F, -1.5F, -8.2F);
         body.addChild(tnt);
-        
 
         tnt_r1 = new ModelPart(this);
         tnt_r1.setPivot(0.0F, 0.5F, 7.75F);
@@ -156,6 +159,28 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         commander.addChild(commander_r1);
         commander_r1.setTextureOffset(21, 6).addCuboid(-0.8F, -3.5F, -2.4F, 4.0F, 1.0F, 4.0F, 0.0F, false);
         commander_r1.setTextureOffset(21, 6).addCuboid(-3.2F, -3.5F, -2.4F, 4.0F, 1.0F, 4.0F, 0.0F, false);
+
+        brtube = new ModelPart(this);
+        brtube.setPivot(0.0F, 0.0F, 0.0F);
+        head.addChild(brtube);
+
+        brtube_r1 = new ModelPart(this);
+        brtube_r1.setPivot(4.3506F, 0.2204F, -4.2F);
+        brtube.addChild(brtube_r1);
+        setRotationAngle(brtube_r1, 0.0F, 0.0F, 0.0873F);
+        brtube_r1.setTextureOffset(47, 9).addCuboid(-0.3506F, -7.6304F, -0.5F, 1.0F, 9.0F, 1.0F, 0.0F, false);
+
+        brtube_r2 = new ModelPart(this);
+        brtube_r2.setPivot(3.7529F, 1.5021F, -4.2F);
+        brtube.addChild(brtube_r2);
+        setRotationAngle(brtube_r2, 0.0F, 0.0F, 1.2217F);
+        brtube_r2.setTextureOffset(47, 9).addCuboid(-0.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+
+        brtube_r3 = new ModelPart(this);
+        brtube_r3.setPivot(1.8735F, 2.1862F, -4.2F);
+        brtube.addChild(brtube_r3);
+        setRotationAngle(brtube_r3, 0.0F, 0.0F, 2.138F);
+        brtube_r3.setTextureOffset(47, 9).addCuboid(-1.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
 
         front_right_leg = new ModelPart(this);
         front_right_leg.setPivot(-1.5F, 1.5F, -6.5F);

@@ -15,6 +15,8 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
@@ -40,10 +42,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CaracalEntity extends TameableEntity {
@@ -136,15 +135,8 @@ public class CaracalEntity extends TameableEntity {
     public void setCustomName(@Nullable Text name) {
         super.setCustomName(name);
         if (this.getCustomName() != null) {
-            String n = this.getCustomName().asString();
-
-            if (n.equalsIgnoreCase("Командир") || n.equalsIgnoreCase("Commander")) {
-                this.commander = true;
-            }
-
-            if (!(n.equalsIgnoreCase("Командир") || n.equalsIgnoreCase("Commander"))) {
-                this.commander = false;
-            }
+            String n = this.getCustomName().asString().toLowerCase(Locale.ENGLISH);
+            this.commander = (n.contains("командир") || n.contains("commander")) && !(n.contains("мирный") || n.contains("peaceful"));
         }
     }
 
@@ -416,7 +408,7 @@ public class CaracalEntity extends TameableEntity {
     }
 
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
-        return dimensions.height * 0.98F;
+        return dimensions.height * 0.90F;
     }
 
     public boolean canImmediatelyDespawn(double distanceSquared) {
