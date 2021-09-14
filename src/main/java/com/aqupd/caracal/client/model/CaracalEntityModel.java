@@ -167,19 +167,16 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         brtube_r1 = new ModelPart(this);
         brtube_r1.setPivot(4.3506F, 0.2204F, -4.2F);
         brtube.addChild(brtube_r1);
-        setRotationAngle(brtube_r1, 0.0F, 0.0F, 0.0873F);
         brtube_r1.setTextureOffset(47, 9).addCuboid(-0.3506F, -7.6304F, -0.5F, 1.0F, 9.0F, 1.0F, 0.0F, false);
 
         brtube_r2 = new ModelPart(this);
         brtube_r2.setPivot(3.7529F, 1.5021F, -4.2F);
         brtube.addChild(brtube_r2);
-        setRotationAngle(brtube_r2, 0.0F, 0.0F, 1.2217F);
         brtube_r2.setTextureOffset(47, 9).addCuboid(-0.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
 
         brtube_r3 = new ModelPart(this);
         brtube_r3.setPivot(1.8735F, 2.1862F, -4.2F);
         brtube.addChild(brtube_r3);
-        setRotationAngle(brtube_r3, 0.0F, 0.0F, 2.138F);
         brtube_r3.setTextureOffset(47, 9).addCuboid(-1.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
 
         front_right_leg = new ModelPart(this);
@@ -205,6 +202,17 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
 
     @Override
     public void setAngles(CaracalEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+        main.setPivot(0.0F, 15.5F, 0.0F);
+        body.setPivot(0.0F, 0.0F, 0.0F);
+        tail.setPivot(0.0F, -2.5F, 8.0F);
+        head.setPivot(0.0F, -0.9F, -7.7F);
+        earfluff1.setPivot(0.5F, -1.5F, 0.0F);
+        earfluff2.setPivot(-0.5F, -1.5F, 0.0F);
+        front_right_leg.setPivot(-1.5F, 1.5F, -6.5F);
+        front_left_leg.setPivot(1.5F, 1.5F, -6.5F);
+        back_right_leg.setPivot(-1.25F, 1.5F, 6.0F);
+        back_left_leg.setPivot(1.25F, 1.5F, 6.0F);
+
         setRotationAngle(tail, 0.6109F, 0.0F, 0.0F);
         setRotationAngle(tail1, 0.6109F, 0.0F, 0.0F);
         setRotationAngle(tnt_r1, 1.5708F, 0.0F, 0.0F);
@@ -218,33 +226,30 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         setRotationAngle(anonymous_r1, 0.0F, 0.1745F, 0.0F);
         setRotationAngle(anonymous_r2, 0.0F, -0.1745F, 0.0F);
         setRotationAngle(commander_r1, 1.2566F, 0.0F, 0.0F);
+        setRotationAngle(brtube_r1, 0.0F, 0.0F, 0.0873F);
+        setRotationAngle(brtube_r2, 0.0F, 0.0F, 1.2217F);
+        setRotationAngle(brtube_r3, 0.0F, 0.0F, 2.138F);
         setRotationAngle(main, 0.0F, 0.0F, 0.0F);
         setRotationAngle(body, 0.0F, 0.0F, 0.0F);
-
-        main.setPivot(0.0F, 15.5F, 0.0F);
-        body.setPivot(0.0F, 0.0F, 0.0F);
-        tail.setPivot(0.0F, -2.5F, 8.0F);
-        head.setPivot(0.0F, -0.9F, -7.7F);
-        earfluff1.setPivot(0.5F, -1.5F, 0.0F);
-        earfluff2.setPivot(-0.5F, -1.5F, 0.0F);
-        front_right_leg.setPivot(-1.5F, 1.5F, -6.5F);
-        front_left_leg.setPivot(1.5F, 1.5F, -6.5F);
-        back_right_leg.setPivot(-1.25F, 1.5F, 6.0F);
-        back_left_leg.setPivot(1.25F, 1.5F, 6.0F);
 
         setRotationAngle(head, (headPitch * 0.017453292F), (headYaw * 0.017453292F), 0.0F);
         setRotationAngle(back_left_leg, (MathHelper.cos(limbAngle * 0.6662F) * limbDistance), 0.0F, 0.0F);
         setRotationAngle(back_right_leg, (MathHelper.cos(limbAngle * 0.6662F + 3.1415927F + 0.3F) * limbDistance), 0.0F, 0.0F);
         setRotationAngle(front_left_leg, (MathHelper.cos(limbAngle * 0.6662F + 0.3F) * limbDistance), 0.0F, 0.0F);
         setRotationAngle(front_right_leg, (MathHelper.cos(limbAngle * 0.6662F + 3.1415927F) * limbDistance), 0.0F, 0.0F);
-
+        this.ear1.roll = -0.05F * MathHelper.cos(animationProgress * 0.1F) + 0.1F;
+        this.ear2.roll = 0.05F * MathHelper.cos(animationProgress * 0.11F) - 0.1F;
+        this.earfluff1.roll = -0.15F * MathHelper.cos(animationProgress * 0.11F) + 1.0F;
+        this.earfluff2.roll = 0.15F * MathHelper.cos(animationProgress * 0.1F) - 1.0F;
         if (entity.isInSneakingPose()) {
             body.setPivot(0.0F, 1.0F, 0.0F);
             head.setPivot(0.0F, 0.9F, -7.7F);
             this.body.pitch = 0.0873F;
             this.tail.pitch = 0.4363F;
-            this.earfluff1.roll = 1.2217F;
-            this.earfluff2.roll = -1.2217F;
+            this.ear1.roll = -0.05F * MathHelper.cos(animationProgress * 0.1F) + 0.1F;
+            this.ear2.roll = 0.05F * MathHelper.cos(animationProgress * 0.11F) - 0.1F;
+            this.earfluff1.roll = -0.15F * MathHelper.cos(animationProgress * 0.25F) + 1.1F;
+            this.earfluff2.roll = 0.15F * MathHelper.cos(animationProgress * 0.3F) - 1.1F;
         } else if (entity.isInSittingPose() && !entity.isSleepingWithOwner()) {
             main.setPivot(0.0F, 19.5F, 0.0F);
             head.setPivot(0.0F, -6.9F, -5.0F);
@@ -255,8 +260,10 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
             tail.setPivot(0.0F, -2.5F, 5.0F);
 
             this.body.pitch = -0.8854F;
-            this.earfluff1.roll = 1.2217F;
-            this.earfluff2.roll = -1.2217F;
+            this.ear1.roll = -0.05F * MathHelper.cos(animationProgress * 0.1F) + 0.1F;
+            this.ear2.roll = 0.05F * MathHelper.cos(animationProgress * 0.11F) - 0.1F;
+            this.earfluff1.roll = -0.1F * MathHelper.cos(animationProgress * 0.25F) + 1.1F;
+            this.earfluff2.roll = 0.1F * MathHelper.cos(animationProgress * 0.3F) - 1.1F;
             this.front_left_leg.pitch = -0.2618F;
             this.front_right_leg.pitch = -0.2618F;
             this.back_left_leg.pitch = -1.5708F;
