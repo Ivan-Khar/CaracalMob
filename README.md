@@ -12,7 +12,7 @@
 <h2 align=center>Screenshots</h2>
 <p align=center>
     <img src="https://i.imgur.com/ZMRftI0.png">
-    <img src="https://i.imgur.com/GtJTC5C.png">
+    <img src="https://i.imgur.com/mXDNY7y.png">
     <img src="https://i.imgur.com/iWPD6X4.png">
 </p>
 <h3>Model made by u/SociopathyKathy:<br>
