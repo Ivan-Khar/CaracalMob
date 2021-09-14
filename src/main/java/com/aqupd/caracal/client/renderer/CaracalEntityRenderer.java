@@ -30,7 +30,7 @@ public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, Cara
         if (entity.getCustomName() != null && !entity.getCustomName().asString().isEmpty()) {
             String n = entity.getCustomName().asString().toLowerCase(Locale.ENGLISH);
 
-            if (n.contains("шлёпа") || n.contains("шлепа") || n.contains("floppa")) {
+            if (n.contains("шляп") || n.contains("hat")) {
                 return new Identifier("aqupd", "textures/entity/caracalshlopa.png");
             } else if (n.contains("мирный") || n.contains("peaceful")) {
                 return new Identifier("aqupd", "textures/entity/caracalcommander.png");
