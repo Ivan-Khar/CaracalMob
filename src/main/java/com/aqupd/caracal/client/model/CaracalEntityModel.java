@@ -111,6 +111,17 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
 
     @Override
     public void setAngles(CaracalEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+        main.setPivot(0.0F, 15.5F, 0.0F);
+        body.setPivot(0.0F, 0.0F, 0.0F);
+        tail.setPivot(0.0F, -2.5F, 8.0F);
+        head.setPivot(0.0F, -0.9F, -7.7F);
+        earfluff1.setPivot(0.5F, -1.5F, 0.0F);
+        earfluff2.setPivot(-0.5F, -1.5F, 0.0F);
+        front_right_leg.setPivot(-1.5F, 1.5F, -6.5F);
+        front_left_leg.setPivot(1.5F, 1.5F, -6.5F);
+        back_right_leg.setPivot(-1.25F, 1.5F, 6.0F);
+        back_left_leg.setPivot(1.25F, 1.5F, 6.0F);
+
         setRotationAngle(tail, 0.6109F, 0.0F, 0.0F);
         setRotationAngle(tail1, 0.6109F, 0.0F, 0.0F);
         setRotationAngle(tnt_r1, 1.5708F, 0.0F, 0.0F);
@@ -130,30 +141,26 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
         setRotationAngle(main, 0.0F, 0.0F, 0.0F);
         setRotationAngle(body, 0.0F, 0.0F, 0.0F);
 
-        main.setPivot(0.0F, 15.5F, 0.0F);
-        body.setPivot(0.0F, 0.0F, 0.0F);
-        tail.setPivot(0.0F, -2.5F, 8.0F);
-        head.setPivot(0.0F, -0.9F, -7.7F);
-        earfluff1.setPivot(0.5F, -1.5F, 0.0F);
-        earfluff2.setPivot(-0.5F, -1.5F, 0.0F);
-        front_right_leg.setPivot(-1.5F, 1.5F, -6.5F);
-        front_left_leg.setPivot(1.5F, 1.5F, -6.5F);
-        back_right_leg.setPivot(-1.25F, 1.5F, 6.0F);
-        back_left_leg.setPivot(1.25F, 1.5F, 6.0F);
-
         setRotationAngle(head, (headPitch * 0.017453292F), (headYaw * 0.017453292F), 0.0F);
         setRotationAngle(back_left_leg, (MathHelper.cos(limbAngle * 0.6662F) * limbDistance), 0.0F, 0.0F);
         setRotationAngle(back_right_leg, (MathHelper.cos(limbAngle * 0.6662F + 3.1415927F + 0.3F) * limbDistance), 0.0F, 0.0F);
         setRotationAngle(front_left_leg, (MathHelper.cos(limbAngle * 0.6662F + 0.3F) * limbDistance), 0.0F, 0.0F);
         setRotationAngle(front_right_leg, (MathHelper.cos(limbAngle * 0.6662F + 3.1415927F) * limbDistance), 0.0F, 0.0F);
 
+        this.ear1.roll = -0.05F * MathHelper.cos(animationProgress * 0.1F) + 0.1F;
+        this.ear2.roll = 0.05F * MathHelper.cos(animationProgress * 0.11F) - 0.1F;
+        this.earfluff1.roll = -0.15F * MathHelper.cos(animationProgress * 0.11F) + 1.0F;
+        this.earfluff2.roll = 0.15F * MathHelper.cos(animationProgress * 0.1F) - 1.0F;
+
         if (entity.isInSneakingPose()) {
             body.setPivot(0.0F, 1.0F, 0.0F);
             head.setPivot(0.0F, 0.9F, -7.7F);
             this.body.pitch = 0.0873F;
             this.tail.pitch = 0.4363F;
-            this.earfluff1.roll = 1.2217F;
-            this.earfluff2.roll = -1.2217F;
+            this.ear1.roll = -0.05F * MathHelper.cos(animationProgress * 0.1F) + 0.1F;
+            this.ear2.roll = 0.05F * MathHelper.cos(animationProgress * 0.11F) - 0.1F;
+            this.earfluff1.roll = -0.15F * MathHelper.cos(animationProgress * 0.25F) + 1.1F;
+            this.earfluff2.roll = 0.15F * MathHelper.cos(animationProgress * 0.3F) - 1.1F;
         } else if (entity.isInSittingPose() && !entity.isInSleepingPose()) {
             main.setPivot(0.0F, 19.5F, 0.0F);
             head.setPivot(0.0F, -6.9F, -5.0F);
@@ -164,8 +171,10 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
             tail.setPivot(0.0F, -2.5F, 5.0F);
 
             this.body.pitch = -0.8854F;
-            this.earfluff1.roll = 1.2217F;
-            this.earfluff2.roll = -1.2217F;
+            this.ear1.roll = -0.05F * MathHelper.cos(animationProgress * 0.1F) + 0.1F;
+            this.ear2.roll = 0.05F * MathHelper.cos(animationProgress * 0.11F) - 0.1F;
+            this.earfluff1.roll = -0.1F * MathHelper.cos(animationProgress * 0.25F) + 1.1F;
+            this.earfluff2.roll = 0.1F * MathHelper.cos(animationProgress * 0.3F) - 1.1F;
             this.front_left_leg.pitch = -0.2618F;
             this.front_right_leg.pitch = -0.2618F;
             this.back_left_leg.pitch = -1.5708F;
