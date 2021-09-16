@@ -53,8 +53,6 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static com.aqupd.caracal.utils.AqLogger.logInfo;
-
 public class CaracalEntity extends TameableEntity implements IAnimatable {
 
     private AnimationFactory factory = new AnimationFactory(this);
@@ -63,6 +61,18 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
     {
         super(type, worldIn);
         this.ignoreCameraFrustum = true;
+    }
+
+    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event)
+    {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.bat.fly", true));
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    public void registerControllers(AnimationData data)
+    {
+        data.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
     }
 
     @Override
@@ -98,9 +108,9 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.5F));
 
         this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
-        this.targetSelector.add(3, new ActiveTargetGoal<>(this, ChickenEntity.class, true));
-        this.targetSelector.add(4, new ActiveTargetGoal<>(this, RabbitEntity.class, true));
-        this.targetSelector.add(5, new ActiveTargetGoal<>(this, BatEntity.class, true));
+        this.targetSelector.add(3, new FollowTargetGoal<>(this, ChickenEntity.class, true));
+        this.targetSelector.add(4, new FollowTargetGoal<>(this, RabbitEntity.class, true));
+        this.targetSelector.add(5, new FollowTargetGoal<>(this, BatEntity.class, true));
         this.targetSelector.add(6, new FollowEntityGoal(this));
     }
 
@@ -128,30 +138,6 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
         if ((this.isInSleepingPose()) && this.age % 5 == 0) {
             this.playSound(SoundEvents.ENTITY_CAT_PURR, 0.6F + 0.4F * (this.random.nextFloat() - this.random.nextFloat()), 1.0F);
         }
-    }
-
-    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event)
-    {
-        if(event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("caracal.walk.animation", true));
-            return PlayState.CONTINUE;
-        } else if(this.isInSneakingPose()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("caracal.run.animation", true));
-            return PlayState.CONTINUE;
-        } else if(this.isInSittingPose() && !this.isInSleepingPose()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("caracal.sit.animation", true));
-            return PlayState.CONTINUE;
-        } else if(this.isInSleepingPose()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("caracal.sleep.animation", true));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
-    }
-
-    @Override
-    public void registerControllers(AnimationData data)
-    {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
     }
 
     static class TemptGoal extends net.minecraft.entity.ai.goal.TemptGoal {
@@ -216,7 +202,7 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
         }
     }
 
-    static class FollowEntityGoal extends ActiveTargetGoal<LivingEntity>{
+    static class FollowEntityGoal extends FollowTargetGoal<LivingEntity>{
         public FollowEntityGoal(CaracalEntity caracalEntity) {
             super(caracalEntity, LivingEntity.class, 0, true, true, LivingEntity::isMobOrPlayer);
         }

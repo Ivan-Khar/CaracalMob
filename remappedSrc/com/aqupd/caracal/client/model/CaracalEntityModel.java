@@ -1,5 +1,6 @@
 package com.aqupd.caracal.client.model;
 import com.aqupd.caracal.entity.CaracalEntity;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.util.Identifier;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
@@ -8,7 +9,7 @@ import java.util.Locale;
 public class CaracalEntityModel extends AnimatedGeoModel<CaracalEntity> {
     @Override
     public Identifier getModelLocation(CaracalEntity object) {
-        return new Identifier("aqupd", "geo/geckolibcaracal.geo.json");
+        return new Identifier("aqupd", "geo/GeckoLibCaracal.geo.json");
     }
     @Override
     public Identifier getTextureLocation(CaracalEntity object) {
@@ -35,7 +36,7 @@ public class CaracalEntityModel extends AnimatedGeoModel<CaracalEntity> {
     }
     @Override
     public Identifier getAnimationFileLocation(CaracalEntity animatable) {
-        return new Identifier("aqupd", "animations/geckolibcaracal.animation.json");
+        return new Identifier("aqupd", "animations/GeckoLibCaracal.animation.json");
     }
 }
 //entity.isInSneakingPose()
