@@ -130,6 +130,7 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
         }
     }
 
+
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event)
     {
         if(event.isMoving()) {
