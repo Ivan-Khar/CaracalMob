@@ -1,12 +1,10 @@
 package com.aqupd.caracal;
 
-import com.aqupd.caracal.client.renderer.CaracalEntityRenderer;
 import com.aqupd.caracal.entity.CaracalEntity;
 import com.aqupd.caracal.utils.AqConfig;
 import com.aqupd.caracal.utils.AqDebug;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -19,8 +17,6 @@ import net.minecraft.item.SpawnEggItem;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import software.bernie.example.registry.EntityRegistry;
-import software.bernie.geckolib3.GeckoLib;
 
 import java.util.Arrays;
 
@@ -66,9 +62,6 @@ public class CaracalMain implements ModInitializer {
                 CARACAL,
                 weight, mingroup, maxgroup // weight/min group size/max group size
         );
-        GeckoLib.initialize();
         logInfo("Caracal mod is loaded!");
     }
-
-
 }

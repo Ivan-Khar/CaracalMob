@@ -39,13 +39,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.Iterator;
 import java.util.List;
@@ -53,24 +46,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static com.aqupd.caracal.utils.AqLogger.logInfo;
-
-public class CaracalEntity extends TameableEntity implements IAnimatable {
-
-    private AnimationFactory factory = new AnimationFactory(this);
-
-    public CaracalEntity(EntityType<CaracalEntity> type, World worldIn)
-    {
-        super(type, worldIn);
-        this.ignoreCameraFrustum = true;
-    }
-
-    @Override
-    public AnimationFactory getFactory()
-    {
-        return this.factory;
-    }
-
+public class CaracalEntity extends TameableEntity {
     private static final Ingredient TAMING_INGREDIENT;
     private static final TrackedData<Boolean> IN_SLEEPING_POSE;
     private TemptGoal temptGoal;
@@ -79,6 +55,11 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
     private static double follow = AqConfig.INSTANCE.getDoubleProperty("entity.follow");
     private static double damage = AqConfig.INSTANCE.getDoubleProperty("entity.damage");
     private static double knockback = AqConfig.INSTANCE.getDoubleProperty("entity.knockback");
+
+
+    public CaracalEntity(EntityType<? extends CaracalEntity> entityType, World world) {
+        super(entityType, world);
+    }
 
     private boolean commander;
 
@@ -98,9 +79,9 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.5F));
 
         this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
-        this.targetSelector.add(3, new ActiveTargetGoal<>(this, ChickenEntity.class, true));
-        this.targetSelector.add(4, new ActiveTargetGoal<>(this, RabbitEntity.class, true));
-        this.targetSelector.add(5, new ActiveTargetGoal<>(this, BatEntity.class, true));
+        this.targetSelector.add(3, new FollowTargetGoal<>(this, ChickenEntity.class, true));
+        this.targetSelector.add(4, new FollowTargetGoal<>(this, RabbitEntity.class, true));
+        this.targetSelector.add(5, new FollowTargetGoal<>(this, BatEntity.class, true));
         this.targetSelector.add(6, new FollowEntityGoal(this));
     }
 
@@ -128,31 +109,6 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
         if ((this.isInSleepingPose()) && this.age % 5 == 0) {
             this.playSound(SoundEvents.ENTITY_CAT_PURR, 0.6F + 0.4F * (this.random.nextFloat() - this.random.nextFloat()), 1.0F);
         }
-    }
-
-
-    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event)
-    {
-        if(event.isMoving()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("caracal.walk.animation", true));
-            return PlayState.CONTINUE;
-        } else if(this.isInSneakingPose()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("caracal.run.animation", true));
-            return PlayState.CONTINUE;
-        } else if(this.isInSittingPose() && !this.isInSleepingPose()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("caracal.sit.animation", true));
-            return PlayState.CONTINUE;
-        } else if(this.isInSleepingPose()) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("caracal.sleep.animation", true));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
-    }
-
-    @Override
-    public void registerControllers(AnimationData data)
-    {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
     }
 
     static class TemptGoal extends net.minecraft.entity.ai.goal.TemptGoal {
@@ -217,7 +173,7 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
         }
     }
 
-    static class FollowEntityGoal extends ActiveTargetGoal<LivingEntity>{
+    static class FollowEntityGoal extends FollowTargetGoal<LivingEntity>{
         public FollowEntityGoal(CaracalEntity caracalEntity) {
             super(caracalEntity, LivingEntity.class, 0, true, true, LivingEntity::isMobOrPlayer);
         }
