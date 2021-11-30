@@ -29,7 +29,7 @@ public class AqConfig {
         return Double.parseDouble(aqprop.getProperty(key));
     }
 
-    private File file = new File("./config/AqMods/caracal.config");
+    private File file = new File("config/AqMods/caracal.config");
 
     private void load() {
         loaded = true;
