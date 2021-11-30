@@ -31,7 +31,6 @@ dependencies {
 	// You may need to force-disable transitiveness on them.
 
 	modImplementation 'com.github.astei:lazydfu:0.1.2'
-	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.17:3.0.13:dev'
 }
 
 processResources {
