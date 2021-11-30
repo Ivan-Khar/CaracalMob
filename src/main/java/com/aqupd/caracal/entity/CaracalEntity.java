@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Predicate;
 
 public class CaracalEntity extends TameableEntity {
     private static final Ingredient TAMING_INGREDIENT;
@@ -79,10 +80,9 @@ public class CaracalEntity extends TameableEntity {
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.5F));
 
         this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
-        this.targetSelector.add(3, new FollowTargetGoal<>(this, ChickenEntity.class, true));
-        this.targetSelector.add(4, new FollowTargetGoal<>(this, RabbitEntity.class, true));
-        this.targetSelector.add(5, new FollowTargetGoal<>(this, BatEntity.class, true));
-        this.targetSelector.add(6, new FollowEntityGoal(this));
+        this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, ChickenEntity.class, true, null));
+        this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, RabbitEntity.class, true, null));
+        this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, BatEntity.class, true, null));
     }
 
     public void mobTick() {
@@ -173,21 +173,6 @@ public class CaracalEntity extends TameableEntity {
         }
     }
 
-    static class FollowEntityGoal extends FollowTargetGoal<LivingEntity>{
-        public FollowEntityGoal(CaracalEntity caracalEntity) {
-            super(caracalEntity, LivingEntity.class, 0, true, true, LivingEntity::isMobOrPlayer);
-        }
-
-        public boolean canStart() {
-            return ((CaracalEntity)this.mob).commander && super.canStart();
-        }
-
-        public void start() {
-            super.start();
-            this.mob.setDespawnCounter(0);
-        }
-    }
-
     public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
         return false;
     }
@@ -261,7 +246,7 @@ public class CaracalEntity extends TameableEntity {
     }
 
     public boolean isInSleepingPose() {
-        return (Boolean)this.dataTracker.get(IN_SLEEPING_POSE);
+        return this.dataTracker.get(IN_SLEEPING_POSE);
     }
 
     static class SleepWithOwnerGoal extends Goal {
