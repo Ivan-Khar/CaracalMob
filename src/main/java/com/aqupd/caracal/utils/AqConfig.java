@@ -30,9 +30,8 @@ public class AqConfig {
         if (!loaded) load();
         return Double.parseDouble(aqprop.getProperty(key));
     }
-
+	
     private final File file = new File("./config/AqMods/caracal.config");
-
     private void load() {
         loaded = true;
         try {
