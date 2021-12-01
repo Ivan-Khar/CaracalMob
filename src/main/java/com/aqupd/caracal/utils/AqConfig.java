@@ -1,6 +1,8 @@
 package com.aqupd.caracal.utils;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 public class AqConfig {
@@ -29,12 +31,12 @@ public class AqConfig {
         return Double.parseDouble(aqprop.getProperty(key));
     }
 
-    private File file = new File("./config/AqMods/caracal.config");
+    private final File file = new File("./config/AqMods/caracal.config");
 
     private void load() {
         loaded = true;
         try {
-            new File("./config/AqMods").mkdir();
+            Files.createDirectories(Paths.get("./config/AqMods/"));
 
             if(file.exists()) {
                 var reader = new FileReader(file);
