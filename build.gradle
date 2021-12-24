@@ -27,26 +27,9 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	Set<String> apiModules = [
-		"fabric-api-base",
-		"fabric-biome-api-v1",
-		"fabric-item-api-v1",
-		"fabric-resource-loader-v0",
-		"fabric-tag-extensions-v0",
-		"fabric-tool-attribute-api-v1",
-		"fabric-object-builder-api-v1",
-		"fabric-renderer-api-v1",
-		"fabric-renderer-registries-v1",
-		"fabric-lifecycle-events-v1"
-	]
-
-// Add each module as a dependency
-	apiModules.forEach {
-		include(modImplementation(fabricApi.module(it, "${project.fabric_version}")))
-	}
 	modImplementation 'com.github.astei:lazydfu:0.1.2'
-	modImplementation 'com.github.CaffeineMC:sodium-fabric:mc1.16.3-0.1.0'
 }
 
 processResources {

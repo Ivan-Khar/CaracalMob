@@ -9,14 +9,18 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.fabricmc.fabric.mixin.object.builder.SpawnRestrictionAccessor;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 
 import java.util.Arrays;
@@ -31,7 +35,6 @@ public class Main implements ModInitializer {
 	int maxgroup = AqConfig.INSTANCE.getNumberProperty("spawn.max");
 
 	String[] biomelist = AqConfig.INSTANCE.getStringProperty("spawn.biomes").split(",");
-	Set<String> biomeSet = new HashSet(Arrays.asList(biomelist));
 
 	public static final Identifier CARACAL_SCREAM = new Identifier("aqupd:caracal_scream");
 	public static SoundEvent CARACAL_AMBIENT = new SoundEvent(CARACAL_SCREAM);
@@ -64,6 +67,7 @@ public class Main implements ModInitializer {
 				CARACAL,
 				weight, mingroup, maxgroup
 		);
+		SpawnRestrictionAccessor.callRegister(CARACAL, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canMobSpawn); //MobEntity::canMobSpawn
 		logInfo("Caracal mod is loaded!");
 	}
 }

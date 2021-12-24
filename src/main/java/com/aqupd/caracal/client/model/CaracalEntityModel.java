@@ -36,6 +36,10 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
     private final ModelPart brtube_r1;
     private final ModelPart brtube_r2;
     private final ModelPart brtube_r3;
+    private final ModelPart beard;
+    private final ModelPart beard_r1;
+    private final ModelPart beard_r2;
+    private final ModelPart beard_r3;
     private final ModelPart front_right_leg;
     private final ModelPart front_left_leg;
     private final ModelPart back_right_leg;
@@ -65,6 +69,7 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         tnt = new ModelPart(this);
         tnt.setPivot(0.0F, -1.5F, -8.2F);
         body.addChild(tnt);
+
 
         tnt_r1 = new ModelPart(this);
         tnt_r1.setPivot(0.0F, 0.5F, 7.75F);
@@ -164,6 +169,7 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         brtube.setPivot(0.0F, 0.0F, 0.0F);
         head.addChild(brtube);
 
+
         brtube_r1 = new ModelPart(this);
         brtube_r1.setPivot(4.3506F, 0.2204F, -4.2F);
         brtube.addChild(brtube_r1);
@@ -178,6 +184,30 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         brtube_r3.setPivot(1.8735F, 2.1862F, -4.2F);
         brtube.addChild(brtube_r3);
         brtube_r3.setTextureOffset(47, 9).addCuboid(-1.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+
+        beard = new ModelPart(this);
+        beard.setPivot(0.0F, 0.5F, -2.4F);
+        head.addChild(beard);
+        beard.setTextureOffset(0, 38).addCuboid(-2.0F, -0.2F, -1.3F, 4.0F, 2.0F, 2.0F, 0.0F, false);
+        beard.setTextureOffset(0, 38).addCuboid(-1.3F, 1.8F, -1.1F, 2.0F, 2.0F, 2.0F, 0.0F, false);
+        beard.setTextureOffset(0, 38).addCuboid(-0.9F, 3.5F, -0.9F, 2.0F, 2.0F, 1.0F, 0.0F, false);
+        beard.setTextureOffset(0, 38).addCuboid(-0.2F, 1.8F, -0.8F, 2.0F, 2.0F, 1.0F, 0.0F, false);
+
+        beard_r1 = new ModelPart(this);
+        beard_r1.setPivot(3.8023F, -0.8542F, -0.5F);
+        beard.addChild(beard_r1);
+        beard_r1.setTextureOffset(1, 40).addCuboid(-1.29F, -6.91F, -0.5F, 4.0F, 0.0F, 1.0F, 0.0F, false);
+        beard_r1.setTextureOffset(1, 40).addCuboid(-1.29F, -0.61F, -0.5F, 4.0F, 0.0F, 1.0F, 0.0F, false);
+
+        beard_r2 = new ModelPart(this);
+        beard_r2.setPivot(2.5469F, 0.667F, -0.5F);
+        beard.addChild(beard_r2);
+        beard_r2.setTextureOffset(2, 39).addCuboid(-1.3F, 0.0F, -0.5F, 2.0F, 0.0F, 1.0F, 0.0F, false);
+
+        beard_r3 = new ModelPart(this);
+        beard_r3.setPivot(-2.4531F, 0.667F, -0.5F);
+        beard.addChild(beard_r3);
+        beard_r3.setTextureOffset(2, 39).addCuboid(-0.7F, 0.0F, -0.5F, 2.0F, 0.0F, 1.0F, 0.0F, false);
 
         front_right_leg = new ModelPart(this);
         front_right_leg.setPivot(-1.5F, 1.5F, -6.5F);
@@ -213,6 +243,10 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         back_right_leg.setPivot(-1.25F, 1.5F, 6.0F);
         back_left_leg.setPivot(1.25F, 1.5F, 6.0F);
 
+
+        setRotationAngle(beard_r1, 0.0F, 0.0F, -1.5708F);
+        setRotationAngle(beard_r2, 0.0F, 0.0F, -0.3491F);
+        setRotationAngle(beard_r3, 0.0F, 0.0F, 0.3491F);
         setRotationAngle(tail, 0.6109F, 0.0F, 0.0F);
         setRotationAngle(tail1, 0.6109F, 0.0F, 0.0F);
         setRotationAngle(tnt_r1, 1.5708F, 0.0F, 0.0F);
@@ -237,10 +271,12 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
         setRotationAngle(back_right_leg, (MathHelper.cos(limbAngle * 0.6662F + 3.1415927F + 0.3F) * limbDistance), 0.0F, 0.0F);
         setRotationAngle(front_left_leg, (MathHelper.cos(limbAngle * 0.6662F + 0.3F) * limbDistance), 0.0F, 0.0F);
         setRotationAngle(front_right_leg, (MathHelper.cos(limbAngle * 0.6662F + 3.1415927F) * limbDistance), 0.0F, 0.0F);
+
         this.ear1.roll = -0.05F * MathHelper.cos(animationProgress * 0.1F) + 0.1F;
         this.ear2.roll = 0.05F * MathHelper.cos(animationProgress * 0.11F) - 0.1F;
         this.earfluff1.roll = -0.15F * MathHelper.cos(animationProgress * 0.11F) + 1.0F;
         this.earfluff2.roll = 0.15F * MathHelper.cos(animationProgress * 0.1F) - 1.0F;
+
         if (entity.isInSneakingPose()) {
             body.setPivot(0.0F, 1.0F, 0.0F);
             head.setPivot(0.0F, 0.9F, -7.7F);
@@ -288,6 +324,7 @@ public class CaracalEntityModel extends EntityModel<CaracalEntity> {
             this.tail.yaw = -0.285F;
         }
     }
+
     @Override
     public void render(MatrixStack matrixStack, VertexConsumer	buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
         main.render(matrixStack, buffer, packedLight, packedOverlay);

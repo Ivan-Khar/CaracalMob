@@ -9,6 +9,7 @@ import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
+import java.time.LocalDate;
 import java.util.Locale;
 
 @Environment(EnvType.CLIENT)
@@ -20,13 +21,16 @@ public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, Cara
 
     protected void scale(CaracalEntity caracalEntity, MatrixStack matrixStack, float f){
         if (caracalEntity.isBaby()) {
-            matrixStack.scale(0.65F, 0.65F, 0.65F);
+            matrixStack.scale(0.6F, 0.6F, 0.6F);
         } else {
             matrixStack.scale(1.0F, 1.0F, 1.0F);
         }
     }
+
     @Override
     public Identifier getTexture(CaracalEntity entity) {
+        int day_of_month = LocalDate.now().getDayOfMonth();
+        int month = LocalDate.now().getMonthValue();
         if (entity.getCustomName() != null && !entity.getCustomName().asString().isEmpty()) {
             String n = entity.getCustomName().asString().toLowerCase(Locale.ENGLISH);
 
@@ -45,6 +49,8 @@ public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, Cara
             } else if (n.contains("водный") || n.contains("water")) {
                 return new Identifier("aqupd", "textures/entity/caracalwater.png");
             }
+        } else if ((day_of_month >= 25 && month == 12) || (day_of_month <= 5 && month == 1)) {
+            return new Identifier("aqupd", "textures/entity/caracalchristmasdays.png");
         }
         return new Identifier("aqupd", "textures/entity/caracal.png");
     }
