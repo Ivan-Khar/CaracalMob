@@ -9,14 +9,18 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.fabricmc.fabric.mixin.object.builder.SpawnRestrictionAccessor;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.SpawnRestriction;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.Heightmap;
 
 import java.util.Arrays;
 
@@ -47,9 +51,7 @@ public class CaracalMain implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        ServerWorldEvents.LOAD.register((server, world) -> {
-            AqDebug.INSTANCE.startDebug(AqConfig.INSTANCE.getBooleanProperty("debug"));
-        });
+        ServerWorldEvents.LOAD.register((server, world) -> AqDebug.INSTANCE.startDebug(AqConfig.INSTANCE.getBooleanProperty("debug")));
 
         Registry.register(Registry.SOUND_EVENT, com.aqupd.caracal.CaracalMain.CARACAL_SCREAM, CARACAL_AMBIENT);
         Registry.register(Registry.SOUND_EVENT, com.aqupd.caracal.CaracalMain.CARACAL_HISSING, CARACAL_HISS);
@@ -62,6 +64,7 @@ public class CaracalMain implements ModInitializer {
                 CARACAL,
                 weight, mingroup, maxgroup // weight/min group size/max group size
         );
+        SpawnRestrictionAccessor.callRegister(CARACAL, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canMobSpawn); //MobEntity::canMobSpawn
         logInfo("Caracal mod is loaded!");
     }
 }

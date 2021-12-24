@@ -10,17 +10,22 @@ import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
+import java.time.LocalDate;
 import java.util.Locale;
+
+import static com.aqupd.caracal.utils.AqLogger.*;
 
 @Environment(EnvType.CLIENT)
 public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, CaracalEntityModel<CaracalEntity>> {
 
     public CaracalEntityRenderer(EntityRendererFactory.Context context) {
-        super(context, new CaracalEntityModel<CaracalEntity>(context.getPart(CaracalMainClient.CARACAL_MODEL_LAYER)), 0.6f);
+        super(context, new CaracalEntityModel<>(context.getPart(CaracalMainClient.CARACAL_MODEL_LAYER)), 0.6f);
     }
 
     @Override
     public Identifier getTexture(CaracalEntity entity) {
+        int day_of_month = LocalDate.now().getDayOfMonth();
+        int month = LocalDate.now().getMonthValue();
         if (entity.getCustomName() != null && !entity.getCustomName().asString().isEmpty()) {
             String n = entity.getCustomName().asString().toLowerCase(Locale.ENGLISH);
 
@@ -39,13 +44,15 @@ public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, Cara
             } else if (n.contains("водный") || n.contains("water")) {
                 return new Identifier("aqupd", "textures/entity/caracalwater.png");
             }
+        } else if ((day_of_month >= 25 && month == 12) || (day_of_month <= 5 && month == 1)) {
+            return new Identifier("aqupd", "textures/entity/caracalchristmasdays.png");
         }
         return new Identifier("aqupd", "textures/entity/caracal.png");
     }
 
     protected void scale(CaracalEntity entity, MatrixStack matrixStack, float f) {
         if(entity.getBreedingAge() < 0) {
-            matrixStack.scale(0.6F, 0.6F, 0.6F);
+            matrixStack.scale(0.6F + 0.4F * entity.getBreedingAge(), 0.6F + 0.4F * entity.getBreedingAge(), 0.6F + 0.4F * entity.getBreedingAge());
         }
         else {
             matrixStack.scale(1.0F, 1.0F, 1.0F);
