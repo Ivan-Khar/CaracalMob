@@ -35,6 +35,10 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
     private final ModelPart brtube_r1;
     private final ModelPart brtube_r2;
     private final ModelPart brtube_r3;
+    private final ModelPart beard;
+    private final ModelPart beard_r1;
+    private final ModelPart beard_r2;
+    private final ModelPart beard_r3;
     private final ModelPart front_right_leg;
     private final ModelPart front_left_leg;
     private final ModelPart back_right_leg;
@@ -46,6 +50,10 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
         this.front_left_leg = this.main.getChild("front_left_leg");
         this.front_right_leg = this.main.getChild("front_right_leg");
         this.head = this.main.getChild("head");
+        this.beard = this.head.getChild("beard");
+        this.beard_r3 = this.beard.getChild("beard_r3");
+        this.beard_r2 = this.beard.getChild("beard_r2");
+        this.beard_r1 = this.beard.getChild("beard_r1");
         this.brtube = this.head.getChild("brtube");
         this.brtube_r3 = this.brtube.getChild("brtube_r3");
         this.brtube_r2 = this.brtube.getChild("brtube_r2");
@@ -102,6 +110,10 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
         modelPartData11.addChild("brtube_r1", ModelPartBuilder.create().uv(47,9).cuboid(-0.3506F, -7.6304F, -0.5F, 1.0F, 9.0F, 1.0F), ModelTransform.pivot(4.3506F,0.2204F,-4.2F));
         modelPartData11.addChild("brtube_r2", ModelPartBuilder.create().uv(47,9).cuboid(-0.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F), ModelTransform.pivot(3.7529F,1.5021F,-4.2F));
         modelPartData11.addChild("brtube_r3", ModelPartBuilder.create().uv(47,9).cuboid(-1.5F, -1.0F, -0.5F, 1.0F, 2.0F, 1.0F), ModelTransform.pivot(1.8735F,2.1862F,-4.2F));
+        ModelPartData modelPartData12 = modelPartData5.addChild("beard", ModelPartBuilder.create().uv(0,38).cuboid(-2.0F, -0.2F, -1.3F, 4.0F, 2.0F, 2.0F).uv(0,38).cuboid(-1.3F, 1.8F, -1.1F, 2.0F, 2.0F, 2.0F).uv(0,38).cuboid(-0.9F, 3.5F, -0.9F, 2.0F, 2.0F, 1.0F).uv(0,38).cuboid(-0.2F, 1.8F, -0.8F, 2.0F, 2.0F, 1.0F), ModelTransform.pivot(0.0F,0.5F,-2.4F));
+        modelPartData12.addChild("beard_r1", ModelPartBuilder.create().uv(1,40).cuboid(-1.29F, -6.91F, -0.5F, 4.0F, 0.0F, 1.0F).uv(1,40).cuboid(-1.29F, -0.61F, -0.5F, 4.0F, 0.0F, 1.0F), ModelTransform.pivot(3.8023F,-0.8542F,-0.5F));
+        modelPartData12.addChild("beard_r2", ModelPartBuilder.create().uv(2,39).cuboid(-1.3F, 0.0F, -0.5F, 2.0F, 0.0F, 1.0F), ModelTransform.pivot(2.5469F,0.667F,-0.5F));
+        modelPartData12.addChild("beard_r3", ModelPartBuilder.create().uv(2,39).cuboid(-0.7F, 0.0F, -0.5F, 2.0F, 0.0F, 1.0F), ModelTransform.pivot(-2.4531F,0.667F,-0.5F));
         modelPartData1.addChild("front_right_leg", ModelPartBuilder.create().uv(46,0).cuboid(-0.75F, 0.0F, -1.0F, 2.0F, 7.0F, 2.0F), ModelTransform.pivot(-1.5F,1.5F,-6.5F));
         modelPartData1.addChild("front_left_leg", ModelPartBuilder.create().uv(46,0).cuboid(-1.25F, 0.0F, -1.0F, 2.0F, 7.0F, 2.0F), ModelTransform.pivot(1.5F,1.5F,-6.5F));
         modelPartData1.addChild("back_right_leg", ModelPartBuilder.create().uv(54,0).cuboid(-1.0F, 0.0F, -1.5F, 2.0F, 7.0F, 3.0F), ModelTransform.pivot(-1.25F,1.5F,6.0F));
@@ -122,6 +134,10 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
         back_right_leg.setPivot(-1.25F, 1.5F, 6.0F);
         back_left_leg.setPivot(1.25F, 1.5F, 6.0F);
 
+
+        setRotationAngle(beard_r1, 0.0F, 0.0F, -1.5708F);
+        setRotationAngle(beard_r2, 0.0F, 0.0F, -0.3491F);
+        setRotationAngle(beard_r3, 0.0F, 0.0F, 0.3491F);
         setRotationAngle(tail, 0.6109F, 0.0F, 0.0F);
         setRotationAngle(tail1, 0.6109F, 0.0F, 0.0F);
         setRotationAngle(tnt_r1, 1.5708F, 0.0F, 0.0F);
