@@ -27,7 +27,6 @@
     ]
   },
   "mixins": [
-    "caracal.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.6",
