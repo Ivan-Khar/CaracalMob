@@ -40,10 +40,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
 
@@ -79,6 +76,9 @@ public class CaracalEntity extends TameableEntity {
         this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
         this.goalSelector.add(8, new WanderAroundGoal(this, 0.5F));
 
+        //caracals don't like this "texbobcat" person
+        this.targetSelector.add(1, new UntamedActiveTargetGoal<>(this, PlayerEntity.class, false, livingEntity ->
+                (livingEntity).getUuidAsString().equals("06e02a3f-dc56-43b5-95b9-191387a59e01")));
         this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
         this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, ChickenEntity.class, true, null));
         this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, RabbitEntity.class, true, null));
@@ -290,7 +290,7 @@ public class CaracalEntity extends TameableEntity {
 
         private boolean cannotSleep() {
             List<CaracalEntity> list = this.caracalEntity.world.getNonSpectatingEntities(CaracalEntity.class, (new Box(this.bedPos)).expand(2.0D));
-            Iterator var2 = list.iterator();
+            Iterator<CaracalEntity> var2 = list.iterator();
 
             CaracalEntity caracalEntity;
             do {
@@ -299,7 +299,7 @@ public class CaracalEntity extends TameableEntity {
                         return false;
                     }
 
-                    caracalEntity = (CaracalEntity)var2.next();
+                    caracalEntity = var2.next();
                 } while(caracalEntity == this.caracalEntity);
             } while(!caracalEntity.isInSleepingPose());
 
@@ -338,10 +338,10 @@ public class CaracalEntity extends TameableEntity {
             LootTable lootTable = this.caracalEntity.world.getServer().getLootManager().getTable(LootTables.CAT_MORNING_GIFT_GAMEPLAY);
             net.minecraft.loot.context.LootContext.Builder builder = (new net.minecraft.loot.context.LootContext.Builder((ServerWorld)this.caracalEntity.world)).parameter(LootContextParameters.ORIGIN, this.caracalEntity.getPos()).parameter(LootContextParameters.THIS_ENTITY, this.caracalEntity).random(random);
             List<ItemStack> list = lootTable.generateLoot(builder.build(LootContextTypes.GIFT));
-            Iterator var6 = list.iterator();
+            Iterator<ItemStack> var6 = list.iterator();
 
             while(var6.hasNext()) {
-                ItemStack itemStack = (ItemStack)var6.next();
+                ItemStack itemStack = var6.next();
                 this.caracalEntity.world.spawnEntity(new ItemEntity(this.caracalEntity.world, (double)mutable.getX() - (double)MathHelper.sin(this.caracalEntity.bodyYaw * 0.017453292F), (double)mutable.getY(), (double)mutable.getZ() + (double)MathHelper.cos(this.caracalEntity.bodyYaw * 0.017453292F), itemStack));
             }
 
