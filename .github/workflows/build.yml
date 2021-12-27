@@ -1,5 +1,8 @@
 name: build
-on: [pull_request, push]
+on:
+  push:
+    path:
+      -'src/**'
 
 jobs:
   build:
