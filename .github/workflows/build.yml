@@ -5,6 +5,11 @@ on:
       -'src/**'
       -'**.properties'
       -'**.gradle'
+  pull_request:
+    paths:
+      -'src/**'
+      -'**.properties'
+      -'**.gradle'
 
 jobs:
   build:
