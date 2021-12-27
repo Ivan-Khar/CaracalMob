@@ -2,14 +2,14 @@ name: build
 on:
   push:
     paths:
-      -'src/**'
-      -'**.properties'
-      -'**.gradle'
+      -'src/*'
+      -'*.properties'
+      -'*.gradle'
   pull_request:
     paths:
-      -'src/**'
-      -'**.properties'
-      -'**.gradle'
+      -'src/*'
+      -'*.properties'
+      -'*.gradle'
 
 jobs:
   build:
