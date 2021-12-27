@@ -3,8 +3,8 @@ on:
   push:
     paths:
       -'!src/**'
-      -'!*.properties'
-      -'!*.gradle'
+      -'!**.properties'
+      -'!**.gradle'
 
 jobs:
   build:
