@@ -2,9 +2,9 @@ name: build
 on:
   push:
     paths:
-      -'!src/**'
-      -'!**.properties'
-      -'!**.gradle'
+      -'src/**'
+      -'**.properties'
+      -'**.gradle'
 
 jobs:
   build:
