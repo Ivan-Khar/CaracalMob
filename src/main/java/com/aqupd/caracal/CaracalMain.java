@@ -29,7 +29,6 @@ public class CaracalMain implements ModInitializer {
     int weight = AqConfig.INSTANCE.getNumberProperty("spawn.weight");
     int mingroup = AqConfig.INSTANCE.getNumberProperty("spawn.min");
     int maxgroup = AqConfig.INSTANCE.getNumberProperty("spawn.max");
-
     String[] biomelist = AqConfig.INSTANCE.getStringProperty("spawn.biomes").split(",");
 
     public static final Identifier CARACAL_SCREAM = new Identifier("aqupd:caracal_scream");
