@@ -21,9 +21,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
-
 import java.util.Arrays;
-
 import static com.aqupd.caracal.utils.AqLogger.*;
 
 public class CaracalMain implements ModInitializer {
