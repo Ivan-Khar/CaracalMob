@@ -2,7 +2,7 @@ name: "Build mod"
 on:
   push:
     paths: 
-      - /src
+      - /src/**
 
 jobs:
   build:
