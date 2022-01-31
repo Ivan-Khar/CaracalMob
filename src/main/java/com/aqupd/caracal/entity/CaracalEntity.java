@@ -79,6 +79,8 @@ public class CaracalEntity extends TameableEntity {
         //caracals don't like this "texbobcat" person
         this.targetSelector.add(1, new UntamedActiveTargetGoal<>(this, PlayerEntity.class, false, livingEntity ->
                 (livingEntity).getUuidAsString().equals("06e02a3f-dc56-43b5-95b9-191387a59e01")));
+        this.targetSelector.add(1, new UntamedActiveTargetGoal<>(this, PlayerEntity.class, false, livingEntity ->
+                (livingEntity).getUuidAsString().equals("38b77e11-7d8b-4958-aaea-fc37ff7d796e")));
         this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
         this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, ChickenEntity.class, true, null));
         this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, RabbitEntity.class, true, null));
