@@ -40,11 +40,12 @@ public class CaracalMain implements ModInitializer {
     public static final EntityType<CaracalEntity> CARACAL = Registry.register(
             Registry.ENTITY_TYPE,
             CARACAL_ID,
-            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE,
-                    CaracalEntity::new).dimensions(EntityDimensions.changing(0.6f, 0.75f)).build()
+            FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CaracalEntity::new)
+                    .dimensions(EntityDimensions.changing(0.6f, 0.75f)).build()
     );
 
-    public static final SpawnEggItem CARACAL_SPAWN_EGG = new SpawnEggItem(CARACAL, 5453358, 15592688, new FabricItemSettings().group(ItemGroup.MISC).fireproof().maxCount(64));
+    public static final SpawnEggItem CARACAL_SPAWN_EGG = new SpawnEggItem(CARACAL, 5453358, 15592688, new FabricItemSettings()
+            .group(ItemGroup.MISC).fireproof().maxCount(64));
 
     @Override
     public void onInitialize() {
@@ -59,9 +60,9 @@ public class CaracalMain implements ModInitializer {
                 selection -> Arrays.stream(biomelist).anyMatch(x -> x.equals(selection.getBiome().getCategory().getName().toUpperCase())),
                 SpawnGroup.CREATURE,
                 CARACAL,
-                weight, mingroup, maxgroup // weight/min group size/max group size
+                weight, mingroup, maxgroup
         );
-        SpawnRestrictionAccessor.callRegister(CARACAL, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canMobSpawn); //MobEntity::canMobSpawn
+        SpawnRestrictionAccessor.callRegister(CARACAL, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canMobSpawn);
         logInfo("Caracal mod is loaded!");
     }
 }
