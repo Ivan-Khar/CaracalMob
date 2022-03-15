@@ -1,0 +1,99 @@
+{
+  "entity.caracal.scream": {
+    "subtitle": "subtitles.aqcaracal.caracal.scream",
+    "sounds": [
+      "aqcaracal:caracal/scream1",
+      "aqcaracal:caracal/scream2",
+      "aqcaracal:caracal/scream3"
+    ]
+  },
+  "entity.caracal.hiss": {
+    "subtitle": "subtitles.aqcaracal.caracal.hiss",
+    "sounds": [
+      "aqcaracal:caracal/hiss1",
+      "aqcaracal:caracal/hiss2",
+      "aqcaracal:caracal/hiss3",
+      "aqcaracal:caracal/hiss4"
+    ]
+  },
+  "entity.caracal.purr": {
+    "subtitle": "subtitles.aqcaracal.caracal.purr",
+    "sounds": [
+      {
+        "name": "mob/cat/purr1",
+        "volume": 0.7
+      },
+      {
+        "name": "mob/cat/purr2",
+        "volume": 0.7
+      },
+      {
+        "name": "mob/cat/purr3",
+        "volume": 0.7
+      }
+    ]
+  },
+  "entity.caracal.purreow": {
+    "subtitle": "subtitles.aqcaracal.caracal.purr",
+    "sounds": [
+      {
+        "name": "mob/cat/purreow1",
+        "volume": 0.5
+      },
+      {
+        "name": "mob/cat/purreow2",
+        "volume": 0.5
+      }
+    ]
+  },
+  "entity.caracal.death": {
+    "subtitle": "subtitles.aqcaracal.caracal.death",
+    "sounds": [
+      {
+        "name": "mob/cat/hitt1",
+        "volume": 0.75,
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/cat/hitt2",
+        "volume": 0.75,
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/cat/hitt3",
+        "volume": 0.75,
+        "pitch": 0.9
+      }
+    ]
+  },
+  "entity.caracal.eat": {
+    "subtitle": "subtitles.aqcaracal.caracal.eat",
+    "sounds": [
+      {
+        "name": "mob/cat/eat1",
+        "volume": 1
+      },
+      {
+        "name": "mob/cat/eat2",
+        "volume": 1
+      }
+    ]
+  },
+  "entity.caracal.beg_for_food": {
+    "subtitle": "subtitles.aqcaracal.caracal.beg_for_food",
+    "sounds": [
+      {
+        "name": "mob/cat/beg1",
+        "volume": 0.7
+      },
+      {
+        "name": "mob/cat/beg2",
+        "volume": 0.7
+      },
+      {
+        "name": "mob/cat/beg3",
+        "volume": 0.7
+      }
+    ]
+  }
+}
