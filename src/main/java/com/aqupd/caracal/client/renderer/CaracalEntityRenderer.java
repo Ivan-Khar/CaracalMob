@@ -5,10 +5,14 @@ import com.aqupd.caracal.client.model.CaracalEntityModel;
 import com.aqupd.caracal.entity.CaracalEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.time.LocalDate;
 import java.util.Locale;
@@ -46,6 +50,15 @@ public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, Cara
             }
         } else if ((day_of_month >= 25 && month == 12) || (day_of_month <= 5 && month == 1)) {
             return new Identifier("aqupd", "textures/entity/caracalchristmasdays.png");
+        } else if ((day_of_month == 1 && month == 4)) {
+            return new Identifier("aqupd", "textures/entity/caracalapril.png");
+        } else if ((day_of_month == 18 && month == 3)) {
+            return switch (entity.getMaskColor()) {
+                case 1 -> new Identifier("aqupd", "textures/entity/caracalbirthday1.png");
+                case 2 -> new Identifier("aqupd", "textures/entity/caracalbirthday2.png");
+                case 3 -> new Identifier("aqupd", "textures/entity/caracalbirthday3.png");
+                default -> new Identifier("aqupd", "textures/entity/caracalbirthday1.png");
+            };
         }
         return new Identifier("aqupd", "textures/entity/caracal.png");
     }

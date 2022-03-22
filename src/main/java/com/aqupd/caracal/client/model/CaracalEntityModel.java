@@ -17,6 +17,7 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
     private final ModelPart tnt_r2;
     private final ModelPart tnt_r3;
     private final ModelPart head;
+    private final ModelPart mouth;
     private final ModelPart hats;
     private final ModelPart hats_r1;
     private final ModelPart hats_r2;
@@ -25,7 +26,6 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
     private final ModelPart earfluff1;
     private final ModelPart ear2;
     private final ModelPart earfluff2;
-    private final ModelPart mouth;
     private final ModelPart anonymous;
     private final ModelPart anonymous_r1;
     private final ModelPart anonymous_r2;
@@ -63,7 +63,6 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
         this.anonymous = this.head.getChild("anonymous");
         this.anonymous_r2 = this.anonymous.getChild("anonymous_r2");
         this.anonymous_r1 = this.anonymous.getChild("anonymous_r1");
-        this.mouth = this.head.getChild("mouth");
         this.ear2 = this.head.getChild("ear2");
         this.earfluff2 = this.ear2.getChild("earfluff2");
         this.ear1 = this.head.getChild("ear1");
@@ -72,6 +71,7 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
         this.hats_r3 = this.hats.getChild("hats_r3");
         this.hats_r2 = this.hats.getChild("hats_r2");
         this.hats_r1 = this.hats.getChild("hats_r1");
+        this.mouth = this.head.getChild("mouth");
         this.body = this.main.getChild("body");
         this.tnt = this.body.getChild("tnt");
         this.tnt_r3 = this.tnt.getChild("tnt_r3");
@@ -92,15 +92,15 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
         modelPartData4.addChild("tnt_r2", ModelPartBuilder.create().uv(40,56).cuboid(-2.0F, -2.0F, -2.0F, 8.0F, 4.0F, 4.0F), ModelTransform.pivot(-4.5F,0.5F,11.9F));
         modelPartData4.addChild("tnt_r3", ModelPartBuilder.create().uv(40,56).cuboid(-2.0F, -2.0F, -2.0F, 8.0F, 4.0F, 4.0F), ModelTransform.pivot(4.5F,0.5F,11.9F));
         ModelPartData modelPartData5 = modelPartData1.addChild("head", ModelPartBuilder.create().uv(0,0).cuboid(-3.0F, -3.1F, -3.6F, 6.0F, 4.0F, 4.0F), ModelTransform.pivot(0.0F,-1.9F,-8.1F));
-        ModelPartData modelPartData6 = modelPartData5.addChild("hats", ModelPartBuilder.create().uv(0,16).cuboid(-3.5F, -14.0F, -13.5F, 7.0F, 1.0F, 7.0F).uv(0,24).cuboid(-2.5F, -17.0F, -12.5F, 5.0F, 3.0F, 5.0F), ModelTransform.pivot(0.0F,10.4F,8.1F));
+        modelPartData5.addChild("mouth", ModelPartBuilder.create().uv(16,1).cuboid(-1.5F, -1.1F, -4.6F, 3.0F, 2.0F, 1.0F), ModelTransform.pivot(0.0F,0.0F,0.0F));
+        ModelPartData modelPartData6 = modelPartData5.addChild("hats", ModelPartBuilder.create().uv(0,16).cuboid(-2.5F, -14.0F, -13.5F, 5.0F, 1.0F, 7.0F).uv(0,18).cuboid(-3.5F, -13.999F, -12.5F, 7.0F, 1.0F, 5.0F).uv(0,26).cuboid(-2.5F, -16.999F, -11.5F, 5.0F, 3.0F, 3.0F).uv(0,24).cuboid(-1.5F, -17.0F, -12.5F, 3.0F, 3.0F, 5.0F), ModelTransform.pivot(0.0F,10.4F,8.1F));
         modelPartData6.addChild("hats_r1", ModelPartBuilder.create().uv(0,32).cuboid(-1.0F, -1.8F, -1.0F, 2.0F, 2.0F, 2.0F), ModelTransform.pivot(-0.8F,-21.5F,-10.0F));
         modelPartData6.addChild("hats_r2", ModelPartBuilder.create().uv(8,32).cuboid(-0.2F, -1.5F, -0.5F, 1.0F, 3.0F, 1.0F), ModelTransform.pivot(-0.7572F,-20.2089F,-10.0F));
-        modelPartData6.addChild("hats_r3", ModelPartBuilder.create().uv(12,32).cuboid(-1.7F, -1.2F, -1.5F, 3.0F, 3.0F, 3.0F), ModelTransform.pivot(0.0F,-18.5F,-10.0F));
+        modelPartData6.addChild("hats_r3", ModelPartBuilder.create().uv(12,34).cuboid(-1.7F, -1.199F, -0.499F, 3.0F, 3.0F, 1.0F).uv(12,32).cuboid(-0.7F, -1.2F, -1.5F, 1.0F, 3.0F, 3.0F), ModelTransform.pivot(0.0F,-18.5F,-10.0F));
         ModelPartData modelPartData7 = modelPartData5.addChild("ear1", ModelPartBuilder.create().uv(0,8).cuboid(-0.5F, -1.5F, -0.5F, 1.0F, 2.0F, 1.0F), ModelTransform.pivot(1.5F,-3.1F,-0.2F));
         modelPartData7.addChild("earfluff1", ModelPartBuilder.create().uv(4,8).cuboid(0.0F, -2.0F, -0.5F, 0.0F, 2.0F, 1.0F), ModelTransform.pivot(0.5F,-1.5F,0.0F));
         ModelPartData modelPartData8 = modelPartData5.addChild("ear2", ModelPartBuilder.create().uv(0,8).cuboid(-0.5F, -1.5F, -0.5F, 1.0F, 2.0F, 1.0F), ModelTransform.pivot(-1.5F,-3.1F,-0.2F));
         modelPartData8.addChild("earfluff2", ModelPartBuilder.create().uv(4,8).cuboid(0.0F, -2.0F, -0.5F, 0.0F, 2.0F, 1.0F), ModelTransform.pivot(-0.5F,-1.5F,0.0F));
-        modelPartData5.addChild("mouth", ModelPartBuilder.create().uv(16,1).cuboid(-1.5F, -1.1F, -4.6F, 3.0F, 2.0F, 1.0F), ModelTransform.pivot(0.0F,0.0F,0.0F));
         ModelPartData modelPartData9 = modelPartData5.addChild("anonymous", ModelPartBuilder.create().uv(46,32).cuboid(-4.0F, -3.3F, -3.1F, 8.0F, 7.0F, 1.0F).uv(46,40).cuboid(-2.0F, 3.7F, -3.1F, 4.0F, 1.0F, 1.0F).uv(46,45).cuboid(-3.0F, -1.8F, 2.2F, 6.0F, 1.0F, 0.0F), ModelTransform.pivot(0.0F,-0.8F,-1.7F));
         modelPartData9.addChild("anonymous_r1", ModelPartBuilder.create().uv(46,38).cuboid(-3.1F, -3.4F, -4.9F, 0.0F, 1.0F, 5.0F), ModelTransform.pivot(0.0F,1.6F,1.6F));
         modelPartData9.addChild("anonymous_r2", ModelPartBuilder.create().uv(46,37).cuboid(3.1F, -3.4F, -4.9F, 0.0F, 1.0F, 5.0F), ModelTransform.pivot(0.0F,1.6F,1.6F));
@@ -135,9 +135,6 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
         back_left_leg.setPivot(1.25F, 1.5F, 6.0F);
 
 
-        setRotationAngle(beard_r1, 0.0F, 0.0F, -1.5708F);
-        setRotationAngle(beard_r2, 0.0F, 0.0F, -0.3491F);
-        setRotationAngle(beard_r3, 0.0F, 0.0F, 0.3491F);
         setRotationAngle(tail, 0.6109F, 0.0F, 0.0F);
         setRotationAngle(tail1, 0.6109F, 0.0F, 0.0F);
         setRotationAngle(tnt_r1, 1.5708F, 0.0F, 0.0F);
@@ -154,6 +151,9 @@ public class CaracalEntityModel<C extends TameableEntity> extends EntityModel<Ca
         setRotationAngle(brtube_r1, 0.0F, 0.0F, 0.0873F);
         setRotationAngle(brtube_r2, 0.0F, 0.0F, 1.2217F);
         setRotationAngle(brtube_r3, 0.0F, 0.0F, 2.138F);
+        setRotationAngle(beard_r1, 0.0F, 0.0F, -1.5708F);
+        setRotationAngle(beard_r2, 0.0F, 0.0F, -0.3491F);
+        setRotationAngle(beard_r3, 0.0F, 0.0F, 0.3491F);
         setRotationAngle(main, 0.0F, 0.0F, 0.0F);
         setRotationAngle(body, 0.0F, 0.0F, 0.0F);
 

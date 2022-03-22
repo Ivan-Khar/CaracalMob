@@ -37,6 +37,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -47,6 +49,8 @@ import java.util.function.Predicate;
 public class CaracalEntity extends TameableEntity {
     private static final Ingredient TAMING_INGREDIENT;
     private static final TrackedData<Boolean> IN_SLEEPING_POSE;
+    private static final TrackedData<Integer> CARACAL_BIRTHDAY_COLOR;
+
     private TemptGoal temptGoal;
     private static double health = AqConfig.INSTANCE.getDoubleProperty("entity.health");
     private static double speed = AqConfig.INSTANCE.getDoubleProperty("entity.speed");
@@ -79,8 +83,6 @@ public class CaracalEntity extends TameableEntity {
         //caracals don't like this "texbobcat" person
         this.targetSelector.add(1, new UntamedActiveTargetGoal<>(this, PlayerEntity.class, false, livingEntity ->
                 (livingEntity).getUuidAsString().equals("06e02a3f-dc56-43b5-95b9-191387a59e01")));
-        this.targetSelector.add(1, new UntamedActiveTargetGoal<>(this, PlayerEntity.class, false, livingEntity ->
-                (livingEntity).getUuidAsString().equals("38b77e11-7d8b-4958-aaea-fc37ff7d796e")));
         this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
         this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, ChickenEntity.class, true, null));
         this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, RabbitEntity.class, true, null));
@@ -151,8 +153,21 @@ public class CaracalEntity extends TameableEntity {
                 .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, knockback);
     }
 
+    public int getMaskColor() {
+        return (Integer)this.dataTracker.get(CARACAL_BIRTHDAY_COLOR);
+    }
+
+    public void setMaskColor(int type) {
+        if (type < 0 || type >= 11) {
+            type = this.random.nextInt(2);
+        }
+
+        this.dataTracker.set(CARACAL_BIRTHDAY_COLOR, type);
+    }
+
     public void writeCustomDataToNbt(NbtCompound tag) {
         super.writeCustomDataToNbt(tag);
+        tag.putInt("CaracalBirthdayColor", this.getMaskColor());
         if (this.commander) {
             tag.putBoolean("Commander", true);
         }
@@ -161,6 +176,7 @@ public class CaracalEntity extends TameableEntity {
 
     public void readCustomDataFromNbt(NbtCompound tag) {
         super.readCustomDataFromNbt(tag);
+        this.setMaskColor(tag.getInt("CaracalBirthdayColor"));
         if (tag.contains("Commander", 99)) {
             this.commander = tag.getBoolean("Commander");
         }
@@ -221,11 +237,11 @@ public class CaracalEntity extends TameableEntity {
         CaracalEntity caracalEntity = CaracalMain.CARACAL.create(serverWorld);
         if (passiveEntity instanceof CaracalEntity) {
             if (this.isTamed()) {
-                assert caracalEntity != null;
                 caracalEntity.setOwnerUuid(this.getOwnerUuid());
                 caracalEntity.setTamed(true);
             }
         }
+        caracalEntity.setMaskColor(-1);
         return caracalEntity;
     }
     public boolean canBreedWith(AnimalEntity other) {
@@ -240,6 +256,7 @@ public class CaracalEntity extends TameableEntity {
 
     protected void initDataTracker() {
         super.initDataTracker();
+        this.dataTracker.startTracking(CARACAL_BIRTHDAY_COLOR, -1);
         this.dataTracker.startTracking(IN_SLEEPING_POSE, false);
     }
 
@@ -416,10 +433,15 @@ public class CaracalEntity extends TameableEntity {
         }
     }
 
+    @Nullable
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+        entityData = super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+        this.setMaskColor(this.random.nextInt(2));
+        return entityData;
+    }
     public boolean isBreedingItem(ItemStack stack) {
         return TAMING_INGREDIENT.test(stack);
     }
-
 
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
         return dimensions.height * 0.98F;
@@ -432,7 +454,8 @@ public class CaracalEntity extends TameableEntity {
 
     static {
         TAMING_INGREDIENT = Ingredient.ofItems(Items.COD, Items.SALMON, Items.CHICKEN, Items.RABBIT);
-        IN_SLEEPING_POSE = DataTracker.registerData(CatEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        IN_SLEEPING_POSE = DataTracker.registerData(CaracalEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+        CARACAL_BIRTHDAY_COLOR = DataTracker.registerData(CaracalEntity.class, TrackedDataHandlerRegistry.INTEGER);
     }
 
     @Environment(EnvType.CLIENT)
