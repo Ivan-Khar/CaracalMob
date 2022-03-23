@@ -167,7 +167,6 @@ public class CaracalEntity extends TameableEntity {
     public void setMaskColor(int type) {
         if (type < 1 || type > 3) {
             type = this.random.nextInt(3 - 1 + 1) + 1;
-            logInfo("generated type: " + type);
         }
 
         this.dataTracker.set(CARACAL_BIRTHDAY_COLOR, type);
