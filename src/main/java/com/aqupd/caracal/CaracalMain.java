@@ -31,10 +31,13 @@ public class CaracalMain implements ModInitializer {
     int maxgroup = AqConfig.INSTANCE.getNumberProperty("spawn.max");
     String[] biomelist = AqConfig.INSTANCE.getStringProperty("spawn.biomes").split(",");
 
-    public static final Identifier CARACAL_SCREAM = new Identifier("aqupd:caracal_scream");
-    public static SoundEvent CARACAL_AMBIENT = new SoundEvent(CARACAL_SCREAM);
-    public static final Identifier CARACAL_HISSING = new Identifier("aqupd:caracal_hiss");
-    public static SoundEvent CARACAL_HISS = new SoundEvent(CARACAL_HISSING);
+    public static SoundEvent CARACAL_SCREAM = new SoundEvent(new Identifier("aqupd:entity.caracal.scream"));
+    public static SoundEvent CARACAL_HISS = new SoundEvent(new Identifier("aqupd:entity.caracal.hiss"));
+    public static SoundEvent CARACAL_PURR = new SoundEvent(new Identifier("aqupd:entity.caracal.purr"));
+    public static SoundEvent CARACAL_PURREOW = new SoundEvent(new Identifier("aqupd:entity.caracal.purreow"));
+    public static SoundEvent CARACAL_DEATH = new SoundEvent(new Identifier("aqupd:entity.caracal.death"));
+    public static SoundEvent CARACAL_EAT = new SoundEvent(new Identifier("aqupd:entity.caracal.eat"));
+    public static SoundEvent CARACAL_BEG_FOR_FOOD = new SoundEvent(new Identifier("aqupd:entity.caracal.beg_for_food"));
 
     public static Identifier CARACAL_ID = new Identifier("aqupd", "caracal");
     public static final EntityType<CaracalEntity> CARACAL = Registry.register(
@@ -51,8 +54,14 @@ public class CaracalMain implements ModInitializer {
     public void onInitialize() {
         ServerWorldEvents.LOAD.register((server, world) -> AqDebug.INSTANCE.startDebug(AqConfig.INSTANCE.getBooleanProperty("debug")));
 
-        Registry.register(Registry.SOUND_EVENT, com.aqupd.caracal.CaracalMain.CARACAL_SCREAM, CARACAL_AMBIENT);
-        Registry.register(Registry.SOUND_EVENT, com.aqupd.caracal.CaracalMain.CARACAL_HISSING, CARACAL_HISS);
+        Registry.register(Registry.SOUND_EVENT, "entity.caracal.scream", CARACAL_SCREAM);
+        Registry.register(Registry.SOUND_EVENT, "entity.caracal.hiss", CARACAL_HISS);
+        Registry.register(Registry.SOUND_EVENT, "entity.caracal.purr", CARACAL_PURR);
+        Registry.register(Registry.SOUND_EVENT, "entity.caracal.purreow", CARACAL_PURREOW);
+        Registry.register(Registry.SOUND_EVENT, "entity.caracal.death", CARACAL_DEATH);
+        Registry.register(Registry.SOUND_EVENT, "entity.caracal.eat", CARACAL_EAT);
+        Registry.register(Registry.SOUND_EVENT, "entity.caracal.beg_for_food", CARACAL_BEG_FOR_FOOD);
+
         Registry.register(Registry.ITEM, new Identifier("aqupd", "caracal_spawn_egg"), CARACAL_SPAWN_EGG);
         FabricDefaultAttributeRegistry.register(CARACAL, CaracalEntity.createcaracalAttributes());
 

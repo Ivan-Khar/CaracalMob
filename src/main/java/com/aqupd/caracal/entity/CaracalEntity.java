@@ -46,6 +46,8 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
 
+import static com.aqupd.caracal.utils.AqLogger.*;
+
 public class CaracalEntity extends TameableEntity {
     private static final Ingredient TAMING_INGREDIENT;
     private static final TrackedData<Boolean> IN_SLEEPING_POSE;
@@ -106,12 +108,17 @@ public class CaracalEntity extends TameableEntity {
             this.setPose(EntityPose.STANDING);
             this.setSprinting(false);
         }
+
+        if (this.temptGoal != null && this.temptGoal.isActive() && !this.isTamed() && this.age % 100 == 0) {
+            this.playSound(CaracalMain.CARACAL_BEG_FOR_FOOD, 1.0F, 1.0F);
+        }
+
         this.updateAnimations();
     }
 
     private void updateAnimations() {
         if ((this.isInSleepingPose()) && this.age % 5 == 0) {
-            this.playSound(SoundEvents.ENTITY_CAT_PURR, 0.6F + 0.4F * (this.random.nextFloat() - this.random.nextFloat()), 1.0F);
+            this.playSound(CaracalMain.CARACAL_PURR, 0.6F + 0.4F * (this.random.nextFloat() - this.random.nextFloat()), 1.0F);
         }
     }
 
@@ -158,8 +165,9 @@ public class CaracalEntity extends TameableEntity {
     }
 
     public void setMaskColor(int type) {
-        if (type < 0 || type >= 11) {
-            type = this.random.nextInt(2);
+        if (type < 1 || type > 3) {
+            type = this.random.nextInt(3 - 1 + 1) + 1;
+            logInfo("generated type: " + type);
         }
 
         this.dataTracker.set(CARACAL_BIRTHDAY_COLOR, type);
@@ -197,10 +205,14 @@ public class CaracalEntity extends TameableEntity {
 
     @Nullable
     protected SoundEvent getAmbientSound() {
-        if (!((this.isInSleepingPose()) && this.age % 5 == 0)) {
-            return CaracalMain.CARACAL_AMBIENT;
+        if (this.isTamed()) {
+            if (this.isInLove()) {
+                return CaracalMain.CARACAL_PURR;
+            } else {
+                return this.random.nextInt(4) == 0 ? CaracalMain.CARACAL_PURREOW : CaracalMain.CARACAL_SCREAM;
+            }
         } else {
-            return null;
+            return CaracalMain.CARACAL_SCREAM;
         }
     }
 
@@ -212,7 +224,7 @@ public class CaracalEntity extends TameableEntity {
         return CaracalMain.CARACAL_HISS;
     }
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_OCELOT_DEATH;
+        return CaracalMain.CARACAL_DEATH;
     }
 
     private float getAttackDamage() {
@@ -226,7 +238,7 @@ public class CaracalEntity extends TameableEntity {
 
     protected void eat(PlayerEntity player, Hand hand, ItemStack stack) {
         if (this.isBreedingItem(stack)) {
-            this.playSound(SoundEvents.ENTITY_CAT_EAT, 1.0F, 1.0F);
+            this.playSound(CaracalMain.CARACAL_EAT, 1.0F, 1.0F);
         }
 
         super.eat(player, hand, stack);
@@ -241,7 +253,7 @@ public class CaracalEntity extends TameableEntity {
                 caracalEntity.setTamed(true);
             }
         }
-        caracalEntity.setMaskColor(-1);
+        caracalEntity.setMaskColor(10);
         return caracalEntity;
     }
     public boolean canBreedWith(AnimalEntity other) {
@@ -256,7 +268,7 @@ public class CaracalEntity extends TameableEntity {
 
     protected void initDataTracker() {
         super.initDataTracker();
-        this.dataTracker.startTracking(CARACAL_BIRTHDAY_COLOR, -1);
+        this.dataTracker.startTracking(CARACAL_BIRTHDAY_COLOR, 10);
         this.dataTracker.startTracking(IN_SLEEPING_POSE, false);
     }
 
@@ -436,7 +448,7 @@ public class CaracalEntity extends TameableEntity {
     @Nullable
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
         entityData = super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
-        this.setMaskColor(this.random.nextInt(2));
+        this.setMaskColor(10);
         return entityData;
     }
     public boolean isBreedingItem(ItemStack stack) {

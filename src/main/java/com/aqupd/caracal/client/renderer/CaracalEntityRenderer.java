@@ -52,12 +52,12 @@ public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, Cara
             return new Identifier("aqupd", "textures/entity/caracalchristmasdays.png");
         } else if ((day_of_month == 1 && month == 4)) {
             return new Identifier("aqupd", "textures/entity/caracalapril.png");
-        } else if ((day_of_month == 18 && month == 3)) {
+        } else if ((day_of_month == 6 && month == 5)) {
             return switch (entity.getMaskColor()) {
                 case 1 -> new Identifier("aqupd", "textures/entity/caracalbirthday1.png");
                 case 2 -> new Identifier("aqupd", "textures/entity/caracalbirthday2.png");
                 case 3 -> new Identifier("aqupd", "textures/entity/caracalbirthday3.png");
-                default -> new Identifier("aqupd", "textures/entity/caracalbirthday1.png");
+                default -> new Identifier("aqupd", "textures/entity/caracal.png");
             };
         }
         return new Identifier("aqupd", "textures/entity/caracal.png");
