@@ -31,8 +31,6 @@ dependencies {
 	// You may need to force-disable transitiveness on them.
 }
 
-
-
 processResources {
 	inputs.property "version", project.version
 
