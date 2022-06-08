@@ -54,7 +54,6 @@ public class CaracalMain implements ModInitializer {
 
     public static final Item CARACAL_SPAWN_EGG = new SpawnEggItem(CaracalMain.CARACAL, 5453358, 15592688, new FabricItemSettings().group(ItemGroup.MISC).fireproof().maxCount(64));
 
-
     @Override
     public void onInitialize() {
         ServerWorldEvents.LOAD.register((server, world) -> AqDebug.INSTANCE.startDebug(AqConfig.INSTANCE.getBooleanProperty("debug")));
@@ -70,7 +69,7 @@ public class CaracalMain implements ModInitializer {
         Registry.register(Registry.ITEM, new Identifier("aqupd", "caracal_spawn_egg"), CARACAL_SPAWN_EGG);
         FabricDefaultAttributeRegistry.register(CARACAL, CaracalEntity.createcaracalAttributes());
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.SAVANNA),SpawnGroup.CREATURE,CaracalMain.CARACAL,weight,mingroup,maxgroup);
-
+  
         SpawnRestrictionAccessor.callRegister(CARACAL, SpawnRestriction.Location.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, MobEntity::canMobSpawn);
         logInfo("Caracal mod is loaded!");
     }
