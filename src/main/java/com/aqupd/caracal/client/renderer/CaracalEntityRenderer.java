@@ -30,8 +30,8 @@ public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, Cara
     public Identifier getTexture(CaracalEntity entity) {
         int day_of_month = LocalDate.now().getDayOfMonth();
         int month = LocalDate.now().getMonthValue();
-        if (entity.getCustomName() != null && !entity.getCustomName().asString().isEmpty()) {
-            String n = entity.getCustomName().asString().toLowerCase(Locale.ENGLISH);
+        if (entity.getCustomName() != null && !entity.getCustomName().getString().isEmpty()) {
+            String n = entity.getCustomName().getString().toLowerCase(Locale.ENGLISH);
 
             if (n.contains("шляп") || n.contains("hat")) {
                 return new Identifier("aqupd", "textures/entity/caracalshlopa.png");

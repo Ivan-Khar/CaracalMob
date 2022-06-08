@@ -5,8 +5,8 @@ import com.aqupd.caracal.client.renderer.CaracalEntityRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 
@@ -20,6 +20,6 @@ public class CaracalMainClient implements ClientModInitializer {
     public void onInitializeClient() {
         EntityModelLayerRegistry.registerModelLayer(CARACAL_MODEL_LAYER, CaracalEntityModel::getTexturedModelData);
         //Register the renderer
-        EntityRendererRegistry.INSTANCE.register(CaracalMain.CARACAL, CaracalEntityRenderer::new);
+        EntityRendererRegistry.register(CaracalMain.CARACAL, CaracalEntityRenderer::new);
     }
 }

@@ -189,11 +189,10 @@ public class CaracalEntity extends TameableEntity {
         }
 
     }
-
     public void setCustomName(@Nullable Text name) {
         super.setCustomName(name);
         if (this.getCustomName() != null) {
-            String n = this.getCustomName().asString().toLowerCase(Locale.ENGLISH);
+            String n = this.getCustomName().getString().toLowerCase(Locale.ENGLISH);
             this.commander = (n.contains("командир") || n.contains("commander")) && !(n.contains("мирный") || n.contains("peaceful"));
         }
     }
@@ -360,13 +359,13 @@ public class CaracalEntity extends TameableEntity {
         }
 
         private void dropMorningGifts() {
-            Random random = this.caracalEntity.getRandom();
+            Random random = (Random) this.caracalEntity.getRandom();
             BlockPos.Mutable mutable = new BlockPos.Mutable();
             mutable.set(this.caracalEntity.getBlockPos());
             this.caracalEntity.teleport((double)(mutable.getX() + random.nextInt(11) - 5), (double)(mutable.getY() + random.nextInt(5) - 2), (double)(mutable.getZ() + random.nextInt(11) - 5), false);
             mutable.set(this.caracalEntity.getBlockPos());
             LootTable lootTable = this.caracalEntity.world.getServer().getLootManager().getTable(LootTables.CAT_MORNING_GIFT_GAMEPLAY);
-            net.minecraft.loot.context.LootContext.Builder builder = (new net.minecraft.loot.context.LootContext.Builder((ServerWorld)this.caracalEntity.world)).parameter(LootContextParameters.ORIGIN, this.caracalEntity.getPos()).parameter(LootContextParameters.THIS_ENTITY, this.caracalEntity).random(random);
+            net.minecraft.loot.context.LootContext.Builder builder = (new net.minecraft.loot.context.LootContext.Builder((ServerWorld)this.caracalEntity.world)).parameter(LootContextParameters.ORIGIN, this.caracalEntity.getPos()).parameter(LootContextParameters.THIS_ENTITY, this.caracalEntity).random((net.minecraft.util.math.random.Random) random);
             List<ItemStack> list = lootTable.generateLoot(builder.build(LootContextTypes.GIFT));
             Iterator<ItemStack> var6 = list.iterator();
 
