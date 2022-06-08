@@ -1,6 +1,8 @@
-name: build
-on: [pull_request, push]
-
+name: "Build mod"
+on:
+  push:
+  pull_request:
+  
 jobs:
   build:
     strategy:

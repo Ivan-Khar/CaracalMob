@@ -43,11 +43,7 @@ public class CaracalSitOnBlockGoal extends MoveToTargetPosGoal {
             return false;
         } else {
             BlockState blockState = world.getBlockState(pos);
-            return blockState.isOf(Blocks.FURNACE) && (Boolean) blockState.get(FurnaceBlock.LIT) || blockState.isIn(BlockTags.BEDS, (abstractBlockState) -> {
-                return (Boolean) abstractBlockState.getOrEmpty(BedBlock.PART).map((bedPart) -> {
-                    return bedPart != BedPart.HEAD;
-                }).orElse(true);
-            });
+            return blockState.isIn(BlockTags.BEDS, (state) -> state.getOrEmpty(BedBlock.PART).map((part) -> part != BedPart.HEAD).orElse(true));
         }
     }
 }

@@ -1,21 +1,99 @@
 {
-  "caracal_scream": {
-    "subtitle": "subtitles.aqupd.caracal_scream",
+  "entity.caracal.scream": {
+    "subtitle": "subtitles.aqupd.caracal.scream",
     "sounds": [
       "aqupd:caracal/scream1",
       "aqupd:caracal/scream2",
       "aqupd:caracal/scream3"
     ]
   },
-  "caracal_hiss": {
-    "subtitle": "subtitles.aqupd.caracal_hiss",
+  "entity.caracal.hiss": {
+    "subtitle": "subtitles.aqupd.caracal.hiss",
     "sounds": [
       "aqupd:caracal/hiss1",
       "aqupd:caracal/hiss2",
       "aqupd:caracal/hiss3",
       "aqupd:caracal/hiss4"
-    ],
-    "pitch": "1.3",
-    "volume": "0.5"
+    ]
+  },
+  "entity.caracal.purr": {
+    "subtitle": "subtitles.aqupd.caracal.purr",
+    "sounds": [
+      {
+        "name": "mob/cat/purr1",
+        "volume": 0.7
+      },
+      {
+        "name": "mob/cat/purr2",
+        "volume": 0.7
+      },
+      {
+        "name": "mob/cat/purr3",
+        "volume": 0.7
+      }
+    ]
+  },
+  "entity.caracal.purreow": {
+    "subtitle": "subtitles.aqupd.caracal.purr",
+    "sounds": [
+      {
+        "name": "mob/cat/purreow1",
+        "volume": 0.5
+      },
+      {
+        "name": "mob/cat/purreow2",
+        "volume": 0.5
+      }
+    ]
+  },
+  "entity.caracal.death": {
+    "subtitle": "subtitles.aqupd.caracal.death",
+    "sounds": [
+      {
+        "name": "mob/cat/hitt1",
+        "volume": 0.75,
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/cat/hitt2",
+        "volume": 0.75,
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/cat/hitt3",
+        "volume": 0.75,
+        "pitch": 0.9
+      }
+    ]
+  },
+  "entity.caracal.eat": {
+    "subtitle": "subtitles.aqupd.caracal.eat",
+    "sounds": [
+      {
+        "name": "mob/cat/eat1",
+        "volume": 1
+      },
+      {
+        "name": "mob/cat/eat2",
+        "volume": 1
+      }
+    ]
+  },
+  "entity.caracal.beg_for_food": {
+    "subtitle": "subtitles.aqupd.caracal.beg_for_food",
+    "sounds": [
+      {
+        "name": "mob/cat/beg1",
+        "volume": 0.7
+      },
+      {
+        "name": "mob/cat/beg2",
+        "volume": 0.7
+      },
+      {
+        "name": "mob/cat/beg3",
+        "volume": 0.7
+      }
+    ]
   }
 }
