@@ -1,15 +1,11 @@
 package com.aqupd.caracal.entity;
 
-import static com.aqupd.caracal.utils.AqLogger.*;
-
 import com.aqupd.caracal.CaracalMain;
 import com.aqupd.caracal.ai.CaracalSitOnBlockGoal;
 import com.aqupd.caracal.utils.AqConfig;
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Predicate;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -27,13 +23,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
+import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -41,7 +37,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -216,7 +212,7 @@ public class CaracalEntity extends TameableEntity {
   }
 
   public int getMaskColor() {
-    return (Integer) this.dataTracker.get(CARACAL_BIRTHDAY_COLOR);
+    return this.dataTracker.get(CARACAL_BIRTHDAY_COLOR);
   }
 
   public void setMaskColor(int type) {
@@ -277,7 +273,7 @@ public class CaracalEntity extends TameableEntity {
   }
 
   public int getMinAmbientSoundDelay() {
-    return ThreadLocalRandom.current().nextInt(300, 1200 + 1);
+    return 120;
   }
 
   protected SoundEvent getHurtSound(DamageSource source) {
@@ -379,7 +375,7 @@ public class CaracalEntity extends TameableEntity {
             this.caracalEntity.world.getBlockState(blockPos);
           if (blockState.isIn(BlockTags.BEDS)) {
             this.bedPos =
-              (BlockPos) blockState
+              blockState
                 .getOrEmpty(BedBlock.FACING)
                 .map(direction -> blockPos.offset(direction.getOpposite()))
                 .orElseGet(() -> new BlockPos(blockPos));
@@ -429,9 +425,9 @@ public class CaracalEntity extends TameableEntity {
         this.caracalEntity.setInSittingPose(false);
         this.caracalEntity.getNavigation()
           .startMovingTo(
-            (double) this.bedPos.getX(),
-            (double) this.bedPos.getY(),
-            (double) this.bedPos.getZ(),
+            this.bedPos.getX(),
+            this.bedPos.getY(),
+            this.bedPos.getZ(),
             1.100000023841858D
           );
       }
@@ -454,50 +450,17 @@ public class CaracalEntity extends TameableEntity {
     }
 
     private void dropMorningGifts() {
-      Random random = (Random) this.caracalEntity.getRandom();
+      Random random = this.caracalEntity.getRandom();
       BlockPos.Mutable mutable = new BlockPos.Mutable();
       mutable.set(this.caracalEntity.getBlockPos());
-      this.caracalEntity.teleport(
-          (double) (mutable.getX() + random.nextInt(11) - 5),
-          (double) (mutable.getY() + random.nextInt(5) - 2),
-          (double) (mutable.getZ() + random.nextInt(11) - 5),
-          false
-        );
+      this.caracalEntity.teleport(mutable.getX() + random.nextInt(11) - 5, mutable.getY() + random.nextInt(5) - 2, mutable.getZ() + random.nextInt(11) - 5, false);
       mutable.set(this.caracalEntity.getBlockPos());
-      LootTable lootTable =
-        this.caracalEntity.world.getServer()
-          .getLootManager()
-          .getTable(LootTables.CAT_MORNING_GIFT_GAMEPLAY);
-      net.minecraft.loot.context.LootContext.Builder builder =
-        (
-          new net.minecraft.loot.context.LootContext.Builder(
-            (ServerWorld) this.caracalEntity.world
-          )
-        ).parameter(LootContextParameters.ORIGIN, this.caracalEntity.getPos())
-          .parameter(LootContextParameters.THIS_ENTITY, this.caracalEntity)
-          .random((net.minecraft.util.math.random.Random) random);
-      List<ItemStack> list = lootTable.generateLoot(
-        builder.build(LootContextTypes.GIFT)
-      );
-      Iterator<ItemStack> var6 = list.iterator();
+      LootTable lootTable = this.caracalEntity.world.getServer().getLootManager().getTable(LootTables.CAT_MORNING_GIFT_GAMEPLAY);
+      LootContext.Builder builder = (new LootContext.Builder((ServerWorld)this.caracalEntity.world)).parameter(LootContextParameters.ORIGIN, this.caracalEntity.getPos()).parameter(LootContextParameters.THIS_ENTITY, this.caracalEntity).random(random);
+      List<ItemStack> list = lootTable.generateLoot(builder.build(LootContextTypes.GIFT));
 
-      while (var6.hasNext()) {
-        ItemStack itemStack = var6.next();
-        this.caracalEntity.world.spawnEntity(
-            new ItemEntity(
-              this.caracalEntity.world,
-              (double) mutable.getX() -
-              (double) MathHelper.sin(
-                this.caracalEntity.bodyYaw * 0.017453292F
-              ),
-              (double) mutable.getY(),
-              (double) mutable.getZ() +
-              (double) MathHelper.cos(
-                this.caracalEntity.bodyYaw * 0.017453292F
-              ),
-              itemStack
-            )
-          );
+      for (ItemStack itemStack : list) {
+        this.caracalEntity.world.spawnEntity(new ItemEntity(this.caracalEntity.world, (double) mutable.getX() - (double) MathHelper.sin(this.caracalEntity.bodyYaw * 0.017453292F), (double) mutable.getY(), (double) mutable.getZ() + (double) MathHelper.cos(this.caracalEntity.bodyYaw * 0.017453292F), itemStack));
       }
     }
 
@@ -506,9 +469,9 @@ public class CaracalEntity extends TameableEntity {
         this.caracalEntity.setInSittingPose(false);
         this.caracalEntity.getNavigation()
           .startMovingTo(
-            (double) this.bedPos.getX(),
-            (double) this.bedPos.getY(),
-            (double) this.bedPos.getZ(),
+            this.bedPos.getX(),
+            this.bedPos.getY(),
+            this.bedPos.getZ(),
             1.100000023841858D
           );
         if (this.caracalEntity.squaredDistanceTo(this.owner) < 2.5D) {
@@ -627,12 +590,4 @@ public class CaracalEntity extends TameableEntity {
       );
   }
 
-  @Environment(EnvType.CLIENT)
-  public Vec3d method_29919() {
-    return new Vec3d(
-      0.0D,
-      0.5F * this.getStandingEyeHeight(),
-      this.getWidth() * 0.4F
-    );
-  }
 }
