@@ -21,8 +21,8 @@ public class CaracalSitOnBlockGoal extends MoveToTargetPosGoal {
   public boolean canStart() {
     return (
       this.caracalEntity.isTamed() &&
-      !this.caracalEntity.isSitting() &&
-      super.canStart()
+        !this.caracalEntity.isSitting() &&
+        super.canStart()
     );
   }
 
