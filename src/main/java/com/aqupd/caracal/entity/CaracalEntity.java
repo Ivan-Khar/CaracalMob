@@ -1,5 +1,7 @@
 package com.aqupd.caracal.entity;
 
+import static com.aqupd.caracal.setup.CaracalSounds.*;
+
 import com.aqupd.caracal.CaracalMain;
 import com.aqupd.caracal.ai.CaracalSitOnBlockGoal;
 import com.aqupd.caracal.utils.AqConfig;
@@ -50,28 +52,13 @@ public class CaracalEntity extends TameableEntity {
   private static final TrackedData<Integer> CARACAL_BIRTHDAY_COLOR;
 
   private TemptGoal temptGoal;
-  private static double health = AqConfig.INSTANCE.getDoubleProperty(
-    "entity.health"
-  );
-  private static double speed = AqConfig.INSTANCE.getDoubleProperty(
-    "entity.speed"
-  );
-  private static double follow = AqConfig.INSTANCE.getDoubleProperty(
-    "entity.follow"
-  );
-  private static double damage = AqConfig.INSTANCE.getDoubleProperty(
-    "entity.damage"
-  );
-  private static double knockback = AqConfig.INSTANCE.getDoubleProperty(
-    "entity.knockback"
-  );
+  private static double health = AqConfig.INSTANCE.getDoubleProperty("entity.health");
+  private static double speed = AqConfig.INSTANCE.getDoubleProperty("entity.speed");
+  private static double follow = AqConfig.INSTANCE.getDoubleProperty("entity.follow");
+  private static double damage = AqConfig.INSTANCE.getDoubleProperty("entity.damage");
+  private static double knockback = AqConfig.INSTANCE.getDoubleProperty("entity.knockback");
 
-  public CaracalEntity(
-    EntityType<? extends CaracalEntity> entityType,
-    World world
-  ) {
-    super(entityType, world);
-  }
+  public CaracalEntity(EntityType<? extends CaracalEntity> entityType, World world) {super(entityType, world);}
 
   private boolean commander;
 
@@ -79,10 +66,7 @@ public class CaracalEntity extends TameableEntity {
     this.temptGoal = new TemptGoal(this, 1.0D, TAMING_INGREDIENT, true);
     this.goalSelector.add(1, new SwimGoal(this));
     this.goalSelector.add(1, new SitGoal(this));
-    this.goalSelector.add(
-        2,
-        new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, false)
-      );
+    this.goalSelector.add(2, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
     this.goalSelector.add(2, new SleepWithOwnerGoal(this));
     this.goalSelector.add(3, new EscapeDangerGoal(this, 1.4D));
     this.goalSelector.add(3, new AnimalMateGoal(this, 1.0D));
@@ -90,10 +74,7 @@ public class CaracalEntity extends TameableEntity {
     this.goalSelector.add(5, new PounceAtTargetGoal(this, 0.3F));
     this.goalSelector.add(6, new AttackGoal(this));
     this.goalSelector.add(7, new CaracalSitOnBlockGoal(this, 0.8D));
-    this.goalSelector.add(
-        7,
-        new LookAtEntityGoal(this, PlayerEntity.class, 10.0F)
-      );
+    this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
     this.goalSelector.add(8, new WanderAroundGoal(this, 0.5F));
 
     //caracals don't like this "texbobcat" person
@@ -109,18 +90,9 @@ public class CaracalEntity extends TameableEntity {
         )
       );
     this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
-    this.targetSelector.add(
-        3,
-        new UntamedActiveTargetGoal<>(this, ChickenEntity.class, true, null)
-      );
-    this.targetSelector.add(
-        3,
-        new UntamedActiveTargetGoal<>(this, RabbitEntity.class, true, null)
-      );
-    this.targetSelector.add(
-        3,
-        new UntamedActiveTargetGoal<>(this, BatEntity.class, true, null)
-      );
+    this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, ChickenEntity.class, true, null));
+    this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, RabbitEntity.class, true, null));
+    this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, BatEntity.class, true, null));
   }
 
   public void mobTick() {
@@ -147,7 +119,7 @@ public class CaracalEntity extends TameableEntity {
       !this.isTamed() &&
       this.age % 100 == 0
     ) {
-      this.playSound(CaracalMain.CARACAL_BEG_FOR_FOOD, 1.0F, 1.0F);
+      this.playSound(ENTITY_CARACAL_BEG_FOR_FOOD, 1.0F, 1.0F);
     }
 
     this.updateAnimations();
@@ -156,7 +128,7 @@ public class CaracalEntity extends TameableEntity {
   private void updateAnimations() {
     if ((this.isInSleepingPose()) && this.age % 5 == 0) {
       this.playSound(
-          CaracalMain.CARACAL_PURR,
+          ENTITY_CARACAL_PURR,
           0.6F + 0.4F * (this.random.nextFloat() - this.random.nextFloat()),
           1.0F
         );
@@ -261,14 +233,18 @@ public class CaracalEntity extends TameableEntity {
   protected SoundEvent getAmbientSound() {
     if (this.isTamed()) {
       if (this.isInLove()) {
-        return CaracalMain.CARACAL_PURR;
+        return ENTITY_CARACAL_PURR;
       } else {
         return this.random.nextInt(4) == 0
-          ? CaracalMain.CARACAL_PURREOW
-          : CaracalMain.CARACAL_SCREAM;
+          ? ENTITY_CARACAL_PURREOW
+          : this.getBreedingAge() < 0
+            ? ENTITY_CARACAL_SMALL_SCREAM
+            : ENTITY_CARACAL_SCREAM;
       }
     } else {
-      return CaracalMain.CARACAL_SCREAM;
+      return this.getBreedingAge() < 0
+        ? ENTITY_CARACAL_SMALL_SCREAM
+        : ENTITY_CARACAL_SCREAM;
     }
   }
 
@@ -277,11 +253,11 @@ public class CaracalEntity extends TameableEntity {
   }
 
   protected SoundEvent getHurtSound(DamageSource source) {
-    return CaracalMain.CARACAL_HISS;
+    return ENTITY_CARACAL_HISS;
   }
 
   protected SoundEvent getDeathSound() {
-    return CaracalMain.CARACAL_DEATH;
+    return ENTITY_CARACAL_DEATH;
   }
 
   private float getAttackDamage() {
@@ -296,7 +272,7 @@ public class CaracalEntity extends TameableEntity {
 
   protected void eat(PlayerEntity player, Hand hand, ItemStack stack) {
     if (this.isBreedingItem(stack)) {
-      this.playSound(CaracalMain.CARACAL_EAT, 1.0F, 1.0F);
+      this.playSound(ENTITY_CARACAL_EAT, 1.0F, 1.0F);
     }
 
     super.eat(player, hand, stack);

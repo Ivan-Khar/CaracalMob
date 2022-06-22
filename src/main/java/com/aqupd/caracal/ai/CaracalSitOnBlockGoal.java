@@ -3,8 +3,6 @@ package com.aqupd.caracal.ai;
 import com.aqupd.caracal.entity.CaracalEntity;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FurnaceBlock;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.ai.goal.MoveToTargetPosGoal;
 import net.minecraft.tag.BlockTags;

@@ -7,6 +7,16 @@
       "aqupd:caracal/scream3"
     ]
   },
+  "entity.caracal.small.scream": {
+    "subtitle": "subtitles.aqupd.caracal.scream",
+    "sounds": [
+      {"name": "aqupd:caracal/small/scream1", "pitch": 0.5},
+      {"name": "aqupd:caracal/small/scream2", "pitch": 0.5},
+      {"name": "aqupd:caracal/small/scream3", "pitch": 0.5},
+      {"name": "aqupd:caracal/small/scream4", "pitch": 0.5},
+      {"name": "aqupd:caracal/small/scream5", "pitch": 0.5}
+    ]
+  },
   "entity.caracal.hiss": {
     "subtitle": "subtitles.aqupd.caracal.hiss",
     "sounds": [
@@ -20,16 +30,8 @@
     "subtitle": "subtitles.aqupd.caracal.purr",
     "sounds": [
       {
-        "name": "mob/cat/purr1",
-        "volume": 0.7
-      },
-      {
-        "name": "mob/cat/purr2",
-        "volume": 0.7
-      },
-      {
-        "name": "mob/cat/purr3",
-        "volume": 0.7
+        "name": "aqupd:caracal/purr",
+        "volume": 1
       }
     ]
   },
@@ -37,12 +39,8 @@
     "subtitle": "subtitles.aqupd.caracal.purr",
     "sounds": [
       {
-        "name": "mob/cat/purreow1",
-        "volume": 0.5
-      },
-      {
-        "name": "mob/cat/purreow2",
-        "volume": 0.5
+        "name": "aqupd:caracal/purreow",
+        "volume": 0.7
       }
     ]
   },

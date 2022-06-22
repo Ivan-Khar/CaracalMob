@@ -1,7 +1,5 @@
 package com.aqupd.caracal.client.renderer;
 
-import static com.aqupd.caracal.utils.AqLogger.*;
-
 import com.aqupd.caracal.CaracalMainClient;
 import com.aqupd.caracal.client.model.CaracalEntityModel;
 import com.aqupd.caracal.entity.CaracalEntity;
@@ -9,27 +7,16 @@ import java.time.LocalDate;
 import java.util.Locale;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
-public class CaracalEntityRenderer
-  extends MobEntityRenderer<CaracalEntity, CaracalEntityModel<CaracalEntity>> {
+public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, CaracalEntityModel<CaracalEntity>> {
 
   public CaracalEntityRenderer(EntityRendererFactory.Context context) {
-    super(
-      context,
-      new CaracalEntityModel<>(
-        context.getPart(CaracalMainClient.CARACAL_MODEL_LAYER)
-      ),
-      0.6f
-    );
+    super(context, new CaracalEntityModel<>(context.getPart(CaracalMainClient.CARACAL_MODEL_LAYER)), 0.6f);
   }
 
   @Override
