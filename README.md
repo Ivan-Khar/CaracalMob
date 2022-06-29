@@ -1,4 +1,4 @@
-<h1 align=center>Caracal for 1.19</h1>
+<h1 align=center>Caracal mod</h1>
 <h2 align=center>Fabric and Fabric API required!</h2>
 <p align=center>
 <img src="https://badgen.net/github/release/aquupd/caracalmob"><img src="https://badgen.net/github/stars/aquupd/caracalmob"></p>
