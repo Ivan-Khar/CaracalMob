@@ -16,7 +16,7 @@ public class Items extends ItemModelProvider {
     @Override
     protected void registerModels() {
 
-        singleTexture(Registration.CARACAL_SPAWN_EGG.get().getRegistryName().getPath(),
+        singleTexture(Registration.CARACAL_SPAWN_EGG.getId().getPath(),
                 new ResourceLocation("item/template_spawn_egg"),
                 new ResourceLocation(Caracal.MODID, "item/caracal_spawn_egg"));
 

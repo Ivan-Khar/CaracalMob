@@ -44,16 +44,11 @@ public class AqConfig {
                 var writer = new FileOutputStream(file);
                 file.createNewFile();
                 aqprop.setProperty("config.version","1");
-                aqprop.setProperty("debug","false");
-                aqprop.setProperty("spawn.weight","50");
-                aqprop.setProperty("spawn.min","2");
-                aqprop.setProperty("spawn.max","4");
                 aqprop.setProperty("entity.health","10.0");
                 aqprop.setProperty("entity.speed","0.3");
                 aqprop.setProperty("entity.follow","20.0");
                 aqprop.setProperty("entity.damage","2.5");
                 aqprop.setProperty("entity.knockback","0.5");
-                aqprop.setProperty("spawn.biomes","SAVANNA");
                 aqprop.store(writer, "Configuration file for Caracal mod");
                 writer.close();
             }

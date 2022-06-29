@@ -13,6 +13,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -324,7 +325,7 @@ public class CaracalEntity extends TamableAnimal {
         return caracal;
     }
 
-    public static boolean canSpawn(EntityType<CaracalEntity> entity, LevelAccessor level, MobSpawnType type, BlockPos pos, Random random){
+    public static boolean canSpawn(EntityType<CaracalEntity> entity, LevelAccessor level, MobSpawnType type, BlockPos pos, RandomSource random){
         return Animal.checkAnimalSpawnRules(entity, level, type, pos, random);
     }
 }

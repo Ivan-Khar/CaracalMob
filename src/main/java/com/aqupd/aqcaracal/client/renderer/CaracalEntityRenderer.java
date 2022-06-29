@@ -10,6 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.time.LocalDate;
 import java.util.Locale;
+import org.jetbrains.annotations.NotNull;
 
 public class CaracalEntityRenderer<Type extends CaracalEntity> extends MobRenderer<Type, CaracalEntityModel<Type>> {
 

@@ -1,46 +1,21 @@
-
-Source installation information for modders
--------------------------------------------
-This code follows the Minecraft Forge installation methodology. It will apply
-some small patches to the vanilla MCP source code, giving you and it access 
-to some of the data and functions you need to build a successful mod.
-
-Note also that the patches are built against "un-renamed" MCP source code (aka
-SRG Names) - this means that you will not be able to read them directly against
-normal code.
-
-Setup Process:
-==============================
-
-Step 1: Open your command-line and browse to the folder where you extracted the zip file.
-
-Step 2: You're left with a choice.
-If you prefer to use Eclipse:
-1. Run the following command: `gradlew genEclipseRuns` (`./gradlew genEclipseRuns` if you are on Mac/Linux)
-2. Open Eclipse, Import > Existing Gradle Project > Select Folder 
-   or run `gradlew eclipse` to generate the project.
-
-If you prefer to use IntelliJ:
-1. Open IDEA, and import project.
-2. Select your build.gradle file and have it import.
-3. Run the following command: `gradlew genIntellijRuns` (`./gradlew genIntellijRuns` if you are on Mac/Linux)
-4. Refresh the Gradle Project in IDEA if required.
-
-If at any point you are missing libraries in your IDE, or you've run into problems you can 
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
-
-Mapping Names:
-=============================
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license, if you do not agree with it you can change your mapping names to other crowdsourced names in your 
-build.gradle. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/MinecraftForge/MCPConfig/blob/master/Mojang.md
-
-Additional Resources: 
-=========================
-Community Documentation: http://mcforge.readthedocs.io/en/latest/gettingstarted/  
-LexManos' Install Video: https://www.youtube.com/watch?v=8VEdtQLuLO0  
-Forge Forum: https://forums.minecraftforge.net/  
-Forge Discord: https://discord.gg/UvedJ9m  
+<h1 align=center>Caracal mod</h1>
+<h2 align=center>Fabric and Fabric API required!</h2>
+<p align=center>
+<img src="https://badgen.net/github/release/aquupd/caracalmob"><img src="https://badgen.net/github/stars/aquupd/caracalmob"></p>
+<ul>
+    <li> This mod adds caracals to your world!</li>
+    <li> They like chickens and rabbits</li>
+    <li> You can tame them with raw fish or chicken/rabbit</li>
+    <li> Spawns naturally in the savanna</li>
+    <li> They have cute sounds!</li>
+</ul>
+<h1 align=center><a href="https://github.com/AquUpd/CaracalMob/wiki/Nametags">All nametags list </a></h1>
+<h2 align=center>Screenshots</h2>
+<p align=center>
+    <img src="https://i.imgur.com/ZMRftI0.png">
+    <img src="https://i.imgur.com/mXDNY7y.png">
+    <img src="https://i.imgur.com/iWPD6X4.png">
+</p>
+<h3>Model made by u/SociopathyKathy:<br>
+https://www.reddit.com/r/Minecraft/comments/kh6cm7/i_got_bored_and_decided_to_make_a_caracal/</h3>
+<h4>This is my first mod, soo it's probably have a lot of bugs. Please report them.</h4>
