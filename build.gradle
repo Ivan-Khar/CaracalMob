@@ -34,6 +34,7 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
+	modImplementation include('com.github.samolego.Config2Brigadier:config2brigadier-fabric:1.2.1')
 	modImplementation 'software.bernie.geckolib:geckolib-fabric-1.19:3.1.5'
 	modImplementation "maven.modrinth:lithium:mc1.19-0.8.1"
 	modImplementation "maven.modrinth:starlight:1.1.1+1.19"

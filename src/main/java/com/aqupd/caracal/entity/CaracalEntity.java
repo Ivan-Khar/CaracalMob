@@ -44,8 +44,11 @@ import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class CaracalEntity extends TameableEntity {
+public class CaracalEntity extends TameableEntity implements IAnimatable {
 
   private static final Ingredient TAMING_INGREDIENT;
   private static final TrackedData<Boolean> IN_SLEEPING_POSE;
@@ -57,7 +60,7 @@ public class CaracalEntity extends TameableEntity {
   private static double follow = AqConfig.INSTANCE.getDoubleProperty("entity.follow");
   private static double damage = AqConfig.INSTANCE.getDoubleProperty("entity.damage");
   private static double knockback = AqConfig.INSTANCE.getDoubleProperty("entity.knockback");
-
+  private AnimationFactory animationFactory = new AnimationFactory(this);
   public CaracalEntity(EntityType<? extends CaracalEntity> entityType, World world) {super(entityType, world);}
 
   private boolean commander;
@@ -133,6 +136,16 @@ public class CaracalEntity extends TameableEntity {
           1.0F
         );
     }
+  }
+
+  @Override
+  public void registerControllers(AnimationData animationData) {
+
+  }
+
+  @Override
+  public AnimationFactory getFactory() {
+    return animationFactory;
   }
 
   static class TemptGoal extends net.minecraft.entity.ai.goal.TemptGoal {

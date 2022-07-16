@@ -1,31 +1,23 @@
-package com.aqupd.caracal.client.renderer;
+package com.aqupd.caracal.entity;
 
-import com.aqupd.caracal.CaracalMainClient;
-import com.aqupd.caracal.client.model.CaracalEntityModel;
-import com.aqupd.caracal.entity.CaracalEntity;
 import java.time.LocalDate;
 import java.util.Locale;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-@Environment(EnvType.CLIENT)
-public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, CaracalEntityModel<CaracalEntity>> {
-
-  public CaracalEntityRenderer(EntityRendererFactory.Context context) {
-    super(context, new CaracalEntityModel<>(context.getPart(CaracalMainClient.CARACAL_MODEL_LAYER)), 0.6f);
+public class CaracalEntityModel extends AnimatedGeoModel<CaracalEntity> {
+  @Override
+  public Identifier getModelResource(CaracalEntity entity) {
+    return new Identifier("aqupd", "geo/caracal.geo.json");
   }
 
   @Override
-  public Identifier getTexture(CaracalEntity entity) {
+  public Identifier getTextureResource(CaracalEntity entity) {
     int day_of_month = LocalDate.now().getDayOfMonth();
     int month = LocalDate.now().getMonthValue();
     if (
       entity.getCustomName() != null &&
-      !entity.getCustomName().getString().isEmpty()
+        !entity.getCustomName().getString().isEmpty()
     ) {
       String n = entity.getCustomName().getString().toLowerCase(Locale.ENGLISH);
 
@@ -73,11 +65,13 @@ public class CaracalEntityRenderer extends MobEntityRenderer<CaracalEntity, Cara
     return new Identifier("aqupd", "textures/entity/caracal.png");
   }
 
-  protected void scale(CaracalEntity entity, MatrixStack matrixStack, float f) {
-    if (entity.getBreedingAge() < 0) {
-      matrixStack.scale(0.6F, 0.6F, 0.6F);
-    } else {
-      matrixStack.scale(1.0F, 1.0F, 1.0F);
-    }
+  @Override
+  public Identifier getAnimationResource(CaracalEntity animatable) {
+    return new Identifier("aqupd", "animations/caracal.animation.json");
+  }
+
+  @Override
+  public void setLivingAnimations(CaracalEntity entity, Integer uniqueID) {
+    super.setLivingAnimations(entity, uniqueID);
   }
 }

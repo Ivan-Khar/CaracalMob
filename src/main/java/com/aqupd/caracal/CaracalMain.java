@@ -17,6 +17,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.SpawnRestriction;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.Identifier;
@@ -30,37 +31,24 @@ public class CaracalMain implements ModInitializer {
   int mingroup = AqConfig.INSTANCE.getNumberProperty("spawn.min");
   int maxgroup = AqConfig.INSTANCE.getNumberProperty("spawn.max");
 
-  public static Identifier CARACAL_ID = new Identifier("aqupd", "caracal");
   public static final EntityType<CaracalEntity> CARACAL = Registry.register(
-    Registry.ENTITY_TYPE,
-    CARACAL_ID,
-    FabricEntityTypeBuilder
-      .create(SpawnGroup.CREATURE, CaracalEntity::new)
-      .dimensions(EntityDimensions.changing(0.6f, 0.75f))
-      .build()
-  );
+    Registry.ENTITY_TYPE, new Identifier("aqupd", "caracal"),
+    FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, CaracalEntity::new)
+      .dimensions(EntityDimensions.changing(0.6f, 0.75f)).build());
 
-  public static final SpawnEggItem CARACAL_SPAWN_EGG = new SpawnEggItem(
+  public static final Item CARACAL_SPAWN_EGG = new SpawnEggItem(
     CaracalMain.CARACAL,
     5453358,
     15592688,
-    new FabricItemSettings().group(ItemGroup.MISC).fireproof().maxCount(64)
-  );
+    new FabricItemSettings().group(ItemGroup.MISC).fireproof().maxCount(64));
 
   @Override
   public void onInitialize() {
     //ServerWorldEvents.LOAD.register((server, world) -> AqDebug.INSTANCE.startDebug(AqConfig.INSTANCE.getBooleanProperty("debug")));
     CaracalSounds.init();
 
-    Registry.register(
-      Registry.ITEM,
-      new Identifier("aqupd", "caracal_spawn_egg"),
-      CARACAL_SPAWN_EGG
-    );
-    FabricDefaultAttributeRegistry.register(
-      CARACAL,
-      CaracalEntity.createcaracalAttributes()
-    );
+    Registry.register(Registry.ITEM, new Identifier("aqupd", "caracal_spawn_egg"), CARACAL_SPAWN_EGG);
+    FabricDefaultAttributeRegistry.register(CARACAL, CaracalEntity.createcaracalAttributes());
 
     BiomeModifications.addSpawn(
       BiomeSelectors.includeByKey(BiomeKeys.SAVANNA),
@@ -68,14 +56,14 @@ public class CaracalMain implements ModInitializer {
       CaracalMain.CARACAL,
       weight,
       mingroup,
-      maxgroup
-    );
+      maxgroup);
+
     SpawnRestrictionAccessor.callRegister(
       CARACAL,
       SpawnRestriction.Location.ON_GROUND,
       Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
-      MobEntity::canMobSpawn
-    );
+      MobEntity::canMobSpawn);
+
     logInfo("Caracal mod is loaded!");
   }
 }
