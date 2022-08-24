@@ -11,7 +11,6 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.fabricmc.fabric.mixin.object.builder.SpawnRestrictionAccessor;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -51,19 +50,18 @@ public class CaracalMain implements ModInitializer {
     FabricDefaultAttributeRegistry.register(CARACAL, CaracalEntity.createcaracalAttributes());
 
     BiomeModifications.addSpawn(
-      BiomeSelectors.includeByKey(BiomeKeys.SAVANNA),
-      SpawnGroup.CREATURE,
-      CaracalMain.CARACAL,
-      weight,
-      mingroup,
-      maxgroup);
+        BiomeSelectors.includeByKey(BiomeKeys.SAVANNA),
+        SpawnGroup.CREATURE,
+        CaracalMain.CARACAL,
+        weight, mingroup, maxgroup
+    );
 
-    SpawnRestrictionAccessor.callRegister(
+    SpawnRestriction.register(
       CARACAL,
       SpawnRestriction.Location.ON_GROUND,
       Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
-      MobEntity::canMobSpawn);
-
+      MobEntity::canMobSpawn
+    );
     logInfo("Caracal mod is loaded!");
   }
 }
