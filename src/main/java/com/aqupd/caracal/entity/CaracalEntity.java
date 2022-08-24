@@ -8,6 +8,7 @@ import com.aqupd.caracal.utils.AqConfig;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -45,9 +46,14 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+@SuppressWarnings({"ConstantConditions", "FieldMayBeFinal"})
 public class CaracalEntity extends TameableEntity implements IAnimatable {
 
   private static final Ingredient TAMING_INGREDIENT;
@@ -60,8 +66,10 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
   private static double follow = AqConfig.INSTANCE.getDoubleProperty("entity.follow");
   private static double damage = AqConfig.INSTANCE.getDoubleProperty("entity.damage");
   private static double knockback = AqConfig.INSTANCE.getDoubleProperty("entity.knockback");
-  private AnimationFactory animationFactory = new AnimationFactory(this);
-  public CaracalEntity(EntityType<? extends CaracalEntity> entityType, World world) {super(entityType, world);}
+
+  public CaracalEntity(EntityType<? extends CaracalEntity> entityType, World world) {
+    super(entityType, world);
+  }
 
   private boolean commander;
 
@@ -81,17 +89,8 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
     this.goalSelector.add(8, new WanderAroundGoal(this, 0.5F));
 
     //caracals don't like this "texbobcat" person
-    this.targetSelector.add(
-        1,
-        new UntamedActiveTargetGoal<>(
-          this,
-          PlayerEntity.class,
-          false,
-          livingEntity ->
-            (livingEntity).getUuidAsString()
-              .equals("06e02a3f-dc56-43b5-95b9-191387a59e01")
-        )
-      );
+    this.targetSelector.add(1, new UntamedActiveTargetGoal<>(this, PlayerEntity.class, false,
+          le -> le.getUuidAsString().equals("06e02a3f-dc56-43b5-95b9-191387a59e01")));
     this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
     this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, ChickenEntity.class, true, null));
     this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, RabbitEntity.class, true, null));
@@ -116,12 +115,7 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
       this.setSprinting(false);
     }
 
-    if (
-      this.temptGoal != null &&
-      this.temptGoal.isActive() &&
-      !this.isTamed() &&
-      this.age % 100 == 0
-    ) {
+    if (this.temptGoal != null && this.temptGoal.isActive() && !this.isTamed() && this.age % 100 == 0) {
       this.playSound(ENTITY_CARACAL_BEG_FOR_FOOD, 1.0F, 1.0F);
     }
 
@@ -130,37 +124,56 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
 
   private void updateAnimations() {
     if ((this.isInSleepingPose()) && this.age % 5 == 0) {
-      this.playSound(
-          ENTITY_CARACAL_PURR,
-          0.6F + 0.4F * (this.random.nextFloat() - this.random.nextFloat()),
-          1.0F
-        );
+      if(this.random.nextFloat() > 0.7) this.playSound(ENTITY_CARACAL_PURR, 0.6F + 0.4F * (this.random.nextFloat() - this.random.nextFloat()), 1.0F);
     }
   }
 
-  @Override
-  public void registerControllers(AnimationData animationData) {
+  private final AnimationFactory aFactory = new AnimationFactory(this);
 
+  private PlayState idle(AnimationEvent<CaracalEntity> event) {
+    event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.caracal.idle", true));
+    return PlayState.CONTINUE;
+  }
+
+  private PlayState animations(AnimationEvent<CaracalEntity> event) {
+
+    if (isInSleepingPose()) {
+      event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.caracal.sleep", true));
+      return PlayState.CONTINUE;
+    } else if (isInSittingPose()) {
+      event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.caracal.sit", true));
+      return PlayState.CONTINUE;
+    } else if (isInSneakingPose()) {
+      event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.caracal.sneak", true));
+      return PlayState.CONTINUE;
+    } else if ((event.getAnimatable()).isSprinting()) {
+      event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.caracal.run", true));
+      return PlayState.CONTINUE;
+    } else if (event.isMoving()) {
+      event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.caracal.walk", true));
+      return PlayState.CONTINUE;
+    }
+    return PlayState.STOP;
+  }
+
+  @Override
+  public void registerControllers(AnimationData data) {
+    data.addAnimationController(new AnimationController<>(this, "idle", 0, this::idle));
+    data.addAnimationController(new AnimationController<>(this, "animations", 0, this::animations));
   }
 
   @Override
   public AnimationFactory getFactory() {
-    return animationFactory;
+    return aFactory;
   }
 
   static class TemptGoal extends net.minecraft.entity.ai.goal.TemptGoal {
-
     @Nullable
     private PlayerEntity player;
 
     private final CaracalEntity caracalEntity;
 
-    public TemptGoal(
-      CaracalEntity caracalEntity,
-      double speed,
-      Ingredient food,
-      boolean canBeScared
-    ) {
+    public TemptGoal(CaracalEntity caracalEntity, double speed, Ingredient food, boolean canBeScared) {
       super(caracalEntity, speed, food, canBeScared);
       this.caracalEntity = caracalEntity;
     }
@@ -234,11 +247,7 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
     }
   }
 
-  public boolean handleFallDamage(
-    float fallDistance,
-    float damageMultiplier,
-    DamageSource damageSource
-  ) {
+  public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
     return false;
   }
 
@@ -248,16 +257,10 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
       if (this.isInLove()) {
         return ENTITY_CARACAL_PURR;
       } else {
-        return this.random.nextInt(4) == 0
-          ? ENTITY_CARACAL_PURREOW
-          : this.getBreedingAge() < 0
-            ? ENTITY_CARACAL_SMALL_SCREAM
-            : ENTITY_CARACAL_SCREAM;
+        return this.random.nextInt(4) == 0 ? ENTITY_CARACAL_PURREOW : this.getBreedingAge() < 0 ? ENTITY_CARACAL_SMALL_SCREAM : ENTITY_CARACAL_SCREAM;
       }
     } else {
-      return this.getBreedingAge() < 0
-        ? ENTITY_CARACAL_SMALL_SCREAM
-        : ENTITY_CARACAL_SCREAM;
+      return this.getBreedingAge() < 0 ? ENTITY_CARACAL_SMALL_SCREAM : ENTITY_CARACAL_SCREAM;
     }
   }
 
@@ -274,9 +277,7 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
   }
 
   private float getAttackDamage() {
-    return (float) this.getAttributeValue(
-        EntityAttributes.GENERIC_ATTACK_DAMAGE
-      );
+    return (float) this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
   }
 
   public boolean tryAttack(Entity target) {
@@ -292,10 +293,7 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
   }
 
   @Nullable
-  public PassiveEntity createChild(
-    ServerWorld serverWorld,
-    PassiveEntity passiveEntity
-  ) {
+  public PassiveEntity createChild(ServerWorld serverWorld, PassiveEntity passiveEntity) {
     CaracalEntity caracalEntity = CaracalMain.CARACAL.create(serverWorld);
     if (passiveEntity instanceof CaracalEntity) {
       if (this.isTamed()) {
@@ -331,10 +329,12 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
     return this.dataTracker.get(IN_SLEEPING_POSE);
   }
 
+  @SuppressWarnings("ConstantConditions")
   static class SleepWithOwnerGoal extends Goal {
-
     private final CaracalEntity caracalEntity;
+    @Nullable
     private PlayerEntity owner;
+    @Nullable
     private BlockPos bedPos;
     private int ticksOnBed;
 
@@ -350,25 +350,20 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
       } else {
         LivingEntity livingEntity = this.caracalEntity.getOwner();
         if (livingEntity instanceof PlayerEntity) {
-          this.owner = (PlayerEntity) livingEntity;
+          this.owner = (PlayerEntity)livingEntity;
           if (!livingEntity.isSleeping()) {
             return false;
           }
 
-          if (this.caracalEntity.squaredDistanceTo(this.owner) > 100.0D) {
+          if (this.caracalEntity.squaredDistanceTo(this.owner) > 100.0) {
             return false;
           }
 
           BlockPos blockPos = this.owner.getBlockPos();
-          BlockState blockState =
-            this.caracalEntity.world.getBlockState(blockPos);
+          BlockState blockState = this.caracalEntity.world.getBlockState(blockPos);
           if (blockState.isIn(BlockTags.BEDS)) {
-            this.bedPos =
-              blockState
-                .getOrEmpty(BedBlock.FACING)
-                .map(direction -> blockPos.offset(direction.getOpposite()))
-                .orElseGet(() -> new BlockPos(blockPos));
-            return !this.cannotSleep();
+            this.bedPos = blockState.getOrEmpty(BedBlock.FACING).map((direction) -> blockPos.offset(direction.getOpposite())).orElseGet(() -> new BlockPos(blockPos));
+            return this.cannotSleep();
           }
         }
 
@@ -377,60 +372,38 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
     }
 
     private boolean cannotSleep() {
-      List<CaracalEntity> list =
-        this.caracalEntity.world.getNonSpectatingEntities(
-            CaracalEntity.class,
-            (new Box(this.bedPos)).expand(2.0D)
-          );
+      List<CaracalEntity> list = this.caracalEntity.world.getNonSpectatingEntities(CaracalEntity.class, (new Box(this.bedPos)).expand(2.0));
       Iterator<CaracalEntity> var2 = list.iterator();
 
       CaracalEntity caracalEntity;
       do {
         do {
           if (!var2.hasNext()) {
-            return false;
+            return true;
           }
 
           caracalEntity = var2.next();
-        } while (caracalEntity == this.caracalEntity);
-      } while (!caracalEntity.isInSleepingPose());
+        } while(caracalEntity == this.caracalEntity);
+      } while(!caracalEntity.isInSleepingPose());
 
-      return true;
+      return false;
     }
 
     public boolean shouldContinue() {
-      return (
-        this.caracalEntity.isTamed() &&
-        !this.caracalEntity.isSitting() &&
-        this.owner != null &&
-        this.owner.isSleeping() &&
-        this.bedPos != null &&
-        !this.cannotSleep()
-      );
+      return this.caracalEntity.isTamed() && !this.caracalEntity.isSitting() && this.owner != null && this.owner.isSleeping() && this.bedPos != null && this.cannotSleep();
     }
 
     public void start() {
       if (this.bedPos != null) {
         this.caracalEntity.setInSittingPose(false);
-        this.caracalEntity.getNavigation()
-          .startMovingTo(
-            this.bedPos.getX(),
-            this.bedPos.getY(),
-            this.bedPos.getZ(),
-            1.100000023841858D
-          );
+        this.caracalEntity.getNavigation().startMovingTo(this.bedPos.getX(), this.bedPos.getY(), this.bedPos.getZ(), 1.100000023841858);
       }
     }
 
     public void stop() {
       this.caracalEntity.setInSleepingPose(false);
       float f = this.caracalEntity.world.getSkyAngle(1.0F);
-      if (
-        this.owner.getSleepTimer() >= 100 &&
-        (double) f > 0.77D &&
-        (double) f < 0.8D &&
-        (double) this.caracalEntity.world.getRandom().nextFloat() < 0.7D
-      ) {
+      if (this.owner.getSleepTimer() >= 100 && (double)f > 0.77 && (double)f < 0.8 && (double)this.caracalEntity.world.getRandom().nextFloat() < 0.7) {
         this.dropMorningGifts();
       }
 
@@ -449,23 +422,18 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
       List<ItemStack> list = lootTable.generateLoot(builder.build(LootContextTypes.GIFT));
 
       for (ItemStack itemStack : list) {
-        this.caracalEntity.world.spawnEntity(new ItemEntity(this.caracalEntity.world, (double) mutable.getX() - (double) MathHelper.sin(this.caracalEntity.bodyYaw * 0.017453292F), (double) mutable.getY(), (double) mutable.getZ() + (double) MathHelper.cos(this.caracalEntity.bodyYaw * 0.017453292F), itemStack));
+        this.caracalEntity.world.spawnEntity(new ItemEntity(this.caracalEntity.world, (double) mutable.getX() - (double) MathHelper.sin(this.caracalEntity.bodyYaw * 0.017453292F), mutable.getY(), (double) mutable.getZ() + (double) MathHelper.cos(this.caracalEntity.bodyYaw * 0.017453292F), itemStack));
       }
+
     }
 
     public void tick() {
       if (this.owner != null && this.bedPos != null) {
         this.caracalEntity.setInSittingPose(false);
-        this.caracalEntity.getNavigation()
-          .startMovingTo(
-            this.bedPos.getX(),
-            this.bedPos.getY(),
-            this.bedPos.getZ(),
-            1.100000023841858D
-          );
-        if (this.caracalEntity.squaredDistanceTo(this.owner) < 2.5D) {
+        this.caracalEntity.getNavigation().startMovingTo(this.bedPos.getX(), this.bedPos.getY(), this.bedPos.getZ(), 1.100000023841858);
+        if (this.caracalEntity.squaredDistanceTo(this.owner) < 2.5) {
           ++this.ticksOnBed;
-          if (this.ticksOnBed > 16) {
+          if (this.ticksOnBed > this.getTickCount(16)) {
             this.caracalEntity.setInSleepingPose(true);
           } else {
             this.caracalEntity.lookAtEntity(this.owner, 45.0F, 45.0F);
@@ -484,23 +452,13 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
       if (this.isTamed() && this.isOwner(player)) {
         return ActionResult.SUCCESS;
       } else {
-        return (
-            !this.isBreedingItem(itemStack) ||
-            !(this.getHealth() < this.getMaxHealth()) &&
-            this.isTamed()
-          )
-          ? ActionResult.PASS
-          : ActionResult.SUCCESS;
+        return (!this.isBreedingItem(itemStack) || !(this.getHealth() < this.getMaxHealth()) && this.isTamed()) ? ActionResult.PASS : ActionResult.SUCCESS;
       }
     } else {
       ActionResult actionResult;
       if (this.isTamed()) {
         if (this.isOwner(player)) {
-          if (
-            item.isFood() &&
-            this.isBreedingItem(itemStack) &&
-            this.getHealth() < this.getMaxHealth()
-          ) {
+          if (item.isFood() && this.isBreedingItem(itemStack) && this.getHealth() < this.getMaxHealth()) {
             this.eat(player, hand, itemStack);
             this.heal((float) item.getFoodComponent().getHunger());
             return ActionResult.CONSUME;
@@ -536,15 +494,8 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
   }
 
   @Nullable
-  public EntityData initialize(
-    ServerWorldAccess world,
-    LocalDifficulty difficulty,
-    SpawnReason spawnReason,
-    @Nullable EntityData entityData,
-    @Nullable NbtCompound entityNbt
-  ) {
-    entityData =
-      super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+  public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
+    entityData = super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
     this.setMaskColor(10);
     return entityData;
   }
@@ -553,10 +504,7 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
     return TAMING_INGREDIENT.test(stack);
   }
 
-  protected float getActiveEyeHeight(
-    EntityPose pose,
-    EntityDimensions dimensions
-  ) {
+  protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
     return dimensions.height * 0.98F;
   }
 
@@ -565,18 +513,8 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
   }
 
   static {
-    TAMING_INGREDIENT =
-      Ingredient.ofItems(Items.COD, Items.SALMON, Items.CHICKEN, Items.RABBIT);
-    IN_SLEEPING_POSE =
-      DataTracker.registerData(
-        CaracalEntity.class,
-        TrackedDataHandlerRegistry.BOOLEAN
-      );
-    CARACAL_BIRTHDAY_COLOR =
-      DataTracker.registerData(
-        CaracalEntity.class,
-        TrackedDataHandlerRegistry.INTEGER
-      );
+    TAMING_INGREDIENT = Ingredient.ofItems(Items.COD, Items.SALMON, Items.CHICKEN, Items.RABBIT);
+    IN_SLEEPING_POSE = DataTracker.registerData(CaracalEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    CARACAL_BIRTHDAY_COLOR = DataTracker.registerData(CaracalEntity.class, TrackedDataHandlerRegistry.INTEGER);
   }
-
 }

@@ -124,8 +124,13 @@
 					]
 				},
 				{
-					"name": "head",
+					"name": "head1",
 					"parent": "body",
+					"pivot": [0, 10.4, -8.1]
+				},
+				{
+					"name": "head",
+					"parent": "head1",
 					"pivot": [0, 10.4, -8.1],
 					"cubes": [
 						{
