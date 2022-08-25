@@ -1,5 +1,5 @@
 <h1 align=center>Caracal mod</h1>
-<h2 align=center>Fabric and Fabric API required!</h2>
+<h2 align=center>Fabric and Fabric API required! Geckolib required!</h2>
 <p align=center>
 <img src="https://badgen.net/github/release/aquupd/caracalmob"><img src="https://badgen.net/github/stars/aquupd/caracalmob"></p>
 <ul>
