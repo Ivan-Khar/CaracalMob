@@ -9,7 +9,7 @@
     <li> Spawns naturally in the savanna</li>
     <li> They have cute sounds!</li>
 </ul>
-<p align=center>
+<p align=left>
 This was added in 2.0.1: </br>
 <img src="https://i.giphy.com/media/ririkplMNbsLKZiw3W/giphy.webp" alt="dance Easter egg"/>
 </p>
