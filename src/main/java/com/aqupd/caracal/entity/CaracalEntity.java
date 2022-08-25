@@ -1,14 +1,8 @@
 package com.aqupd.caracal.entity;
 
-import static com.aqupd.caracal.setup.CaracalSounds.*;
-
 import com.aqupd.caracal.CaracalMain;
 import com.aqupd.caracal.ai.CaracalSitOnBlockGoal;
 import com.aqupd.caracal.utils.AqConfig;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -53,12 +47,19 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-@SuppressWarnings({"ConstantConditions", "FieldMayBeFinal"})
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
+import static com.aqupd.caracal.setup.CaracalSounds.*;
+
+@SuppressWarnings({"ConstantConditions", "FieldMayBeFinal", "rawtypes"})
 public class CaracalEntity extends TameableEntity implements IAnimatable {
 
   private static final Ingredient TAMING_INGREDIENT;
   private static final TrackedData<Boolean> IN_SLEEPING_POSE;
   private static final TrackedData<Integer> CARACAL_BIRTHDAY_COLOR;
+  private static final TrackedData<Integer> CURRENT_ANIMATION;
 
   private TemptGoal temptGoal;
   private static double health = AqConfig.INSTANCE.getDoubleProperty("entity.health");
@@ -130,35 +131,63 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
 
   private final AnimationFactory aFactory = new AnimationFactory(this);
 
-  private PlayState idle(AnimationEvent<CaracalEntity> event) {
-    event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.caracal.idle", true));
-    return PlayState.CONTINUE;
-  }
-
+  /*
+  0 - IDLE
+  1 - WALK
+  2 - SNEAK
+  3 - RUN
+  4 - SIT
+  5 - SLEEP
+  6 - DANCE1
+  7 - DANCE2
+  */
   private PlayState animations(AnimationEvent<CaracalEntity> event) {
+    AnimationController contr = event.getController();
 
-    if (isInSleepingPose()) {
-      event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.caracal.sleep", true));
+    if (isInSleepingPose()) { //5
+      contr.setAnimation(new AnimationBuilder().addAnimation("animation.caracal.sit2sleep", false).addAnimation("animation.caracal.sleep", true));
+      setCurrentAnimation(5);
       return PlayState.CONTINUE;
-    } else if (isInSittingPose()) {
-      event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.caracal.sit", true));
+    } else if (isInSittingPose()) { //4
+      AnimationBuilder ab = new AnimationBuilder();
+      if(getCurrentAnimation() == 5) {
+        ab.addAnimation("animation.caracal.sleep2sit", false);
+      } else if (getCurrentAnimation() <= 2) {
+        ab.addAnimation("animation.caracal.idle2sit", false);
+      }
+      ab.addAnimation("animation.caracal.sit", true);
+      if(contr.getCurrentAnimation() != null && contr.getCurrentAnimation().animationName.equals("animation.caracal.sit")) setCurrentAnimation(4);
+      contr.setAnimation(ab);
       return PlayState.CONTINUE;
-    } else if (isInSneakingPose()) {
-      event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.caracal.sneak", true));
+    } else if (isInSneakingPose()) { //2
+      contr.setAnimation(new AnimationBuilder().addAnimation("animation.caracal.sneak", true));
+      setCurrentAnimation(3);
       return PlayState.CONTINUE;
-    } else if ((event.getAnimatable()).isSprinting()) {
-      event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.caracal.run", true));
+    } else if (event.getAnimatable().isSprinting()) { //3
+      contr.setAnimation(new AnimationBuilder().addAnimation("animation.caracal.run", true));
+      setCurrentAnimation(2);
       return PlayState.CONTINUE;
-    } else if (event.isMoving()) {
-      event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.caracal.walk", true));
+    } else if (event.isMoving()) { //1
+      contr.setAnimation(new AnimationBuilder().addAnimation("animation.caracal.walk", true));
+      setCurrentAnimation(1);
       return PlayState.CONTINUE;
     }
-    return PlayState.STOP;
+
+    AnimationBuilder ab1 = new AnimationBuilder();
+    if(getCurrentAnimation() == 4) {
+      ab1.addAnimation("animation.caracal.sit2idle", false);
+      if(contr.getCurrentAnimation() != null && contr.getCurrentAnimation().animationName.equals("animation.caracal.idle")) setCurrentAnimation(0);
+    } else if(getCurrentAnimation() == 5) {
+      ab1.addAnimation("animation.caracal.sit2idle", false);
+      if(contr.getCurrentAnimation() != null && contr.getCurrentAnimation().animationName.equals("animation.caracal.idle")) setCurrentAnimation(0);
+    }
+
+    contr.setAnimation(ab1.addAnimation("animation.caracal.idle", true));
+    return PlayState.CONTINUE;
   }
 
   @Override
   public void registerControllers(AnimationData data) {
-    data.addAnimationController(new AnimationController<>(this, "idle", 0, this::idle));
     data.addAnimationController(new AnimationController<>(this, "animations", 0, this::animations));
   }
 
@@ -207,6 +236,14 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
       .add(EntityAttributes.GENERIC_FOLLOW_RANGE, follow)
       .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, damage)
       .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, knockback);
+  }
+
+  public int getCurrentAnimation() {
+    return this.dataTracker.get(CURRENT_ANIMATION);
+  }
+
+  public void setCurrentAnimation(int animation) {
+    this.dataTracker.set(CURRENT_ANIMATION, animation);
   }
 
   public int getMaskColor() {
@@ -319,6 +356,7 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
     super.initDataTracker();
     this.dataTracker.startTracking(CARACAL_BIRTHDAY_COLOR, 10);
     this.dataTracker.startTracking(IN_SLEEPING_POSE, false);
+    this.dataTracker.startTracking(CURRENT_ANIMATION, 0);
   }
 
   public void setInSleepingPose(boolean sleeping) {
@@ -328,8 +366,7 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
   public boolean isInSleepingPose() {
     return this.dataTracker.get(IN_SLEEPING_POSE);
   }
-
-  @SuppressWarnings("ConstantConditions")
+  
   static class SleepWithOwnerGoal extends Goal {
     private final CaracalEntity caracalEntity;
     @Nullable
@@ -516,5 +553,6 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
     TAMING_INGREDIENT = Ingredient.ofItems(Items.COD, Items.SALMON, Items.CHICKEN, Items.RABBIT);
     IN_SLEEPING_POSE = DataTracker.registerData(CaracalEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     CARACAL_BIRTHDAY_COLOR = DataTracker.registerData(CaracalEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    CURRENT_ANIMATION = DataTracker.registerData(CaracalEntity.class, TrackedDataHandlerRegistry.INTEGER);
   }
 }
