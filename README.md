@@ -9,6 +9,8 @@
     <li> Spawns naturally in the savanna</li>
     <li> They have cute sounds!</li>
 </ul>
+This was added in 2.0.1:
+<img src="https://media0.giphy.com/media/ririkplMNbsLKZiw3W/giphy.gif" alt="dance Easter egg" width="480" height="272" />
 <h1 align=center><a href="https://github.com/AquUpd/CaracalMob/wiki/Nametags">All nametags list </a></h1>
 <h2 align=center>Screenshots</h2>
 <p align=center>
