@@ -5,6 +5,7 @@ import com.aqupd.caracal.ai.CaracalSitOnBlockGoal;
 import com.aqupd.caracal.utils.AqConfig;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -60,6 +61,10 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
   private static final TrackedData<Boolean> IN_SLEEPING_POSE;
   private static final TrackedData<Integer> CARACAL_BIRTHDAY_COLOR;
   private static final TrackedData<Integer> CURRENT_ANIMATION;
+
+  private boolean songPlaying;
+  @Nullable
+  private BlockPos songSource;
 
   private TemptGoal temptGoal;
   private static double health = AqConfig.INSTANCE.getDoubleProperty("entity.health");
@@ -143,6 +148,17 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
   */
   private PlayState animations(AnimationEvent<CaracalEntity> event) {
     AnimationController contr = event.getController();
+
+    if (this.songSource == null || !this.songSource.isWithinDistance(this.getPos(), 5.0) || !this.world.getBlockState(this.songSource).isOf(Blocks.JUKEBOX)) {
+      this.songPlaying = false;
+      this.songSource = null;
+    }
+
+    if (isSongPlaying()) {
+      contr.setAnimation(new AnimationBuilder().addRepeatingAnimation("animation.caracal.dance1", 8).addAnimation("animation.caracal.dance2", true));
+      contr.transitionLengthTicks = 5;
+      return PlayState.CONTINUE;
+    }
 
     if (isInSleepingPose()) { //5
       contr.setAnimation(new AnimationBuilder().addAnimation("animation.caracal.sit2sleep", false).addAnimation("animation.caracal.sleep", true));
@@ -291,6 +307,16 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
         (n.contains("командир") || n.contains("commander")) &&
         !(n.contains("мирный") || n.contains("peaceful"));
     }
+  }
+
+  @Override
+  public void setNearbySongPlaying(BlockPos songPosition, boolean playing) {
+    this.songSource = songPosition;
+    this.songPlaying = playing;
+  }
+
+  public boolean isSongPlaying() {
+    return this.songPlaying;
   }
 
   public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
