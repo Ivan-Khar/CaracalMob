@@ -181,14 +181,23 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
       ab1.addAnimation("animation.caracal.sit2idle", false);
       if(contr.getCurrentAnimation() != null && contr.getCurrentAnimation().animationName.equals("animation.caracal.idle")) setCurrentAnimation(0);
     }
-
     contr.setAnimation(ab1.addAnimation("animation.caracal.idle", true));
     return PlayState.CONTINUE;
+  }
+
+  private PlayState idle(AnimationEvent<CaracalEntity> event) {
+    AnimationController contr = event.getController();
+    if(getCurrentAnimation() <= 3 && getCurrentAnimation() > 0) {
+      contr.setAnimation(new AnimationBuilder().addAnimation("animation.caracal.idle", true));
+      return PlayState.CONTINUE;
+    }
+    return PlayState.STOP;
   }
 
   @Override
   public void registerControllers(AnimationData data) {
     data.addAnimationController(new AnimationController<>(this, "animations", 0, this::animations));
+    data.addAnimationController(new AnimationController<>(this, "idle", 0, this::idle));
   }
 
   @Override
