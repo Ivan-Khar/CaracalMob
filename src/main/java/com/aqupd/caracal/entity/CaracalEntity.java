@@ -156,7 +156,6 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
 
     if (isSongPlaying()) {
       contr.setAnimation(new AnimationBuilder().addRepeatingAnimation("animation.caracal.dance1", 8).addAnimation("animation.caracal.dance2", true));
-      contr.transitionLengthTicks = 5;
       return PlayState.CONTINUE;
     }
 
