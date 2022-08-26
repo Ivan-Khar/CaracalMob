@@ -1,7 +1,5 @@
 package com.aqupd.caracal;
 
-import static com.aqupd.caracal.utils.AqLogger.*;
-
 import com.aqupd.caracal.entity.CaracalEntity;
 import com.aqupd.caracal.setup.CaracalSounds;
 import com.aqupd.caracal.utils.AqConfig;
@@ -11,6 +9,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.fabricmc.fabric.mixin.object.builder.SpawnRestrictionAccessor;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -23,6 +22,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.BiomeKeys;
+
+import static com.aqupd.caracal.utils.AqLogger.logInfo;
 
 public class CaracalMain implements ModInitializer {
 
@@ -56,7 +57,7 @@ public class CaracalMain implements ModInitializer {
         weight, mingroup, maxgroup
     );
 
-    SpawnRestriction.register(
+    SpawnRestrictionAccessor.callRegister(
       CARACAL,
       SpawnRestriction.Location.ON_GROUND,
       Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
