@@ -26,9 +26,9 @@ import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.tag.BlockTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -40,13 +40,14 @@ import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
-import software.bernie.geckolib3.core.controller.AnimationController;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationEvent;
+import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Iterator;
 import java.util.List;
@@ -55,7 +56,7 @@ import java.util.Locale;
 import static com.aqupd.caracal.setup.CaracalSounds.*;
 
 @SuppressWarnings({"ConstantConditions", "FieldMayBeFinal", "rawtypes"})
-public class CaracalEntity extends TameableEntity implements IAnimatable {
+public class CaracalEntity extends TameableEntity implements GeoEntity {
 
   private static final Ingredient TAMING_INGREDIENT;
   private static final TrackedData<Boolean> IN_SLEEPING_POSE;
@@ -134,7 +135,7 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
     }
   }
 
-  private final AnimationFactory aFactory = new AnimationFactory(this);
+  private final AnimatableInstanceCache aFactory = GeckoLibUtil.createInstanceCache(this);
 
   /*
   0 - IDLE
@@ -147,6 +148,7 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
   7 - DANCE2
   */
   private PlayState animations(AnimationEvent<CaracalEntity> event) {
+    RawAnimation anim = RawAnimation.begin();
     AnimationController contr = event.getController();
 
     if (this.songSource == null || !this.songSource.isWithinDistance(this.getPos(), 5.0) || !this.world.getBlockState(this.songSource).isOf(Blocks.JUKEBOX)) {
@@ -155,68 +157,66 @@ public class CaracalEntity extends TameableEntity implements IAnimatable {
     }
 
     if (isSongPlaying()) {
-      contr.setAnimation(new AnimationBuilder().addRepeatingAnimation("animation.caracal.dance1", 8).addAnimation("animation.caracal.dance2", true));
+      contr.setAnimation(anim.thenPlayXTimes("animation.caracal.dance1", 8).thenLoop("animation.caracal.dance2"));
       return PlayState.CONTINUE;
     }
 
     if (isInSleepingPose()) { //5
-      contr.setAnimation(new AnimationBuilder().addAnimation("animation.caracal.sit2sleep", false).addAnimation("animation.caracal.sleep", true));
+      contr.setAnimation(anim.thenPlay("animation.caracal.sit2sleep").thenLoop("animation.caracal.sleep"));
       setCurrentAnimation(5);
       return PlayState.CONTINUE;
     } else if (isInSittingPose()) { //4
-      AnimationBuilder ab = new AnimationBuilder();
       if(getCurrentAnimation() == 5) {
-        ab.addAnimation("animation.caracal.sleep2sit", false);
+        anim.thenPlay("animation.caracal.sleep2sit");
       } else if (getCurrentAnimation() <= 2) {
-        ab.addAnimation("animation.caracal.idle2sit", false);
+        anim.thenPlay("animation.caracal.idle2sit");
       }
-      ab.addAnimation("animation.caracal.sit", true);
-      if(contr.getCurrentAnimation() != null && contr.getCurrentAnimation().animationName.equals("animation.caracal.sit")) setCurrentAnimation(4);
-      contr.setAnimation(ab);
+      anim.thenLoop("animation.caracal.sit");
+      if(contr.getCurrentAnimation() != null && contr.getCurrentAnimation().animation().name().equals("animation.caracal.sit")) setCurrentAnimation(4);
+      contr.setAnimation(anim);
       return PlayState.CONTINUE;
     } else if (isInSneakingPose()) { //2
-      contr.setAnimation(new AnimationBuilder().addAnimation("animation.caracal.sneak", true));
+      contr.setAnimation(anim.thenLoop("animation.caracal.sneak"));
       setCurrentAnimation(3);
       return PlayState.CONTINUE;
     } else if (event.getAnimatable().isSprinting()) { //3
-      contr.setAnimation(new AnimationBuilder().addAnimation("animation.caracal.run", true));
+      contr.setAnimation(anim.thenLoop("animation.caracal.run"));
       setCurrentAnimation(2);
       return PlayState.CONTINUE;
     } else if (event.isMoving()) { //1
-      contr.setAnimation(new AnimationBuilder().addAnimation("animation.caracal.walk", true));
+      contr.setAnimation(anim.thenLoop("animation.caracal.walk"));
       setCurrentAnimation(1);
       return PlayState.CONTINUE;
     }
 
-    AnimationBuilder ab1 = new AnimationBuilder();
     if(getCurrentAnimation() == 4) {
-      ab1.addAnimation("animation.caracal.sit2idle", false);
-      if(contr.getCurrentAnimation() != null && contr.getCurrentAnimation().animationName.equals("animation.caracal.idle")) setCurrentAnimation(0);
+      anim.thenPlay("animation.caracal.sit2idle");
+      if(contr.getCurrentAnimation() != null && contr.getCurrentAnimation().animation().name().equals("animation.caracal.idle")) setCurrentAnimation(0);
     } else if(getCurrentAnimation() == 5) {
-      ab1.addAnimation("animation.caracal.sit2idle", false);
-      if(contr.getCurrentAnimation() != null && contr.getCurrentAnimation().animationName.equals("animation.caracal.idle")) setCurrentAnimation(0);
+      anim.thenPlay("animation.caracal.sit2idle");
+      if(contr.getCurrentAnimation() != null && contr.getCurrentAnimation().animation().name().equals("animation.caracal.idle")) setCurrentAnimation(0);
     }
-    contr.setAnimation(ab1.addAnimation("animation.caracal.idle", true));
+    contr.setAnimation(anim.thenLoop("animation.caracal.idle"));
     return PlayState.CONTINUE;
   }
 
   private PlayState idle(AnimationEvent<CaracalEntity> event) {
     AnimationController contr = event.getController();
     if(getCurrentAnimation() <= 3 && getCurrentAnimation() > 0) {
-      contr.setAnimation(new AnimationBuilder().addAnimation("animation.caracal.idle", true));
+      contr.setAnimation(RawAnimation.begin().thenLoop("animation.caracal.idle"));
       return PlayState.CONTINUE;
     }
     return PlayState.STOP;
   }
 
   @Override
-  public void registerControllers(AnimationData data) {
-    data.addAnimationController(new AnimationController<>(this, "animations", 0, this::animations));
-    data.addAnimationController(new AnimationController<>(this, "idle", 0, this::idle));
+  public void registerControllers(AnimatableManager data) {
+    data.addController(new AnimationController<>(this, "animations", 0, this::animations));
+    data.addController(new AnimationController<>(this, "idle", 0, this::idle));
   }
 
   @Override
-  public AnimationFactory getFactory() {
+  public AnimatableInstanceCache getAnimatableInstanceCache() {
     return aFactory;
   }
 

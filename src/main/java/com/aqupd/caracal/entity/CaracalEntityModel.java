@@ -1,15 +1,17 @@
 package com.aqupd.caracal.entity;
 
 import net.minecraft.util.Identifier;
-import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
-import software.bernie.geckolib3.core.processor.IBone;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 
 import java.time.LocalDate;
 import java.util.Locale;
 
-public class CaracalEntityModel extends AnimatedGeoModel<CaracalEntity> {
+public class CaracalEntityModel extends DefaultedEntityGeoModel<CaracalEntity> {
+
+  public CaracalEntityModel() {
+    super(new Identifier("aqupd", "caracal"), true);
+  }
+
   @Override
   public Identifier getModelResource(CaracalEntity entity) {
     return new Identifier("aqupd", "geo/caracal.geo.json");
@@ -55,16 +57,5 @@ public class CaracalEntityModel extends AnimatedGeoModel<CaracalEntity> {
   @Override
   public Identifier getAnimationResource(CaracalEntity animatable) {
     return new Identifier("aqupd", "animations/caracal.animation.json");
-  }
-
-  @Override
-  public void setLivingAnimations(CaracalEntity entity, Integer uniqueID, AnimationEvent event) {
-    super.setLivingAnimations(entity, uniqueID, event);
-    IBone head = this.getAnimationProcessor().getBone("head");
-    EntityModelData data = (EntityModelData) event.getExtraDataOfType(EntityModelData.class).get(0);
-    if(head != null) {
-      head.setRotationX((float) (data.headPitch * Math.PI / 180F));
-      head.setRotationY(((float) (data.netHeadYaw * Math.PI / 180F)));
-    }
   }
 }

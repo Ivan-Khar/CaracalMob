@@ -33,6 +33,6 @@
     "minecraft": "~1.19",
     "java": ">=17",
     "fabric-api": ">=0.60.0+1.19.2",
-    "geckolib3": "*"
+    "geckolib": "*"
   }
 }

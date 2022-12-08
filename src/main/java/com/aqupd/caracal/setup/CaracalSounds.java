@@ -1,8 +1,9 @@
 package com.aqupd.caracal.setup;
 
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class CaracalSounds {
@@ -18,7 +19,7 @@ public class CaracalSounds {
   public static void init() {}
 
   private static SoundEvent register(String id) {
-    SoundEvent se = new SoundEvent(new Identifier("aqupd", id));
-    return Registry.register(Registry.SOUND_EVENT, id, se);
+    SoundEvent soundEvent = SoundEvent.of(new Identifier("aqupd", id));
+    return Registry.register(Registries.SOUND_EVENT, id, soundEvent);
   }
 }

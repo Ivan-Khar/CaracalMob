@@ -5,7 +5,7 @@ import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.ai.goal.MoveToTargetPosGoal;
-import net.minecraft.tag.BlockTags;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;
 
@@ -47,12 +47,9 @@ public class CaracalSitOnBlockGoal extends MoveToTargetPosGoal {
     } else {
       BlockState blockState = world.getBlockState(pos);
       return blockState.isIn(
-        BlockTags.BEDS,
-        state ->
-          state
-            .getOrEmpty(BedBlock.PART)
-            .map(part -> part != BedPart.HEAD)
-            .orElse(true)
+        BlockTags.BEDS, state -> state.getOrEmpty(BedBlock.PART)
+                  .map(part -> part != BedPart.HEAD)
+                  .orElse(true)
       );
     }
   }
