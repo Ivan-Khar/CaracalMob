@@ -161,6 +161,8 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
       return PlayState.CONTINUE;
     }
 
+
+    /* Rewrite time
     if (isInSleepingPose()) { //5
       contr.setAnimation(anim.thenPlay("animation.caracal.sit2sleep").thenLoop("animation.caracal.sleep"));
       setCurrentAnimation(5);
@@ -190,13 +192,15 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
     }
 
     if(getCurrentAnimation() == 4) {
-      anim.thenPlay("animation.caracal.sit2idle");
-      if(contr.getCurrentAnimation() != null && contr.getCurrentAnimation().animation().name().equals("animation.caracal.idle")) setCurrentAnimation(0);
+      anim.thenPlay("animation.caracal.sit2idle").thenWait(100).thenLoop("animation.caracal.idle");
+      if(contr.hasAnimationFinished()) setCurrentAnimation(0);
     } else if(getCurrentAnimation() == 5) {
-      anim.thenPlay("animation.caracal.sit2idle");
-      if(contr.getCurrentAnimation() != null && contr.getCurrentAnimation().animation().name().equals("animation.caracal.idle")) setCurrentAnimation(0);
+      anim.thenPlay("animation.caracal.sleep2idle").thenWait(100).thenLoop("animation.caracal.idle");
+      if(contr.hasAnimationFinished()) setCurrentAnimation(0);
     }
-    contr.setAnimation(anim.thenLoop("animation.caracal.idle"));
+
+    if (getCurrentAnimation() == 0) contr.setAnimation(anim.thenLoop("animation.caracal.idle"));
+     */
     return PlayState.CONTINUE;
   }
 
