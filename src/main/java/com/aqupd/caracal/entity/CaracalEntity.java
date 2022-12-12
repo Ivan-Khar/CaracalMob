@@ -83,9 +83,9 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
   protected void initGoals() {
     this.temptGoal = new TemptGoal(this, 1.0D, TAMING_INGREDIENT, true);
     this.goalSelector.add(1, new SwimGoal(this));
+    this.goalSelector.add(1, new SleepWithOwnerGoal(this));
     this.goalSelector.add(1, new SitGoal(this));
     this.goalSelector.add(2, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
-    this.goalSelector.add(2, new SleepWithOwnerGoal(this));
     this.goalSelector.add(3, new EscapeDangerGoal(this, 1.4D));
     this.goalSelector.add(3, new AnimalMateGoal(this, 1.0D));
     this.goalSelector.add(3, this.temptGoal);
@@ -133,35 +133,78 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
     if ((this.isInSleepingPose()) && this.age % 5 == 0) {
       if(this.random.nextFloat() > 0.7) this.playSound(ENTITY_CARACAL_PURR, 0.6F + 0.4F * (this.random.nextFloat() - this.random.nextFloat()), 1.0F);
     }
+    if (this.songSource == null || !this.songSource.isWithinDistance(this.getPos(), 5.0) || !this.world.getBlockState(this.songSource).isOf(Blocks.JUKEBOX)) {
+      this.songPlaying = false;
+      this.songSource = null;
+    }
   }
 
   private final AnimatableInstanceCache aFactory = GeckoLibUtil.createInstanceCache(this);
 
   /*
-  0 - IDLE
-  1 - WALK
-  2 - SNEAK
-  3 - RUN
-  4 - SIT
-  5 - SLEEP
-  6 - DANCE1
-  7 - DANCE2
+  0 - IDLE animation.caracal.idle
+  IDLE>SIT animation.caracal.idle2sit
+  IDLE>SLEEP animation.caracal.idle2sleep
+  1 - WALK animation.caracal.walk
+  2 - SNEAK animation.caracal.sneak
+  3 - RUN animation.caracal.run
+  4 - SIT animation.caracal.sit
+  SIT>IDLE animation.caracal.sit2idle
+  SIT>SLEEP animation.caracal.sit2sleep
+  5 - SLEEP animation.caracal.sleep
+  SLEEP>IDLE animation.caracal.sleep2idle
+  SLEEP>SIT animation.caracal.sleep2sit
+  6 - DANCE animation.caracal.dance1 animation.caracal.dance2
   */
   private PlayState animations(AnimationEvent<CaracalEntity> event) {
     RawAnimation anim = RawAnimation.begin();
     AnimationController contr = event.getController();
 
-    if (this.songSource == null || !this.songSource.isWithinDistance(this.getPos(), 5.0) || !this.world.getBlockState(this.songSource).isOf(Blocks.JUKEBOX)) {
-      this.songPlaying = false;
-      this.songSource = null;
-    }
+    String animName = "";
+    if (contr.getCurrentAnimation() != null) { animName = contr.getCurrentAnimation().animation().name(); }
 
     if (isSongPlaying()) {
-      contr.setAnimation(anim.thenPlayXTimes("animation.caracal.dance1", 8).thenLoop("animation.caracal.dance2"));
+      if (!animName.equals("animation.caracal.dance1") || !animName.equals("animation.caracal.dance2")) {
+        setCurrentAnimation(6);
+      }
+    } else if(getCurrentAnimation() == 4 && !isInSittingPose()) {
+      contr.setAnimation(anim.thenPlay("animation.caracal.sit2idle"));
+      if (contr.getAnimationState() == AnimationController.State.PAUSED) setCurrentAnimation(0);
       return PlayState.CONTINUE;
+    } else if(getCurrentAnimation() == 5 && !isInSleepingPose() && !isInSittingPose()) {
+      contr.setAnimation(anim.thenPlay("animation.caracal.sleep2idle"));
+      if (contr.getAnimationState() == AnimationController.State.PAUSED) setCurrentAnimation(0);
+      return PlayState.CONTINUE;
+    } else if(getCurrentAnimation() != 4 && isInSittingPose() && !isInSleepingPose()) {
+      if (getCurrentAnimation() <= 3) contr.setAnimation(anim.thenPlay("animation.caracal.idle2sit"));
+      else if (getCurrentAnimation() == 5) contr.setAnimation(anim.thenPlay("animation.caracal.sleep2sit"));
+      if (contr.getAnimationState() == AnimationController.State.PAUSED) setCurrentAnimation(4);
+      return PlayState.CONTINUE;
+    } else if(getCurrentAnimation() != 5 && isInSleepingPose()) {
+      if (getCurrentAnimation() <= 3) contr.setAnimation(anim.thenPlay("animation.caracal.idle2sleep"));
+      else if (getCurrentAnimation() == 4) contr.setAnimation(anim.thenPlay("animation.caracal.sit2sleep"));
+      if (contr.getAnimationState() == AnimationController.State.PAUSED) setCurrentAnimation(5);
+      return PlayState.CONTINUE;
+    } else if(isInSleepingPose()) {
+      setCurrentAnimation(5);
+    } else if(isInSittingPose()) {
+      setCurrentAnimation(4);
+    } else if(event.isMoving()) {
+      setCurrentAnimation(1);
+    } else {
+      setCurrentAnimation(0);
     }
 
-
+    switch (getCurrentAnimation()) {
+      case 0 -> contr.setAnimation(anim.thenLoop("animation.caracal.idle"));
+      case 1 -> contr.setAnimation(anim.thenLoop("animation.caracal.walk"));
+      case 2 -> contr.setAnimation(anim.thenLoop("animation.caracal.sneak"));
+      case 3 -> contr.setAnimation(anim.thenLoop("animation.caracal.run"));
+      case 4 -> contr.setAnimation(anim.thenLoop("animation.caracal.sit"));
+      case 5 -> contr.setAnimation(anim.thenLoop("animation.caracal.sleep"));
+      case 6 -> contr.setAnimation(anim.thenPlayXTimes("animation.caracal.dance1", 9).thenLoop("animation.caracal.dance2"));
+    }
+    return PlayState.CONTINUE;
     /* Rewrite time
     if (isInSleepingPose()) { //5
       contr.setAnimation(anim.thenPlay("animation.caracal.sit2sleep").thenLoop("animation.caracal.sleep"));
@@ -199,9 +242,8 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
       if(contr.hasAnimationFinished()) setCurrentAnimation(0);
     }
 
-    if (getCurrentAnimation() == 0) contr.setAnimation(anim.thenLoop("animation.caracal.idle"));
+    if (getCurrentAnimation() == 0)
      */
-    return PlayState.CONTINUE;
   }
 
   private PlayState idle(AnimationEvent<CaracalEntity> event) {
