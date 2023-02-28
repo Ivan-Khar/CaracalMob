@@ -44,8 +44,8 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.AnimationEvent;
 import software.bernie.geckolib.core.animation.RawAnimation;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -141,6 +141,19 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
 
   private final AnimatableInstanceCache aFactory = GeckoLibUtil.createInstanceCache(this);
 
+  private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("animation.caracal.idle");
+  private static final RawAnimation IDLE2SIT = RawAnimation.begin().thenPlay("animation.caracal.idle2sit");
+  private static final RawAnimation IDLE2SLEEP = RawAnimation.begin().thenPlay("animation.caracal.idle2sleep");
+  private static final RawAnimation WALK = RawAnimation.begin().thenLoop("animation.caracal.walk");
+  private static final RawAnimation SNEAK = RawAnimation.begin().thenLoop("animation.caracal.sneak");
+  private static final RawAnimation RUN = RawAnimation.begin().thenLoop("animation.caracal.run");
+  private static final RawAnimation SIT = RawAnimation.begin().thenLoop("animation.caracal.sit");
+  private static final RawAnimation SIT2IDLE = RawAnimation.begin().thenPlay("animation.caracal.sit2idle");
+  private static final RawAnimation SIT2SLEEP = RawAnimation.begin().thenPlay("animation.caracal.sit2sleep");
+  private static final RawAnimation SLEEP = RawAnimation.begin().thenLoop("animation.caracal.sleep");
+  private static final RawAnimation SLEEP2IDLE = RawAnimation.begin().thenPlay("animation.caracal.sleep2idle");
+  private static final RawAnimation SLEEP2SIT = RawAnimation.begin().thenPlay("animation.caracal.sleep2sit");
+  private static final RawAnimation DANCE = RawAnimation.begin().thenPlayXTimes("animation.caracal.dance1", 9).thenLoop("animation.caracal.dance2");
   /*
   0 - IDLE animation.caracal.idle
   IDLE>SIT animation.caracal.idle2sit
@@ -156,9 +169,8 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
   SLEEP>SIT animation.caracal.sleep2sit
   6 - DANCE animation.caracal.dance1 animation.caracal.dance2
   */
-  private PlayState animations(AnimationEvent<CaracalEntity> event) {
-    RawAnimation anim = RawAnimation.begin();
-    AnimationController contr = event.getController();
+  private PlayState predicate(AnimationState<CaracalEntity> state) {
+    AnimationController contr = state.getController();
 
     String animName = "";
     if (contr.getCurrentAnimation() != null) { animName = contr.getCurrentAnimation().animation().name(); }
@@ -168,97 +180,61 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
         setCurrentAnimation(6);
       }
     } else if(getCurrentAnimation() == 4 && !isInSittingPose()) {
-      contr.setAnimation(anim.thenPlay("animation.caracal.sit2idle"));
+      contr.setAnimation(SIT2IDLE);
       if (contr.getAnimationState() == AnimationController.State.PAUSED) setCurrentAnimation(0);
       return PlayState.CONTINUE;
     } else if(getCurrentAnimation() == 5 && !isInSleepingPose() && !isInSittingPose()) {
-      contr.setAnimation(anim.thenPlay("animation.caracal.sleep2idle"));
+      contr.setAnimation(SLEEP2IDLE);
       if (contr.getAnimationState() == AnimationController.State.PAUSED) setCurrentAnimation(0);
       return PlayState.CONTINUE;
     } else if(getCurrentAnimation() != 4 && isInSittingPose() && !isInSleepingPose()) {
-      if (getCurrentAnimation() <= 3) contr.setAnimation(anim.thenPlay("animation.caracal.idle2sit"));
-      else if (getCurrentAnimation() == 5) contr.setAnimation(anim.thenPlay("animation.caracal.sleep2sit"));
+      if (getCurrentAnimation() <= 3) contr.setAnimation(IDLE2SIT);
+      else if (getCurrentAnimation() == 5) contr.setAnimation(SLEEP2SIT);
+
       if (contr.getAnimationState() == AnimationController.State.PAUSED) setCurrentAnimation(4);
       return PlayState.CONTINUE;
     } else if(getCurrentAnimation() != 5 && isInSleepingPose()) {
-      if (getCurrentAnimation() <= 3) contr.setAnimation(anim.thenPlay("animation.caracal.idle2sleep"));
-      else if (getCurrentAnimation() == 4) contr.setAnimation(anim.thenPlay("animation.caracal.sit2sleep"));
+      if (getCurrentAnimation() <= 3) contr.setAnimation(IDLE2SLEEP);
+      else if (getCurrentAnimation() == 4) contr.setAnimation(SIT2SLEEP);
+
       if (contr.getAnimationState() == AnimationController.State.PAUSED) setCurrentAnimation(5);
       return PlayState.CONTINUE;
     } else if(isInSleepingPose()) {
       setCurrentAnimation(5);
     } else if(isInSittingPose()) {
       setCurrentAnimation(4);
-    } else if(event.isMoving()) {
+    } else if(state.isMoving()) {
       setCurrentAnimation(1);
     } else {
       setCurrentAnimation(0);
     }
 
     switch (getCurrentAnimation()) {
-      case 0 -> contr.setAnimation(anim.thenLoop("animation.caracal.idle"));
-      case 1 -> contr.setAnimation(anim.thenLoop("animation.caracal.walk"));
-      case 2 -> contr.setAnimation(anim.thenLoop("animation.caracal.sneak"));
-      case 3 -> contr.setAnimation(anim.thenLoop("animation.caracal.run"));
-      case 4 -> contr.setAnimation(anim.thenLoop("animation.caracal.sit"));
-      case 5 -> contr.setAnimation(anim.thenLoop("animation.caracal.sleep"));
-      case 6 -> contr.setAnimation(anim.thenPlayXTimes("animation.caracal.dance1", 9).thenLoop("animation.caracal.dance2"));
+      case 0 -> contr.setAnimation(IDLE);
+      case 1 -> contr.setAnimation(WALK);
+      case 2 -> contr.setAnimation(SNEAK);
+      case 3 -> contr.setAnimation(RUN);
+      case 4 -> contr.setAnimation(SIT);
+      case 5 -> contr.setAnimation(SLEEP);
+      case 6 -> contr.setAnimation(DANCE);
     }
     return PlayState.CONTINUE;
-    /* Rewrite time
-    if (isInSleepingPose()) { //5
-      contr.setAnimation(anim.thenPlay("animation.caracal.sit2sleep").thenLoop("animation.caracal.sleep"));
-      setCurrentAnimation(5);
-      return PlayState.CONTINUE;
-    } else if (isInSittingPose()) { //4
-      if(getCurrentAnimation() == 5) {
-        anim.thenPlay("animation.caracal.sleep2sit");
-      } else if (getCurrentAnimation() <= 2) {
-        anim.thenPlay("animation.caracal.idle2sit");
-      }
-      anim.thenLoop("animation.caracal.sit");
-      if(contr.getCurrentAnimation() != null && contr.getCurrentAnimation().animation().name().equals("animation.caracal.sit")) setCurrentAnimation(4);
-      contr.setAnimation(anim);
-      return PlayState.CONTINUE;
-    } else if (isInSneakingPose()) { //2
-      contr.setAnimation(anim.thenLoop("animation.caracal.sneak"));
-      setCurrentAnimation(3);
-      return PlayState.CONTINUE;
-    } else if (event.getAnimatable().isSprinting()) { //3
-      contr.setAnimation(anim.thenLoop("animation.caracal.run"));
-      setCurrentAnimation(2);
-      return PlayState.CONTINUE;
-    } else if (event.isMoving()) { //1
-      contr.setAnimation(anim.thenLoop("animation.caracal.walk"));
-      setCurrentAnimation(1);
-      return PlayState.CONTINUE;
-    }
-
-    if(getCurrentAnimation() == 4) {
-      anim.thenPlay("animation.caracal.sit2idle").thenWait(100).thenLoop("animation.caracal.idle");
-      if(contr.hasAnimationFinished()) setCurrentAnimation(0);
-    } else if(getCurrentAnimation() == 5) {
-      anim.thenPlay("animation.caracal.sleep2idle").thenWait(100).thenLoop("animation.caracal.idle");
-      if(contr.hasAnimationFinished()) setCurrentAnimation(0);
-    }
-
-    if (getCurrentAnimation() == 0)
-     */
   }
 
-  private PlayState idle(AnimationEvent<CaracalEntity> event) {
-    AnimationController contr = event.getController();
+  protected PlayState idle(AnimationState<CaracalEntity> state) {
     if(getCurrentAnimation() <= 3 && getCurrentAnimation() > 0) {
-      contr.setAnimation(RawAnimation.begin().thenLoop("animation.caracal.idle"));
+      state.setAnimation(IDLE);
       return PlayState.CONTINUE;
     }
     return PlayState.STOP;
   }
 
   @Override
-  public void registerControllers(AnimatableManager data) {
-    data.addController(new AnimationController<>(this, "animations", 0, this::animations));
-    data.addController(new AnimationController<>(this, "idle", 0, this::idle));
+  public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+    controllers.add(
+        new AnimationController<>(this, "animations", 0, this::predicate),
+        new AnimationController<>(this, "idle", 0, this::idle)
+    );
   }
 
   @Override

@@ -17,9 +17,10 @@ public class CaracalEntityRenderer extends GeoEntityRenderer<CaracalEntity> {
   }
 
   @Override
-  public void preRender(MatrixStack stack, CaracalEntity animatable, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-    super.preRender(stack, animatable, model, bufferSource, buffer, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-    if (animatable.isBaby()) { stack.scale(0.6F, 0.6F, 0.6F); }
-    else { stack.scale(1.0F, 1.0F, 1.0F); }
+  public void preRender(MatrixStack poseStack, CaracalEntity animatable, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+
+    if (animatable.isBaby()) { poseStack.scale(0.6F, 0.6F, 0.6F); }
+    else { poseStack.scale(1.0F, 1.0F, 1.0F); }
   }
 }
