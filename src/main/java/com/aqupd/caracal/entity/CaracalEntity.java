@@ -36,6 +36,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.EntityView;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -242,6 +243,11 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
     return aFactory;
   }
 
+  @Override
+  public EntityView method_48926() {
+    return this.getWorld();
+  }
+
   static class TemptGoal extends net.minecraft.entity.ai.goal.TemptGoal {
     @Nullable
     private PlayerEntity player;
@@ -374,7 +380,7 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
   }
 
   public boolean tryAttack(Entity target) {
-    return target.damage(DamageSource.mob(this), this.getAttackDamage());
+    return target.damage(this.getDamageSources().mobAttack(this), this.getAttackDamage());
   }
 
   protected void eat(PlayerEntity player, Hand hand, ItemStack stack) {
