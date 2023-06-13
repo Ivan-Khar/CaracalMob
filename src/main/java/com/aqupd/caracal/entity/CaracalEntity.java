@@ -44,6 +44,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.example.entity.BatEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -60,7 +61,7 @@ import java.util.*;
 import static com.aqupd.caracal.setup.CaracalSounds.*;
 import static net.minecraft.world.entity.ai.attributes.Attributes.*;
 
-@SuppressWarnings({"ConstantConditions", "FieldMayBeFinal", "rawtypes"})
+@SuppressWarnings({"ConstantConditions", "FieldMayBeFinal", "rawtypes", "resource"})
 public class CaracalEntity extends TamableAnimal implements GeoEntity {
 
   private static final Ingredient TAMING_INGREDIENT;
@@ -182,6 +183,7 @@ public class CaracalEntity extends TamableAnimal implements GeoEntity {
   SLEEP>SIT animation.caracal.sleep2sit
   6 - DANCE animation.caracal.dance1 animation.caracal.dance2
   */
+  @SuppressWarnings("SameReturnValue")
   private PlayState predicate(AnimationState<CaracalEntity> state) {
     AnimationController contr = state.getController();
 
@@ -433,6 +435,7 @@ public class CaracalEntity extends TamableAnimal implements GeoEntity {
     return this.entityData.get(IN_SLEEPING_POSE);
   }
 
+  @SuppressWarnings("BooleanMethodIsAlwaysInverted")
   static class SleepWithOwnerGoal extends Goal {
     private final CaracalEntity caracal;
     @Nullable
@@ -538,7 +541,7 @@ public class CaracalEntity extends TamableAnimal implements GeoEntity {
     }
   }
 
-  public InteractionResult mobInteract(Player player, InteractionHand hand) {
+  public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
     ItemStack itemStack = player.getItemInHand(hand);
     Item item = itemStack.getItem();
     if (this.level().isClientSide()) {

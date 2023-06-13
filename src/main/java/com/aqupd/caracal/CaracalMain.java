@@ -19,6 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.Heightmap;
+import software.bernie.example.registry.ItemRegistry;
 
 import static com.aqupd.caracal.utils.AqLogger.logInfo;
 
@@ -39,6 +40,7 @@ public class CaracalMain implements ModInitializer {
     15592688,
     new FabricItemSettings().fireproof().maxCount(64));
 
+  @SuppressWarnings("DataFlowIssue")
   @Override
   public void onInitialize() {
     //ServerWorldEvents.LOAD.register((server, world) -> AqDebug.INSTANCE.startDebug(AqConfig.INSTANCE.getBooleanProperty("debug")));
@@ -61,7 +63,8 @@ public class CaracalMain implements ModInitializer {
       Mob::checkMobSpawnRules
     );
 
-    ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SPAWN_EGGS).register(entries -> entries.prepend(CARACAL_SPAWN_EGG));
+    //noinspection UnstableApiUsage
+    ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SPAWN_EGGS).register(entries -> entries.addAfter(ItemRegistry.MUTANT_ZOMBIE_SPAWN_EGG, CARACAL_SPAWN_EGG));
     logInfo("Caracal mod is loaded!");
   }
 }

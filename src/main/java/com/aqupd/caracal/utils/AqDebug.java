@@ -7,21 +7,23 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
 
+@SuppressWarnings("unused")
 public class AqDebug {
 
   private AqDebug() {}
 
   private boolean loaded;
   public static final AqDebug INSTANCE = new AqDebug();
-  private Properties aqdebug = new Properties();
+  private final Properties aqdebug = new Properties();
 
   public boolean startDebug(boolean key) {
     if (key && !loaded) load();
     return (true);
   }
 
-  private File dfile = new File("./config/AqMods/biomes.config");
+  private final File dfile = new File("./config/AqMods/biomes.config");
 
+  @SuppressWarnings("ResultOfMethodCallIgnored")
   private void load() {
     loaded = true;
     try {

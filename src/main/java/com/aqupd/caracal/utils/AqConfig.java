@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Properties;
 
+@SuppressWarnings("unused")
 public class AqConfig {
 
   private AqConfig() {}
@@ -12,7 +13,7 @@ public class AqConfig {
   public static final AqConfig INSTANCE = new AqConfig();
 
   private boolean loaded;
-  private Properties aqprop = new Properties();
+  private final Properties aqprop = new Properties();
 
   public boolean getBooleanProperty(String key) {
     if (!loaded) load();
@@ -36,6 +37,7 @@ public class AqConfig {
 
   private final File file = new File("./config/AqMods/caracal.config");
 
+  @SuppressWarnings("ResultOfMethodCallIgnored")
   private void load() {
     loaded = true;
     try {
