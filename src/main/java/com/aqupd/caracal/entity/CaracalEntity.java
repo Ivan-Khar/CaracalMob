@@ -21,7 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.LootTables;
-import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameterSet;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.nbt.NbtCompound;
@@ -45,8 +45,8 @@ import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
@@ -134,7 +134,7 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
     if ((this.isInSleepingPose()) && this.age % 5 == 0) {
       if(this.random.nextFloat() > 0.7) this.playSound(ENTITY_CARACAL_PURR, 0.6F + 0.4F * (this.random.nextFloat() - this.random.nextFloat()), 1.0F);
     }
-    if (this.songSource == null || !this.songSource.isWithinDistance(this.getPos(), 5.0) || !this.world.getBlockState(this.songSource).isOf(Blocks.JUKEBOX)) {
+    if (this.songSource == null || !this.songSource.isWithinDistance(this.getPos(), 5.0) || !this.getWorld().getBlockState(this.songSource).isOf(Blocks.JUKEBOX)) {
       this.songPlaying = false;
       this.songSource = null;
     }
@@ -459,7 +459,7 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
           }
 
           BlockPos blockPos = this.owner.getBlockPos();
-          BlockState blockState = this.caracalEntity.world.getBlockState(blockPos);
+          BlockState blockState = this.caracalEntity.getWorld().getBlockState(blockPos);
           if (blockState.isIn(BlockTags.BEDS)) {
             this.bedPos = blockState.getOrEmpty(BedBlock.FACING).map((direction) -> blockPos.offset(direction.getOpposite())).orElseGet(() -> new BlockPos(blockPos));
             return this.cannotSleep();
@@ -471,7 +471,7 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
     }
 
     private boolean cannotSleep() {
-      List<CaracalEntity> list = this.caracalEntity.world.getNonSpectatingEntities(CaracalEntity.class, (new Box(this.bedPos)).expand(2.0));
+      List<CaracalEntity> list = this.caracalEntity.getWorld().getNonSpectatingEntities(CaracalEntity.class, (new Box(this.bedPos)).expand(2.0));
       Iterator<CaracalEntity> var2 = list.iterator();
 
       CaracalEntity caracalEntity;
@@ -501,8 +501,8 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
 
     public void stop() {
       this.caracalEntity.setInSleepingPose(false);
-      float f = this.caracalEntity.world.getSkyAngle(1.0F);
-      if (this.owner.getSleepTimer() >= 100 && (double)f > 0.77 && (double)f < 0.8 && (double)this.caracalEntity.world.getRandom().nextFloat() < 0.7) {
+      float f = this.caracalEntity.getWorld().getSkyAngle(1.0F);
+      if (this.owner.getSleepTimer() >= 100 && (double)f > 0.77 && (double)f < 0.8 && (double) this.caracalEntity.getWorld().getRandom().nextFloat() < 0.7) {
         this.dropMorningGifts();
       }
 
@@ -516,12 +516,12 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
       mutable.set(this.caracalEntity.getBlockPos());
       this.caracalEntity.teleport(mutable.getX() + random.nextInt(11) - 5, mutable.getY() + random.nextInt(5) - 2, mutable.getZ() + random.nextInt(11) - 5, false);
       mutable.set(this.caracalEntity.getBlockPos());
-      LootTable lootTable = this.caracalEntity.world.getServer().getLootManager().getTable(LootTables.CAT_MORNING_GIFT_GAMEPLAY);
-      LootContext.Builder builder = (new LootContext.Builder((ServerWorld)this.caracalEntity.world)).parameter(LootContextParameters.ORIGIN, this.caracalEntity.getPos()).parameter(LootContextParameters.THIS_ENTITY, this.caracalEntity).random(random);
-      List<ItemStack> list = lootTable.generateLoot(builder.build(LootContextTypes.GIFT));
+      LootTable lootTable = this.caracalEntity.getWorld().getServer().getLootManager().getLootTable(LootTables.CAT_MORNING_GIFT_GAMEPLAY);
+      LootContextParameterSet lootContextParameterSet = (new LootContextParameterSet.Builder((ServerWorld) this.caracalEntity.getWorld())).add(LootContextParameters.ORIGIN, this.caracalEntity.getPos()).add(LootContextParameters.THIS_ENTITY, this.caracalEntity).build(LootContextTypes.GIFT);
+      List<ItemStack> list = lootTable.generateLoot(lootContextParameterSet);
 
       for (ItemStack itemStack : list) {
-        this.caracalEntity.world.spawnEntity(new ItemEntity(this.caracalEntity.world, (double) mutable.getX() - (double) MathHelper.sin(this.caracalEntity.bodyYaw * 0.017453292F), mutable.getY(), (double) mutable.getZ() + (double) MathHelper.cos(this.caracalEntity.bodyYaw * 0.017453292F), itemStack));
+        this.caracalEntity.getWorld().spawnEntity(new ItemEntity(this.caracalEntity.getWorld(), (double) mutable.getX() - (double) MathHelper.sin(this.caracalEntity.bodyYaw * 0.017453292F), mutable.getY(), (double) mutable.getZ() + (double) MathHelper.cos(this.caracalEntity.bodyYaw * 0.017453292F), itemStack));
       }
 
     }
@@ -547,7 +547,7 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
   public ActionResult interactMob(PlayerEntity player, Hand hand) {
     ItemStack itemStack = player.getStackInHand(hand);
     Item item = itemStack.getItem();
-    if (this.world.isClient) {
+    if (this.getWorld().isClient) {
       if (this.isTamed() && this.isOwner(player)) {
         return ActionResult.SUCCESS;
       } else {
@@ -574,9 +574,9 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
         if (this.random.nextInt(3) == 0) {
           this.setOwner(player);
           this.setSitting(true);
-          this.world.sendEntityStatus(this, (byte) 7);
+          this.getWorld().sendEntityStatus(this, (byte) 7);
         } else {
-          this.world.sendEntityStatus(this, (byte) 6);
+          this.getWorld().sendEntityStatus(this, (byte) 6);
         }
 
         this.setPersistent();
