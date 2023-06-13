@@ -50,10 +50,11 @@ public class CaracalMain implements ModInitializer {
     FabricDefaultAttributeRegistry.register(CARACAL, CaracalEntity.createCaracalAttributes());
 
     BiomeModifications.addSpawn(
-        BiomeSelectors.includeByKey(Biomes.SAVANNA),
-        MobCategory.CREATURE,
-        CaracalMain.CARACAL,
-        weight, mingroup, maxgroup
+      //TODO: Make it choose biomes by tag
+      BiomeSelectors.includeByKey(Biomes.SAVANNA),
+      MobCategory.CREATURE,
+      CaracalMain.CARACAL,
+      weight, mingroup, maxgroup
     );
 
     SpawnPlacements.register(
