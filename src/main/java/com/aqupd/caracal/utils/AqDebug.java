@@ -14,6 +14,7 @@ public class AqDebug {
 
   private boolean loaded;
   public static final AqDebug INSTANCE = new AqDebug();
+  @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
   private final Properties aqdebug = new Properties();
 
   public boolean startDebug(boolean key) {
