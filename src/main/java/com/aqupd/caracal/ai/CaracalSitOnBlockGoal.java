@@ -1,15 +1,15 @@
 package com.aqupd.caracal.ai;
 
 import com.aqupd.caracal.entity.CaracalEntity;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.enums.BedPart;
-import net.minecraft.entity.ai.goal.MoveToTargetPosGoal;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BedPart;
 
-public class CaracalSitOnBlockGoal extends MoveToTargetPosGoal {
+public class CaracalSitOnBlockGoal extends MoveToBlockGoal {
 
   private final CaracalEntity caracalEntity;
 
@@ -18,11 +18,11 @@ public class CaracalSitOnBlockGoal extends MoveToTargetPosGoal {
     this.caracalEntity = caracalEntity;
   }
 
-  public boolean canStart() {
+  public boolean canUse() {
     return (
-      this.caracalEntity.isTamed() &&
-        !this.caracalEntity.isSitting() &&
-        super.canStart()
+      this.caracalEntity.isTame() &&
+        !this.caracalEntity.isOrderedToSit() &&
+        super.canUse()
     );
   }
 
@@ -38,18 +38,19 @@ public class CaracalSitOnBlockGoal extends MoveToTargetPosGoal {
 
   public void tick() {
     super.tick();
-    this.caracalEntity.setInSittingPose(this.hasReached());
+    this.caracalEntity.setInSittingPose(this.isReachedTarget());
   }
 
-  protected boolean isTargetPos(WorldView world, BlockPos pos) {
-    if (!world.isAir(pos.up())) {
+  @Override
+  protected boolean isValidTarget(LevelReader level, BlockPos pos) {
+    if (!level.isEmptyBlock(pos.above())) {
       return false;
     } else {
-      BlockState blockState = world.getBlockState(pos);
-      return blockState.isIn(
-        BlockTags.BEDS, state -> state.getOrEmpty(BedBlock.PART)
-                  .map(part -> part != BedPart.HEAD)
-                  .orElse(true)
+      BlockState blockState = level.getBlockState(pos);
+      return blockState.is(
+        BlockTags.BEDS, state -> state.getOptionalValue(BedBlock.PART)
+          .map(part -> part != BedPart.HEAD)
+          .orElse(true)
       );
     }
   }

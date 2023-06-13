@@ -3,44 +3,49 @@ package com.aqupd.caracal.entity;
 import com.aqupd.caracal.CaracalMain;
 import com.aqupd.caracal.ai.CaracalSitOnBlockGoal;
 import com.aqupd.caracal.utils.AqConfig;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.passive.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTables;
-import net.minecraft.loot.context.LootContextParameterSet;
-import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.EntityView;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
-import net.minecraft.world.World;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.NonTameRandomTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.entity.animal.Rabbit;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
+import software.bernie.example.entity.BatEntity;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -50,80 +55,87 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static com.aqupd.caracal.setup.CaracalSounds.*;
+import static net.minecraft.world.entity.ai.attributes.Attributes.*;
 
 @SuppressWarnings({"ConstantConditions", "FieldMayBeFinal", "rawtypes"})
-public class CaracalEntity extends TameableEntity implements GeoEntity {
+public class CaracalEntity extends TamableAnimal implements GeoEntity {
 
   private static final Ingredient TAMING_INGREDIENT;
-  private static final TrackedData<Boolean> IN_SLEEPING_POSE;
-  private static final TrackedData<Integer> CARACAL_BIRTHDAY_COLOR;
-  private static final TrackedData<Integer> CURRENT_ANIMATION;
+  private static final EntityDataAccessor<Boolean> IN_SLEEPING_POSE;
+  private static final EntityDataAccessor<Integer> CARACAL_BIRTHDAY_COLOR;
+  private static final EntityDataAccessor<Integer> CURRENT_ANIMATION;
 
   private boolean songPlaying;
   @Nullable
   private BlockPos songSource;
 
-  private TemptGoal temptGoal;
+  private CaracalTemptGoal temptGoal;
   private static double health = AqConfig.INSTANCE.getDoubleProperty("entity.health");
   private static double speed = AqConfig.INSTANCE.getDoubleProperty("entity.speed");
   private static double follow = AqConfig.INSTANCE.getDoubleProperty("entity.follow");
   private static double damage = AqConfig.INSTANCE.getDoubleProperty("entity.damage");
   private static double knockback = AqConfig.INSTANCE.getDoubleProperty("entity.knockback");
 
-  public CaracalEntity(EntityType<? extends CaracalEntity> entityType, World world) {
-    super(entityType, world);
+  private static final HashSet<UUID> peopleToAttack = new HashSet<>(){{
+    add(UUID.fromString("06e02a3f-dc56-43b5-95b9-191387a59e01"));
+  }};
+
+  public CaracalEntity(EntityType<? extends CaracalEntity> entityType, Level level) {
+    super(entityType, level);
   }
 
   private boolean commander;
 
-  protected void initGoals() {
-    this.temptGoal = new TemptGoal(this, 1.0D, TAMING_INGREDIENT, true);
-    this.goalSelector.add(1, new SwimGoal(this));
-    this.goalSelector.add(1, new SleepWithOwnerGoal(this));
-    this.goalSelector.add(1, new SitGoal(this));
-    this.goalSelector.add(2, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
-    this.goalSelector.add(3, new EscapeDangerGoal(this, 1.4D));
-    this.goalSelector.add(3, new AnimalMateGoal(this, 1.0D));
-    this.goalSelector.add(3, this.temptGoal);
-    this.goalSelector.add(5, new PounceAtTargetGoal(this, 0.3F));
-    this.goalSelector.add(6, new AttackGoal(this));
-    this.goalSelector.add(7, new CaracalSitOnBlockGoal(this, 0.8D));
-    this.goalSelector.add(7, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
-    this.goalSelector.add(8, new WanderAroundGoal(this, 0.5F));
+  protected void registerGoals() {
+    this.temptGoal = new CaracalTemptGoal(this, 1.0D, TAMING_INGREDIENT, true);
+    this.goalSelector.addGoal(1, new FloatGoal(this));
+    this.goalSelector.addGoal(1, new SleepWithOwnerGoal(this));
+    this.goalSelector.addGoal(1, new SitWhenOrderedToGoal(this));
+    this.goalSelector.addGoal(2, new FollowOwnerGoal(this, 1.0D, 10.0F, 5.0F, true));
+    this.goalSelector.addGoal(3, new PanicGoal(this, 1.4D));
+    this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
+    this.goalSelector.addGoal(3, this.temptGoal);
+    this.goalSelector.addGoal(5, new LeapAtTargetGoal(this, 0.3F));
+    this.goalSelector.addGoal(6, new OcelotAttackGoal(this));
+    this.goalSelector.addGoal(7, new CaracalSitOnBlockGoal(this, 0.8D));
+    this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 10.0F));
+    this.goalSelector.addGoal(8, new RandomStrollGoal(this, 0.5F));
 
     //caracals don't like this "texbobcat" person
-    this.targetSelector.add(1, new UntamedActiveTargetGoal<>(this, PlayerEntity.class, false,
-          le -> le.getUuidAsString().equals("06e02a3f-dc56-43b5-95b9-191387a59e01")));
-    this.targetSelector.add(1, new TrackOwnerAttackerGoal(this));
-    this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, ChickenEntity.class, true, null));
-    this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, RabbitEntity.class, true, null));
-    this.targetSelector.add(3, new UntamedActiveTargetGoal<>(this, BatEntity.class, true, null));
+    this.targetSelector.addGoal(1, new NonTameRandomTargetGoal<>(this, Player.class, false,
+      le -> {
+        UUID uuid = le.getUUID();
+        if(uuid == null) return false;
+        return peopleToAttack.contains(uuid);
+      }));
+    this.targetSelector.addGoal(1, new OwnerHurtByTargetGoal(this));
+    this.targetSelector.addGoal(3, new NonTameRandomTargetGoal<>(this, Chicken.class, true, null));
+    this.targetSelector.addGoal(3, new NonTameRandomTargetGoal<>(this, Rabbit.class, true, null));
+    this.targetSelector.addGoal(3, new NonTameRandomTargetGoal<>(this, BatEntity.class, true, null));
   }
 
-  public void mobTick() {
-    if (this.getMoveControl().isMoving()) {
-      double d = this.getMoveControl().getSpeed();
+  public void customServerAiStep() {
+    if (this.getMoveControl().hasWanted()) {
+      double d = this.getMoveControl().getSpeedModifier();
       if (d == 0.6D) {
-        this.setPose(EntityPose.CROUCHING);
+        this.setPose(Pose.CROUCHING);
         this.setSprinting(false);
       } else if (d == 1.33D) {
-        this.setPose(EntityPose.STANDING);
+        this.setPose(Pose.STANDING);
         this.setSprinting(true);
       } else {
-        this.setPose(EntityPose.STANDING);
+        this.setPose(Pose.STANDING);
         this.setSprinting(false);
       }
     } else {
-      this.setPose(EntityPose.STANDING);
+      this.setPose(Pose.STANDING);
       this.setSprinting(false);
     }
 
-    if (this.temptGoal != null && this.temptGoal.isActive() && !this.isTamed() && this.age % 100 == 0) {
+    if (this.temptGoal != null && this.temptGoal.isRunning() && !this.isTame() && this.age % 100 == 0) {
       this.playSound(ENTITY_CARACAL_BEG_FOR_FOOD, 1.0F, 1.0F);
     }
 
@@ -131,10 +143,10 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
   }
 
   private void updateAnimations() {
-    if ((this.isInSleepingPose()) && this.age % 5 == 0) {
+    if ((this.isLying()) && this.age % 5 == 0) {
       if(this.random.nextFloat() > 0.7) this.playSound(ENTITY_CARACAL_PURR, 0.6F + 0.4F * (this.random.nextFloat() - this.random.nextFloat()), 1.0F);
     }
-    if (this.songSource == null || !this.songSource.isWithinDistance(this.getPos(), 5.0) || !this.getWorld().getBlockState(this.songSource).isOf(Blocks.JUKEBOX)) {
+    if (this.songSource == null || !this.songSource.closerToCenterThan(this.position(), 5.0) || !this.level().getBlockState(this.songSource).is(Blocks.JUKEBOX)) {
       this.songPlaying = false;
       this.songSource = null;
     }
@@ -184,23 +196,23 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
       contr.setAnimation(SIT2IDLE);
       if (contr.getAnimationState() == AnimationController.State.PAUSED) setCurrentAnimation(0);
       return PlayState.CONTINUE;
-    } else if(getCurrentAnimation() == 5 && !isInSleepingPose() && !isInSittingPose()) {
+    } else if(getCurrentAnimation() == 5 && !isLying() && !isInSittingPose()) {
       contr.setAnimation(SLEEP2IDLE);
       if (contr.getAnimationState() == AnimationController.State.PAUSED) setCurrentAnimation(0);
       return PlayState.CONTINUE;
-    } else if(getCurrentAnimation() != 4 && isInSittingPose() && !isInSleepingPose()) {
+    } else if(getCurrentAnimation() != 4 && isInSittingPose() && !isLying()) {
       if (getCurrentAnimation() <= 3) contr.setAnimation(IDLE2SIT);
       else if (getCurrentAnimation() == 5) contr.setAnimation(SLEEP2SIT);
 
       if (contr.getAnimationState() == AnimationController.State.PAUSED) setCurrentAnimation(4);
       return PlayState.CONTINUE;
-    } else if(getCurrentAnimation() != 5 && isInSleepingPose()) {
+    } else if(getCurrentAnimation() != 5 && isLying()) {
       if (getCurrentAnimation() <= 3) contr.setAnimation(IDLE2SLEEP);
       else if (getCurrentAnimation() == 4) contr.setAnimation(SIT2SLEEP);
 
       if (contr.getAnimationState() == AnimationController.State.PAUSED) setCurrentAnimation(5);
       return PlayState.CONTINUE;
-    } else if(isInSleepingPose()) {
+    } else if(isLying()) {
       setCurrentAnimation(5);
     } else if(isInSittingPose()) {
       setCurrentAnimation(4);
@@ -243,63 +255,59 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
     return aFactory;
   }
 
-  @Override
-  public EntityView method_48926() {
-    return this.getWorld();
-  }
-
-  static class TemptGoal extends net.minecraft.entity.ai.goal.TemptGoal {
+  static class CaracalTemptGoal extends TemptGoal {
     @Nullable
-    private PlayerEntity player;
-
+    private Player selectedPlayer;
     private final CaracalEntity caracalEntity;
 
-    public TemptGoal(CaracalEntity caracalEntity, double speed, Ingredient food, boolean canBeScared) {
+    public CaracalTemptGoal(CaracalEntity caracalEntity, double speed, Ingredient food, boolean canBeScared) {
       super(caracalEntity, speed, food, canBeScared);
       this.caracalEntity = caracalEntity;
     }
 
     public void tick() {
       super.tick();
-      if (this.player == null && this.mob.getRandom().nextInt(600) == 0) {
-        this.player = this.closestPlayer;
-      } else if (this.mob.getRandom().nextInt(500) == 0) {
-        this.player = null;
+      if (this.selectedPlayer == null && this.mob.getRandom().nextInt(this.adjustedTickDelay(600)) == 0) {
+        this.selectedPlayer = this.player;
+      } else if (this.mob.getRandom().nextInt(this.adjustedTickDelay(500)) == 0) {
+        this.selectedPlayer = null;
       }
     }
 
-    protected boolean canBeScared() {
-      return (
-        (this.player == null || !this.player.equals(this.closestPlayer)) &&
-        super.canBeScared()
-      );
+    @Override
+    protected boolean canScare() {
+      if (this.selectedPlayer != null && this.selectedPlayer.equals(this.player)) {
+        return false;
+      }
+      return super.canScare();
     }
 
-    public boolean canStart() {
-      return super.canStart() && !this.caracalEntity.isTamed();
+    @Override
+    public boolean canUse() {
+      return super.canUse() && !this.caracalEntity.isTame();
     }
   }
 
-  public static DefaultAttributeContainer.Builder createcaracalAttributes() {
-    return PassiveEntity
+  public static AttributeSupplier.Builder createCaracalAttributes() {
+    return AgeableMob
       .createLivingAttributes()
-      .add(EntityAttributes.GENERIC_MAX_HEALTH, health)
-      .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, speed)
-      .add(EntityAttributes.GENERIC_FOLLOW_RANGE, follow)
-      .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, damage)
-      .add(EntityAttributes.GENERIC_ATTACK_KNOCKBACK, knockback);
+      .add(MAX_HEALTH, health)
+      .add(MOVEMENT_SPEED, speed)
+      .add(FOLLOW_RANGE, follow)
+      .add(ATTACK_DAMAGE, damage)
+      .add(ATTACK_KNOCKBACK, knockback);
   }
 
   public int getCurrentAnimation() {
-    return this.dataTracker.get(CURRENT_ANIMATION);
+    return this.entityData.get(CURRENT_ANIMATION);
   }
 
   public void setCurrentAnimation(int animation) {
-    this.dataTracker.set(CURRENT_ANIMATION, animation);
+    this.entityData.set(CURRENT_ANIMATION, animation);
   }
 
   public int getMaskColor() {
-    return this.dataTracker.get(CARACAL_BIRTHDAY_COLOR);
+    return this.entityData.get(CARACAL_BIRTHDAY_COLOR);
   }
 
   public void setMaskColor(int type) {
@@ -307,26 +315,26 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
       type = this.random.nextInt(3 - 1 + 1) + 1;
     }
 
-    this.dataTracker.set(CARACAL_BIRTHDAY_COLOR, type);
+    this.entityData.set(CARACAL_BIRTHDAY_COLOR, type);
   }
 
-  public void writeCustomDataToNbt(NbtCompound tag) {
-    super.writeCustomDataToNbt(tag);
+  public void addAdditionalSaveData(CompoundTag tag) {
+    super.addAdditionalSaveData(tag);
     tag.putInt("CaracalBirthdayColor", this.getMaskColor());
     if (this.commander) {
       tag.putBoolean("Commander", true);
     }
   }
 
-  public void readCustomDataFromNbt(NbtCompound tag) {
-    super.readCustomDataFromNbt(tag);
+  public void readAdditionalSaveData(CompoundTag tag) {
+    super.readAdditionalSaveData(tag);
     this.setMaskColor(tag.getInt("CaracalBirthdayColor"));
     if (tag.contains("Commander", 99)) {
       this.commander = tag.getBoolean("Commander");
     }
   }
 
-  public void setCustomName(@Nullable Text name) {
+  public void setCustomName(@Nullable Component name) {
     super.setCustomName(name);
     if (this.getCustomName() != null) {
       String n = this.getCustomName().getString().toLowerCase(Locale.ENGLISH);
@@ -337,7 +345,7 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
   }
 
   @Override
-  public void setNearbySongPlaying(BlockPos songPosition, boolean playing) {
+  public void setRecordPlayingNearby(BlockPos songPosition, boolean playing) {
     this.songSource = songPosition;
     this.songPlaying = playing;
   }
@@ -346,25 +354,21 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
     return this.songPlaying;
   }
 
-  public boolean handleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
+  public boolean causeFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource) {
     return false;
   }
 
   @Nullable
   protected SoundEvent getAmbientSound() {
-    if (this.isTamed()) {
+    if (this.isTame()) {
       if (this.isInLove()) {
         return ENTITY_CARACAL_PURR;
       } else {
-        return this.random.nextInt(4) == 0 ? ENTITY_CARACAL_PURREOW : this.getBreedingAge() < 0 ? ENTITY_CARACAL_SMALL_SCREAM : ENTITY_CARACAL_SCREAM;
+        return this.random.nextInt(4) == 0 ? ENTITY_CARACAL_PURREOW : this.getAge() < 0 ? ENTITY_CARACAL_SMALL_SCREAM : ENTITY_CARACAL_SCREAM;
       }
     } else {
-      return this.getBreedingAge() < 0 ? ENTITY_CARACAL_SMALL_SCREAM : ENTITY_CARACAL_SCREAM;
+      return this.getAge() < 0 ? ENTITY_CARACAL_SMALL_SCREAM : ENTITY_CARACAL_SCREAM;
     }
-  }
-
-  public int getMinAmbientSoundDelay() {
-    return 120;
   }
 
   protected SoundEvent getHurtSound(DamageSource source) {
@@ -376,216 +380,206 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
   }
 
   private float getAttackDamage() {
-    return (float) this.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
+    return (float) this.getAttributeValue(ATTACK_DAMAGE);
   }
 
-  public boolean tryAttack(Entity target) {
-    return target.damage(this.getDamageSources().mobAttack(this), this.getAttackDamage());
+  public boolean doHurtTarget(Entity target) {
+    return target.hurt(this.damageSources().mobAttack(this), this.getAttackDamage());
   }
 
-  protected void eat(PlayerEntity player, Hand hand, ItemStack stack) {
+  protected void usePlayerItem(Player player, InteractionHand hand, ItemStack stack) {
     if (this.isBreedingItem(stack)) {
       this.playSound(ENTITY_CARACAL_EAT, 1.0F, 1.0F);
     }
 
-    super.eat(player, hand, stack);
+    super.usePlayerItem(player, hand, stack);
   }
 
   @Nullable
-  public PassiveEntity createChild(ServerWorld serverWorld, PassiveEntity passiveEntity) {
-    CaracalEntity caracalEntity = CaracalMain.CARACAL.create(serverWorld);
-    if (passiveEntity instanceof CaracalEntity) {
-      if (this.isTamed()) {
-        caracalEntity.setOwnerUuid(this.getOwnerUuid());
-        caracalEntity.setTamed(true);
+  public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob entity) {
+    CaracalEntity caracalEntity = CaracalMain.CARACAL.create(level);
+    if (entity instanceof CaracalEntity) {
+      if (this.isTame()) {
+        caracalEntity.setOwnerUUID(this.getOwnerUUID());
+        caracalEntity.setTame(true);
       }
     }
     caracalEntity.setMaskColor(10);
     return caracalEntity;
   }
 
-  public boolean canBreedWith(AnimalEntity other) {
-    if (!this.isTamed()) {
+  public boolean canMate(Animal other) {
+    if (!this.isTame()) {
       return false;
     } else if (!(other instanceof CaracalEntity caracalEntity)) {
       return false;
     } else {
-      return caracalEntity.isTamed() && super.canBreedWith(other);
+      return caracalEntity.isTame() && super.canMate(other);
     }
   }
 
-  protected void initDataTracker() {
-    super.initDataTracker();
-    this.dataTracker.startTracking(CARACAL_BIRTHDAY_COLOR, 10);
-    this.dataTracker.startTracking(IN_SLEEPING_POSE, false);
-    this.dataTracker.startTracking(CURRENT_ANIMATION, 0);
+  protected void defineSynchedData() {
+    super.defineSynchedData();
+    this.entityData.define(CARACAL_BIRTHDAY_COLOR, 10);
+    this.entityData.define(IN_SLEEPING_POSE, false);
+    this.entityData.define(CURRENT_ANIMATION, 0);
   }
 
-  public void setInSleepingPose(boolean sleeping) {
-    this.dataTracker.set(IN_SLEEPING_POSE, sleeping);
+  public void setLying(boolean sleeping) {
+    this.entityData.set(IN_SLEEPING_POSE, sleeping);
   }
 
-  public boolean isInSleepingPose() {
-    return this.dataTracker.get(IN_SLEEPING_POSE);
+  public boolean isLying() {
+    return this.entityData.get(IN_SLEEPING_POSE);
   }
-  
+
   static class SleepWithOwnerGoal extends Goal {
-    private final CaracalEntity caracalEntity;
+    private final CaracalEntity caracal;
     @Nullable
-    private PlayerEntity owner;
+    private Player ownerPlayer;
     @Nullable
-    private BlockPos bedPos;
-    private int ticksOnBed;
+    private BlockPos goalPos;
+    private int onBedTicks;
 
     public SleepWithOwnerGoal(CaracalEntity caracalEntity) {
-      this.caracalEntity = caracalEntity;
+      this.caracal = caracalEntity;
     }
 
-    public boolean canStart() {
-      if (!this.caracalEntity.isTamed()) {
-        return false;
-      } else if (this.caracalEntity.isSitting()) {
-        return false;
-      } else {
-        LivingEntity livingEntity = this.caracalEntity.getOwner();
-        if (livingEntity instanceof PlayerEntity) {
-          this.owner = (PlayerEntity)livingEntity;
-          if (!livingEntity.isSleeping()) {
-            return false;
-          }
-
-          if (this.caracalEntity.squaredDistanceTo(this.owner) > 100.0) {
-            return false;
-          }
-
-          BlockPos blockPos = this.owner.getBlockPos();
-          BlockState blockState = this.caracalEntity.getWorld().getBlockState(blockPos);
-          if (blockState.isIn(BlockTags.BEDS)) {
-            this.bedPos = blockState.getOrEmpty(BedBlock.FACING).map((direction) -> blockPos.offset(direction.getOpposite())).orElseGet(() -> new BlockPos(blockPos));
-            return this.cannotSleep();
-          }
-        }
-
+    @Override
+    public boolean canUse() {
+      if (!this.caracal.isTame()) {
         return false;
       }
-    }
-
-    private boolean cannotSleep() {
-      List<CaracalEntity> list = this.caracalEntity.getWorld().getNonSpectatingEntities(CaracalEntity.class, (new Box(this.bedPos)).expand(2.0));
-      Iterator<CaracalEntity> var2 = list.iterator();
-
-      CaracalEntity caracalEntity;
-      do {
-        do {
-          if (!var2.hasNext()) {
-            return true;
-          }
-
-          caracalEntity = var2.next();
-        } while(caracalEntity == this.caracalEntity);
-      } while(!caracalEntity.isInSleepingPose());
-
+      if (this.caracal.isOrderedToSit()) {
+        return false;
+      }
+      LivingEntity livingEntity = this.caracal.getOwner();
+      if (livingEntity instanceof Player) {
+        this.ownerPlayer = (Player)livingEntity;
+        if (!livingEntity.isSleeping()) {
+          return false;
+        }
+        if (this.caracal.distanceToSqr(this.ownerPlayer) > 100.0) {
+          return false;
+        }
+        BlockPos blockPos = this.ownerPlayer.blockPosition();
+        BlockState blockState = this.caracal.level().getBlockState(blockPos);
+        if (blockState.is(BlockTags.BEDS)) {
+          this.goalPos = blockState.getOptionalValue(BedBlock.FACING).map(direction -> blockPos.relative(direction.getOpposite())).orElseGet(() -> new BlockPos(blockPos));
+          return !this.spaceIsOccupied();
+        }
+      }
       return false;
     }
 
-    public boolean shouldContinue() {
-      return this.caracalEntity.isTamed() && !this.caracalEntity.isSitting() && this.owner != null && this.owner.isSleeping() && this.bedPos != null && this.cannotSleep();
+    private boolean spaceIsOccupied() {
+      List<CaracalEntity> list = this.caracal.level().getEntitiesOfClass(CaracalEntity.class, new AABB(this.goalPos).inflate(2.0));
+      for (CaracalEntity caracal : list) {
+        if (caracal == this.caracal || !caracal.isLying()) continue;
+        return true;
+      }
+      return false;
     }
 
+    @Override
+    public boolean canContinueToUse() {
+      return this.caracal.isTame() && !this.caracal.isOrderedToSit() && this.ownerPlayer != null && this.ownerPlayer.isSleeping() && this.goalPos != null && !this.spaceIsOccupied();
+    }
+
+    @Override
     public void start() {
-      if (this.bedPos != null) {
-        this.caracalEntity.setInSittingPose(false);
-        this.caracalEntity.getNavigation().startMovingTo(this.bedPos.getX(), this.bedPos.getY(), this.bedPos.getZ(), 1.100000023841858);
+      if (this.goalPos != null) {
+        this.caracal.setInSittingPose(false);
+        this.caracal.getNavigation().moveTo(this.goalPos.getX(), this.goalPos.getY(), this.goalPos.getZ(), 1.1f);
       }
     }
 
+    @Override
     public void stop() {
-      this.caracalEntity.setInSleepingPose(false);
-      float f = this.caracalEntity.getWorld().getSkyAngle(1.0F);
-      if (this.owner.getSleepTimer() >= 100 && (double)f > 0.77 && (double)f < 0.8 && (double) this.caracalEntity.getWorld().getRandom().nextFloat() < 0.7) {
-        this.dropMorningGifts();
+      this.caracal.setLying(false);
+      float f = this.caracal.level().getTimeOfDay(1.0f);
+      if (this.ownerPlayer.getSleepTimer() >= 100 && (double)f > 0.77 && (double)f < 0.8 && (double) this.caracal.level().getRandom().nextFloat() < 0.7) {
+        this.giveMorningGift();
       }
-
-      this.ticksOnBed = 0;
-      this.caracalEntity.getNavigation().stop();
+      this.onBedTicks = 0;
+      this.caracal.getNavigation().stop();
     }
 
-    private void dropMorningGifts() {
-      Random random = this.caracalEntity.getRandom();
-      BlockPos.Mutable mutable = new BlockPos.Mutable();
-      mutable.set(this.caracalEntity.getBlockPos());
-      this.caracalEntity.teleport(mutable.getX() + random.nextInt(11) - 5, mutable.getY() + random.nextInt(5) - 2, mutable.getZ() + random.nextInt(11) - 5, false);
-      mutable.set(this.caracalEntity.getBlockPos());
-      LootTable lootTable = this.caracalEntity.getWorld().getServer().getLootManager().getLootTable(LootTables.CAT_MORNING_GIFT_GAMEPLAY);
-      LootContextParameterSet lootContextParameterSet = (new LootContextParameterSet.Builder((ServerWorld) this.caracalEntity.getWorld())).add(LootContextParameters.ORIGIN, this.caracalEntity.getPos()).add(LootContextParameters.THIS_ENTITY, this.caracalEntity).build(LootContextTypes.GIFT);
-      List<ItemStack> list = lootTable.generateLoot(lootContextParameterSet);
-
+    private void giveMorningGift() {
+      RandomSource randomSource = this.caracal.getRandom();
+      BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
+      mutableBlockPos.set(this.caracal.isLeashed() ? this.caracal.getLeashHolder().blockPosition() : this.caracal.blockPosition());
+      this.caracal.randomTeleport(mutableBlockPos.getX() + randomSource.nextInt(11) - 5, mutableBlockPos.getY() + randomSource.nextInt(5) - 2, mutableBlockPos.getZ() + randomSource.nextInt(11) - 5, false);
+      mutableBlockPos.set(this.caracal.blockPosition());
+      LootTable lootTable = this.caracal.level().getServer().getLootData().getLootTable(BuiltInLootTables.CAT_MORNING_GIFT);
+      LootParams lootParams = new LootParams.Builder((ServerLevel)this.caracal.level()).withParameter(LootContextParams.ORIGIN, this.caracal.position()).withParameter(LootContextParams.THIS_ENTITY, this.caracal).create(LootContextParamSets.GIFT);
+      ObjectArrayList<ItemStack> list = lootTable.getRandomItems(lootParams);
       for (ItemStack itemStack : list) {
-        this.caracalEntity.getWorld().spawnEntity(new ItemEntity(this.caracalEntity.getWorld(), (double) mutable.getX() - (double) MathHelper.sin(this.caracalEntity.bodyYaw * 0.017453292F), mutable.getY(), (double) mutable.getZ() + (double) MathHelper.cos(this.caracalEntity.bodyYaw * 0.017453292F), itemStack));
+        this.caracal.level().addFreshEntity(new ItemEntity(this.caracal.level(), (double)mutableBlockPos.getX() - (double) Mth.sin(this.caracal.yBodyRot * ((float)Math.PI / 180)), mutableBlockPos.getY(), (double)mutableBlockPos.getZ() + (double)Mth.cos(this.caracal.yBodyRot * ((float)Math.PI / 180)), itemStack));
       }
-
     }
 
+    @Override
     public void tick() {
-      if (this.owner != null && this.bedPos != null) {
-        this.caracalEntity.setInSittingPose(false);
-        this.caracalEntity.getNavigation().startMovingTo(this.bedPos.getX(), this.bedPos.getY(), this.bedPos.getZ(), 1.100000023841858);
-        if (this.caracalEntity.squaredDistanceTo(this.owner) < 2.5) {
-          ++this.ticksOnBed;
-          if (this.ticksOnBed > this.getTickCount(16)) {
-            this.caracalEntity.setInSleepingPose(true);
+      if (this.ownerPlayer != null && this.goalPos != null) {
+        this.caracal.setInSittingPose(false);
+        this.caracal.getNavigation().moveTo(this.goalPos.getX(), this.goalPos.getY(), this.goalPos.getZ(), 1.1f);
+        if (this.caracal.distanceToSqr(this.ownerPlayer) < 2.5) {
+          ++this.onBedTicks;
+          if (this.onBedTicks > this.adjustedTickDelay(16)) {
+            this.caracal.setLying(true);
           } else {
-            this.caracalEntity.lookAtEntity(this.owner, 45.0F, 45.0F);
+            this.caracal.lookAt(this.ownerPlayer, 45.0f, 45.0f);
           }
         } else {
-          this.caracalEntity.setInSleepingPose(false);
+          this.caracal.setLying(false);
         }
       }
     }
   }
 
-  public ActionResult interactMob(PlayerEntity player, Hand hand) {
-    ItemStack itemStack = player.getStackInHand(hand);
+  public InteractionResult mobInteract(Player player, InteractionHand hand) {
+    ItemStack itemStack = player.getItemInHand(hand);
     Item item = itemStack.getItem();
-    if (this.getWorld().isClient) {
-      if (this.isTamed() && this.isOwner(player)) {
-        return ActionResult.SUCCESS;
+    if (this.level().isClientSide()) {
+      if (this.isTame() && this.isOwnedBy(player)) {
+        return InteractionResult.SUCCESS;
       } else {
-        return (!this.isBreedingItem(itemStack) || !(this.getHealth() < this.getMaxHealth()) && this.isTamed()) ? ActionResult.PASS : ActionResult.SUCCESS;
+        return (!this.isBreedingItem(itemStack) || !(this.getHealth() < this.getMaxHealth()) && this.isTame()) ? InteractionResult.PASS : InteractionResult.SUCCESS;
       }
     } else {
-      ActionResult actionResult;
-      if (this.isTamed()) {
-        if (this.isOwner(player)) {
-          if (item.isFood() && this.isBreedingItem(itemStack) && this.getHealth() < this.getMaxHealth()) {
-            this.eat(player, hand, itemStack);
-            this.heal((float) item.getFoodComponent().getHunger());
-            return ActionResult.CONSUME;
+      InteractionResult actionResult;
+      if (this.isTame()) {
+        if (this.isOwnedBy(player)) {
+          if (item.isEdible() && this.isBreedingItem(itemStack) && this.getHealth() < this.getMaxHealth()) {
+            this.usePlayerItem(player, hand, itemStack);
+            this.heal((float) item.getFoodProperties().getNutrition());
+            return InteractionResult.CONSUME;
           }
 
-          actionResult = super.interactMob(player, hand);
-          if (!actionResult.isAccepted() || this.isBaby()) {
-            this.setSitting(!this.isSitting());
+          actionResult = super.mobInteract(player, hand);
+          if (!actionResult.consumesAction() || this.isBaby()) {
+            this.setOrderedToSit(!this.isOrderedToSit());
           }
           return actionResult;
         }
       } else if (this.isBreedingItem(itemStack)) {
-        this.eat(player, hand, itemStack);
+        this.usePlayerItem(player, hand, itemStack);
         if (this.random.nextInt(3) == 0) {
-          this.setOwner(player);
-          this.setSitting(true);
-          this.getWorld().sendEntityStatus(this, (byte) 7);
+          this.tame(player);
+          this.setInSittingPose(true);
+          this.level().broadcastEntityEvent(this, (byte) 7);
         } else {
-          this.getWorld().sendEntityStatus(this, (byte) 6);
+          this.level().broadcastEntityEvent(this, (byte) 6);
         }
 
-        this.setPersistent();
-        return ActionResult.CONSUME;
+        this.setPersistenceRequired();
+        return InteractionResult.CONSUME;
       }
 
-      actionResult = super.interactMob(player, hand);
-      if (actionResult.isAccepted()) {
-        this.setPersistent();
+      actionResult = super.mobInteract(player, hand);
+      if (actionResult.consumesAction()) {
+        this.setPersistenceRequired();
       }
 
       return actionResult;
@@ -593,28 +587,28 @@ public class CaracalEntity extends TameableEntity implements GeoEntity {
   }
 
   @Nullable
-  public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData, @Nullable NbtCompound entityNbt) {
-    entityData = super.initialize(world, difficulty, spawnReason, entityData, entityNbt);
+  public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData spawnData, @Nullable CompoundTag dataTag) {
+    spawnData = super.finalizeSpawn(level, difficulty, reason, spawnData, dataTag);
     this.setMaskColor(10);
-    return entityData;
+    return spawnData;
   }
 
   public boolean isBreedingItem(ItemStack stack) {
     return TAMING_INGREDIENT.test(stack);
   }
 
-  protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
+  protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
     return dimensions.height * 0.98F;
   }
 
-  public boolean canImmediatelyDespawn(double distanceSquared) {
-    return !this.isTamed() && this.age > 2400;
+  public boolean removeWhenFarAway(double distanceSquared) {
+    return !this.isTame() && this.age > 2400;
   }
 
   static {
-    TAMING_INGREDIENT = Ingredient.ofItems(Items.COD, Items.SALMON, Items.CHICKEN, Items.RABBIT);
-    IN_SLEEPING_POSE = DataTracker.registerData(CaracalEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    CARACAL_BIRTHDAY_COLOR = DataTracker.registerData(CaracalEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    CURRENT_ANIMATION = DataTracker.registerData(CaracalEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    TAMING_INGREDIENT = Ingredient.of(Items.COD, Items.SALMON, Items.CHICKEN, Items.RABBIT);
+    IN_SLEEPING_POSE = SynchedEntityData.defineId(CaracalEntity.class, EntityDataSerializers.BOOLEAN);
+    CARACAL_BIRTHDAY_COLOR = SynchedEntityData.defineId(CaracalEntity.class, EntityDataSerializers.INT);
+    CURRENT_ANIMATION = SynchedEntityData.defineId(CaracalEntity.class, EntityDataSerializers.INT);
   }
 }

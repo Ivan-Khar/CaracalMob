@@ -58,7 +58,6 @@ public class AqConfig {
         aqprop.setProperty("entity.follow", "20.0");
         aqprop.setProperty("entity.damage", "2.5");
         aqprop.setProperty("entity.knockback", "0.5");
-        aqprop.setProperty("spawn.biomes", "Doesn't work");
         aqprop.store(writer, "Configuration file for Caracal mod. spawn.biomes doesn't work for now");
         writer.close();
       }
