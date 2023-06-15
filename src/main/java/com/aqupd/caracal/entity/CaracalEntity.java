@@ -1,7 +1,7 @@
 package com.aqupd.caracal.entity;
 
-import com.aqupd.caracal.CaracalMain;
 import com.aqupd.caracal.ai.CaracalSitOnBlockGoal;
+import com.aqupd.caracal.setup.CaracalEntities;
 import com.aqupd.caracal.utils.AqConfig;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
@@ -34,6 +34,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Blocks;
@@ -56,7 +57,10 @@ import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 import static com.aqupd.caracal.setup.CaracalSounds.*;
 import static net.minecraft.world.entity.ai.attributes.Attributes.*;
@@ -137,7 +141,7 @@ public class CaracalEntity extends TamableAnimal implements GeoEntity {
     }
 
     if (this.temptGoal != null && this.temptGoal.isRunning() && !this.isTame() && this.age % 100 == 0) {
-      this.playSound(ENTITY_CARACAL_BEG_FOR_FOOD, 1.0F, 1.0F);
+      this.playSound(ENTITY_CARACAL_BEG_FOR_FOOD.get(), 1.0F, 1.0F);
     }
 
     this.updateAnimations();
@@ -145,7 +149,7 @@ public class CaracalEntity extends TamableAnimal implements GeoEntity {
 
   private void updateAnimations() {
     if ((this.isLying()) && this.age % 5 == 0) {
-      if(this.random.nextFloat() > 0.7) this.playSound(ENTITY_CARACAL_PURR, 0.6F + 0.4F * (this.random.nextFloat() - this.random.nextFloat()), 1.0F);
+      if(this.random.nextFloat() > 0.7) this.playSound(ENTITY_CARACAL_PURR.get(), 0.6F + 0.4F * (this.random.nextFloat() - this.random.nextFloat()), 1.0F);
     }
     if (this.songSource == null || !this.songSource.closerToCenterThan(this.position(), 5.0) || !this.level().getBlockState(this.songSource).is(Blocks.JUKEBOX)) {
       this.songPlaying = false;
@@ -364,21 +368,21 @@ public class CaracalEntity extends TamableAnimal implements GeoEntity {
   protected SoundEvent getAmbientSound() {
     if (this.isTame()) {
       if (this.isInLove()) {
-        return ENTITY_CARACAL_PURR;
+        return ENTITY_CARACAL_PURR.get();
       } else {
-        return this.random.nextInt(4) == 0 ? ENTITY_CARACAL_PURREOW : this.getAge() < 0 ? ENTITY_CARACAL_SMALL_SCREAM : ENTITY_CARACAL_SCREAM;
+        return this.random.nextInt(4) == 0 ? ENTITY_CARACAL_PURREOW.get() : this.getAge() < 0 ? ENTITY_CARACAL_SMALL_SCREAM.get() : ENTITY_CARACAL_SCREAM.get();
       }
     } else {
-      return this.getAge() < 0 ? ENTITY_CARACAL_SMALL_SCREAM : ENTITY_CARACAL_SCREAM;
+      return this.getAge() < 0 ? ENTITY_CARACAL_SMALL_SCREAM.get() : ENTITY_CARACAL_SCREAM.get();
     }
   }
 
   protected SoundEvent getHurtSound(DamageSource source) {
-    return ENTITY_CARACAL_HISS;
+    return ENTITY_CARACAL_HISS.get();
   }
 
   protected SoundEvent getDeathSound() {
-    return ENTITY_CARACAL_DEATH;
+    return ENTITY_CARACAL_DEATH.get();
   }
 
   private float getAttackDamage() {
@@ -391,7 +395,7 @@ public class CaracalEntity extends TamableAnimal implements GeoEntity {
 
   protected void usePlayerItem(Player player, InteractionHand hand, ItemStack stack) {
     if (this.isBreedingItem(stack)) {
-      this.playSound(ENTITY_CARACAL_EAT, 1.0F, 1.0F);
+      this.playSound(ENTITY_CARACAL_EAT.get(), 1.0F, 1.0F);
     }
 
     super.usePlayerItem(player, hand, stack);
@@ -399,7 +403,7 @@ public class CaracalEntity extends TamableAnimal implements GeoEntity {
 
   @Nullable
   public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob entity) {
-    CaracalEntity caracalEntity = CaracalMain.CARACAL.create(level);
+    CaracalEntity caracalEntity = CaracalEntities.CARACAL.get().create(level);
     if (entity instanceof CaracalEntity) {
       if (this.isTame()) {
         caracalEntity.setOwnerUUID(this.getOwnerUUID());
@@ -606,6 +610,10 @@ public class CaracalEntity extends TamableAnimal implements GeoEntity {
 
   public boolean removeWhenFarAway(double distanceSquared) {
     return !this.isTame() && this.age > 2400;
+  }
+
+  public static boolean canSpawn(EntityType<CaracalEntity> entity, LevelAccessor level, MobSpawnType type, BlockPos pos, RandomSource random) {
+    return Animal.checkAnimalSpawnRules(entity, level, type, pos, random);
   }
 
   static {

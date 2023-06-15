@@ -1,0 +1,10 @@
+{
+  "entity.aqupdcaracal.caracal": "Каракал",
+  "subtitles.aqupdcaracal.caracal.hiss": "Каракал шипит",
+  "subtitles.aqupdcaracal.caracal.scream": "Каракал кричит",
+  "subtitles.aqupdcaracal.caracal.purr": "Каракал мяукает",
+  "subtitles.aqupdcaracal.caracal.death": "Каракал погибает",
+  "subtitles.aqupdcaracal.caracal.eat": "Каракал ест",
+  "subtitles.aqupdcaracal.caracal.beg_for_food": "Каракал выпрашивает еду",
+  "item.aqupdcaracal.caracal_spawn_egg": "Яйцо призыва каракала"
+}

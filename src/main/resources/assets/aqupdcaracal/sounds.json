@@ -1,0 +1,97 @@
+{
+  "entity.caracal.scream": {
+    "subtitle": "subtitles.aqupdcaracal.caracal.scream",
+    "sounds": [
+      "aqupdcaracal:caracal/scream1",
+      "aqupdcaracal:caracal/scream2",
+      "aqupdcaracal:caracal/scream3"
+    ]
+  },
+  "entity.caracal.small.scream": {
+    "subtitle": "subtitles.aqupdcaracal.caracal.scream",
+    "sounds": [
+      {"name": "aqupdcaracal:caracal/small/scream1", "pitch": 0.5},
+      {"name": "aqupdcaracal:caracal/small/scream2", "pitch": 0.5},
+      {"name": "aqupdcaracal:caracal/small/scream3", "pitch": 0.5},
+      {"name": "aqupdcaracal:caracal/small/scream4", "pitch": 0.5},
+      {"name": "aqupdcaracal:caracal/small/scream5", "pitch": 0.5}
+    ]
+  },
+  "entity.caracal.hiss": {
+    "subtitle": "subtitles.aqupdcaracal.caracal.hiss",
+    "sounds": [
+      "aqupdcaracal:caracal/hiss1",
+      "aqupdcaracal:caracal/hiss2",
+      "aqupdcaracal:caracal/hiss3",
+      "aqupdcaracal:caracal/hiss4"
+    ]
+  },
+  "entity.caracal.purr": {
+    "subtitle": "subtitles.aqupdcaracal.caracal.purr",
+    "sounds": [
+      {
+        "name": "aqupdcaracal:caracal/purr",
+        "volume": 1
+      }
+    ]
+  },
+  "entity.caracal.purreow": {
+    "subtitle": "subtitles.aqupdcaracal.caracal.purr",
+    "sounds": [
+      {
+        "name": "aqupdcaracal:caracal/purreow",
+        "volume": 0.7
+      }
+    ]
+  },
+  "entity.caracal.death": {
+    "subtitle": "subtitles.aqupdcaracal.caracal.death",
+    "sounds": [
+      {
+        "name": "mob/cat/hitt1",
+        "volume": 0.75,
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/cat/hitt2",
+        "volume": 0.75,
+        "pitch": 0.9
+      },
+      {
+        "name": "mob/cat/hitt3",
+        "volume": 0.75,
+        "pitch": 0.9
+      }
+    ]
+  },
+  "entity.caracal.eat": {
+    "subtitle": "subtitles.aqupdcaracal.caracal.eat",
+    "sounds": [
+      {
+        "name": "mob/cat/eat1",
+        "volume": 1
+      },
+      {
+        "name": "mob/cat/eat2",
+        "volume": 1
+      }
+    ]
+  },
+  "entity.caracal.beg_for_food": {
+    "subtitle": "subtitles.aqupdcaracal.caracal.beg_for_food",
+    "sounds": [
+      {
+        "name": "mob/cat/beg1",
+        "volume": 0.7
+      },
+      {
+        "name": "mob/cat/beg2",
+        "volume": 0.7
+      },
+      {
+        "name": "mob/cat/beg3",
+        "volume": 0.7
+      }
+    ]
+  }
+}

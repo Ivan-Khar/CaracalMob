@@ -2,14 +2,11 @@ package com.aqupd.caracal.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-@Environment(EnvType.CLIENT)
 public class CaracalEntityRenderer extends GeoEntityRenderer<CaracalEntity> {
 
   public CaracalEntityRenderer(EntityRendererProvider.Context ctx) {
