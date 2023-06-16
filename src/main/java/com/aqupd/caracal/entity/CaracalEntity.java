@@ -63,6 +63,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import static com.aqupd.caracal.setup.CaracalSounds.*;
+import static net.minecraft.world.InteractionResult.*;
 import static net.minecraft.world.entity.ai.attributes.Attributes.*;
 
 @SuppressWarnings({"ConstantConditions", "FieldMayBeFinal", "rawtypes", "resource"})
@@ -548,49 +549,54 @@ public class CaracalEntity extends TamableAnimal implements GeoEntity {
   public @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
     ItemStack itemStack = player.getItemInHand(hand);
     Item item = itemStack.getItem();
-    if (this.level().isClientSide()) {
-      if (this.isTame() && this.isOwnedBy(player)) {
-        return InteractionResult.SUCCESS;
-      } else {
-        return (!this.isBreedingItem(itemStack) || !(this.getHealth() < this.getMaxHealth()) && this.isTame()) ? InteractionResult.PASS : InteractionResult.SUCCESS;
+
+    if (this.level().isClientSide()) {                                                //Client-Side world
+      if (this.isTame() && this.isOwnedBy(player)) {                                  //If tamed & owned by player, interaction is successful
+        return SUCCESS;
+      } else {                                                                        //If not tamed
+        if(this.isBreedingItem(itemStack)) return SUCCESS;                            //If caracal can eat item, interaction is successful
+        if((this.getHealth() < this.getMaxHealth()) && this.isTame()) return CONSUME; //If tamed caracal is hurt, interaction is successful
       }
     } else {
-      InteractionResult actionResult;
-      if (this.isTame()) {
-        if (this.isOwnedBy(player)) {
-          if (item.isEdible() && this.isBreedingItem(itemStack) && this.getHealth() < this.getMaxHealth()) {
+      if(this.isTame() && this.isOwnedBy(player)) {
+        if (this.isBreedingItem(itemStack)) {
+          if (this.getHealth() < this.getMaxHealth()) {
             this.usePlayerItem(player, hand, itemStack);
-            this.heal((float) item.getFoodProperties().getNutrition());
-            return InteractionResult.CONSUME;
+            this.heal(item.getFoodProperties().getNutrition());
+            return CONSUME;
           }
 
-          actionResult = super.mobInteract(player, hand);
-          if (!actionResult.consumesAction() || this.isBaby()) {
-            this.setOrderedToSit(!this.isOrderedToSit());
+          if (this.getAge() == 0 && this.canFallInLove()) {
+            this.usePlayerItem(player, hand, itemStack);
+            this.setInLove(player);
+            return SUCCESS;
           }
-          return actionResult;
+
+          if (this.isBaby()) {
+            this.usePlayerItem(player, hand, itemStack);
+            this.ageUp(getSpeedUpSecondsWhenFeeding(-this.getAge()), true);
+            return sidedSuccess(this.level().isClientSide);
+          }
         }
-      } else if (this.isBreedingItem(itemStack)) {
-        this.usePlayerItem(player, hand, itemStack);
-        if (this.random.nextInt(3) == 0) {
-          this.tame(player);
-          this.setInSittingPose(true);
-          this.level().broadcastEntityEvent(this, (byte) 7);
-        } else {
-          this.level().broadcastEntityEvent(this, (byte) 6);
+        setOrderedToSit(!isOrderedToSit());
+      } else {
+        if(this.isBreedingItem(itemStack)) {
+          this.usePlayerItem(player, hand, itemStack);
+
+          if (this.random.nextInt(3) == 0) {
+            this.tame(player);
+            this.setOrderedToSit(true);
+            this.setPersistenceRequired();
+            this.level().broadcastEntityEvent(this, (byte) 7);
+          } else {
+            this.level().broadcastEntityEvent(this, (byte) 6);
+          }
+          return CONSUME;
         }
-
-        this.setPersistenceRequired();
-        return InteractionResult.CONSUME;
       }
-
-      actionResult = super.mobInteract(player, hand);
-      if (actionResult.consumesAction()) {
-        this.setPersistenceRequired();
-      }
-
-      return actionResult;
     }
+
+    return PASS;
   }
 
   @Nullable
