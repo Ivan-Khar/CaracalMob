@@ -1,9 +1,14 @@
 pluginManagement {
     repositories {
         maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
+            name 'Fabric'
+            url 'https://maven.fabricmc.net/'
         }
+        mavenCentral()
         gradlePluginPortal()
+        maven {
+            name = 'JitPack maven'
+            url 'https://jitpack.io'
+        }
     }
 }
