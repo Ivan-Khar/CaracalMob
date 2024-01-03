@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 public class AqLogger {
 
   private static final Logger LOGGER = LogManager.getLogger();
-  private static String logprefix = "[AqUpd's mobs] ";
+  private static final String logprefix = "[AqUpd's mobs] ";
 
   public static void logError(String error) {
     LOGGER.error(logprefix + error);

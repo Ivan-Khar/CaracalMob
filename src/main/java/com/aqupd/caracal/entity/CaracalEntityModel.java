@@ -3,6 +3,7 @@ package com.aqupd.caracal.entity;
 import com.aqupd.caracal.CaracalMain;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
+
 import java.time.LocalDate;
 import java.util.Locale;
 
