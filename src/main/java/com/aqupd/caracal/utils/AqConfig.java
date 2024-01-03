@@ -63,7 +63,7 @@ public class AqConfig {
         writer.close();
       }
     } catch (IOException e) {
-      e.printStackTrace();
+      AqLogger.logError("Error while loading config file: " + e.getMessage());
     }
   }
 }
