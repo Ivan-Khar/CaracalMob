@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "#aqupdcaracal:caracal_spawn_biomes",
+  "spawners": {
+    "type": "aqupdcaracal:caracal",
+    "weight": 15,
+    "minCount": 1,
+    "maxCount": 3
+  }
+}
