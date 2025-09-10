@@ -5,12 +5,12 @@ import com.aqupd.caracal.entity.CaracalEntity;
 import com.aqupd.caracal.setup.CaracalEntities;
 import com.aqupd.caracal.setup.CaracalItems;
 import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 
 @Mod.EventBusSubscriber(modid = CaracalMain.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -28,7 +28,7 @@ public class CommonModEvents {
   @SubscribeEvent
   public static void addItemsToCreativeMenu(BuildCreativeModeTabContentsEvent event) {
     if (event.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
-      event.accept(CaracalItems.CARACAL_SPAWN_EGG);
+      event.accept(CaracalItems.CARACAL_SPAWN_EGG.get());
     }
   }
 }
